@@ -1,141 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yes, that's my e-mail.</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      background: black;
-      font-family: 'Courier New', monospace;
-      color: white;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Димитър Тодоров</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;
-    }
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            overflow: hidden;
+            position: relative;
+        }
 
-    #text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: clamp(2rem, 5vw, 6rem);
-      text-align: center;
-      color: white;
-      mix-blend-mode: screen;
-      cursor: pointer;
-      user-select: none;
-      letter-spacing: 0.05em;
-      filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
-      transition: transform 0.3s ease;
-    }
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(40, 40, 40, 0.3) 0%, transparent 70%);
+            z-index: 0;
+            animation: fadePulse 8s ease-in-out infinite;
+        }
 
-    #text:hover {
-      transform: translate(-50%, -50%) scale(1.05);
-      filter: drop-shadow(0 0 20px rgba(255,255,255,0.6));
-    }
+        @keyframes fadePulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.7; }
+        }
 
-    .glitch {
-      animation: flicker 2s infinite;
-    }
+        h1 {
+            font-size: 7rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #e0e0e0, #a0a0a0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            z-index: 1;
+            animation: slideIn 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    @keyframes flicker {
-      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-        opacity: 1;
-        transform: translate(0, 0);
-      }
-      20%, 24%, 55% {
-        opacity: 0.8;
-        transform: translate(1px, -1px);
-      }
-      22%, 26% {
-        opacity: 0.6;
-        transform: translate(-1px, 1px);
-      }
-    }
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #4a4a4a, #8a8a8a);
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: underline 1s 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
 
-    @media (max-width: 600px) {
-      #text {
-        font-size: 2rem;
-      }
-    }
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
 
-    audio {
-      display: none;
-    }
-  </style>
+        @keyframes underline {
+            to { transform: scaleX(1); }
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .nav-grid a {
+            text-decoration: none;
+            color: #e0e0e0;
+            font-size: 1.25rem;
+            font-weight: 500;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .nav-grid a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-grid a:hover::before {
+            transform: translateX(100%);
+        }
+
+        .nav-grid a:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 4rem;
+            }
+
+            .nav-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+                max-width: 90%;
+            }
+
+            .nav-grid a {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-  <canvas id="bg"></canvas>
-  <div id="text" class="glitch">Yes, that's my e-mail.</div>
-  <audio id="ambience" autoplay loop muted>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7d6b3c5c58.mp3?filename=ambient-space-113086.mp3" type="audio/mpeg">
-  </audio>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r150/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script>
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg'), antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-
-    const particles = new THREE.BufferGeometry();
-    const count = 2000;
-    const positions = new Float32Array(count * 3);
-    for (let i = 0; i < count * 3; i++) {
-      positions[i] = (Math.random() - 0.5) * 100;
-    }
-    particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-    const material = new THREE.PointsMaterial({ color: 0x44ccff, size: 0.3 });
-    const particleSystem = new THREE.Points(particles, material);
-    scene.add(particleSystem);
-
-    camera.position.z = 5;
-
-    function animate() {
-      requestAnimationFrame(animate);
-      particleSystem.rotation.y += 0.0005;
-      particleSystem.rotation.x += 0.0003;
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
-    gsap.from("#text", {
-      duration: 2,
-      opacity: 0,
-      scale: 0.8,
-      ease: "power3.out",
-      delay: 0.5
-    });
-
-    const text = document.getElementById("text");
-    const audio = document.getElementById("ambience");
-    let isMuted = true;
-
-    text.addEventListener("click", () => {
-      isMuted = !isMuted;
-      audio.muted = isMuted;
-      if (!audio.played.length) {
-        audio.play();
-      }
-      gsap.to("#text", { scale: 1.1, duration: 0.2, yoyo: true, repeat: 1 });
-    });
-  </script>
+    <div class="background-overlay"></div>
+    <h1>Това е моят e-mail, да!</h1>
+    <div class="nav-grid">
+        <a href="Grok.html">Grok</a>
+        <a href="Chatgpt.html">ChatGPT</a>
+        <a href="Deepseek.html">DeepSeek</a>
+        <a href="Gemini.html">Gemini</a>
+    </div>
 </body>
 </html>

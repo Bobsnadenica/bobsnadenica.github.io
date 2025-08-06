@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Yes, that's my e-mail.</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+      font-family: 'Courier New', monospace;
+      color: white;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      z-index: -1;
+    }
+
+    #text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(2rem, 5vw, 6rem);
+      text-align: center;
+      letter-spacing: 0.05em;
+      color: white;
+      mix-blend-mode: screen;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+      user-select: none;
+      cursor: pointer;
+      animation: flicker 3s infinite ease-in-out;
+    }
+
+    #text:hover {
+      filter: drop-shadow(0 0 20px rgba(255,255,255,0.5));
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      48% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.005); }
+      49% { opacity: 0.4; transform: translate(-49.9%, -50.1%) scale(1.015); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg"></canvas>
+  <div id="text">Това е моят e-mail,да.</div>
+  <audio id="ambience" autoplay loop muted>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7d6b3c5c58.mp3?filename=ambient-space-113086.mp3" type="audio/mpeg">
+  </audio>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r150/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    const canvas = document.getElementById("bg");
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.Camera();
+    camera.position.z = 1;
+
+    const geometry = new THREE.PlaneBufferGeometry(2, 2);
+
+    const uniforms = {
+      iTime: { value: 0 },
+      iResolution: { value: new THREE.Vector3() },
+      iMouse: { value: new THREE.Vector2() }
+    };
+
+    const material = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      fragmentShader: `
+        precision highp float;
+        uniform float iTime;
+        uniform vec3 iResolution;
+        uniform vec2 iMouse;
+
+        float noise(vec2 p) {
+          return fract(sin(dot(p ,vec2(127.1,311.7))) * 43758.5453123);
+        }
+
+        float fbm(vec2 p) {
+          float v = 0.0;
+          float a = 0.5;
+          for (int i = 0; i < 6; i++) {
+            v += a * noise(p);
+            p *= 2.0;
+            a *= 0.5;
+          }
+          return v;
+        }
+
+        void main() {
+          vec2 uv = gl_FragCoord.xy / iResolution.xy;
+          vec2 pos = uv - 0.5;
+          pos.x *= iResolution.x / iResolution.y;
+
+          float t = iTime * 0.1;
+          float n = fbm(pos * 3.0 + vec2(t * 0.5, t));
+          vec3 col = vec3(0.02, 0.05, 0.1) + n * vec3(0.1, 0.6, 1.0);
+          col = pow(col, vec3(1.5));
+
+          gl_FragColor = vec4(col, 1.0);
+        }
+      `
+    });
+
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+    uniforms.iResolution.value.set(window.innerWidth, window.innerHeight, 1);
+
+    window.addEventListener("resize", () => {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      uniforms.iResolution.value.set(window.innerWidth, window.innerHeight, 1);
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      uniforms.iMouse.value.set(e.clientX, e.clientY);
+    });
+
+    function render(time) {
+      uniforms.iTime.value = time * 0.001;
+      renderer.render(scene, camera);
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+
+    gsap.from("#text", {
+      duration: 2,
+      opacity: 0,
+      scale: 0.8,
+      ease: "power3.out",
+      delay: 0.3
+    });
+
+    const text = document.getElementById("text");
+    const audio = document.getElementById("ambience");
+    let isMuted = true;
+
+    text.addEventListener("click", () => {
+      isMuted = !isMuted;
+      audio.muted = isMuted;
+      if (!audio.played.length) audio.play();
+      gsap.to("#text", { scale: 1.05, duration: 0.2, yoyo: true, repeat: 1 });
+    });
+  </script>
+</body>
+</html>

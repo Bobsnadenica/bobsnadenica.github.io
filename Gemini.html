@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awe and Amaze - Refined</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #000;
+        }
+
+        #webgl-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        #content-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            z-index: 1;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 100%);
+        }
+
+        #main-text {
+            font-size: clamp(1.8rem, 7vw, 5.5rem);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-shadow: 0 0 12px rgba(0,255,255,0.7), 0 0 25px rgba(0,255,255,0.5);
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(60px);
+            position: relative;
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            background-color: rgba(0,0,0,0.25);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+            border: 1px solid rgba(0,255,255,0.3);
+            transition: all 0.3s ease-out;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% {
+                text-shadow: 0 0 12px rgba(0,255,255,0.7), 0 0 25px rgba(0,255,255,0.5);
+                border-color: rgba(0,255,255,0.3);
+            }
+            100% {
+                text-shadow: 0 0 18px rgba(0,255,255,0.9), 0 0 35px rgba(0,255,255,0.7);
+                border-color: rgba(0,255,255,0.6);
+            }
+        }
+
+        #main-text:hover {
+            transform: translateY(-8px) scale(1.03);
+            text-shadow: 0 0 20px rgba(0,255,255,1), 0 0 40px rgba(0,255,255,0.8);
+            border-color: rgba(0,255,255,0.8);
+            animation: none; /* Pause continuous glow on hover */
+        }
+
+        #main-text:active {
+            transform: scale(0.97);
+            text-shadow: 0 0 10px rgba(0,255,255,0.5), 0 0 20px rgba(0,255,255,0.3);
+            border-color: rgba(0,255,255,0.2);
+        }
+
+        .glitch-effect {
+            animation: glitch 0.4s infinite alternate;
+        }
+
+        @keyframes glitch {
+            0% {
+                transform: translate(0);
+                text-shadow: 0 0 12px rgba(0,255,255,0.7), 0 0 25px rgba(0,255,255,0.5),
+                             3px 0px 0px rgba(255,0,0,0.7), -3px 0px 0px rgba(0,255,0,0.7);
+            }
+            25% {
+                transform: translate(-3px, 3px);
+                text-shadow: 0 0 12px rgba(0,255,255,0.7), 0 0 25px rgba(0,255,255,0.5),
+                             -3px 0px 0px rgba(255,0,0,0.7), 0px 3px 0px rgba(0,255,0,0.7);
+            }
+            50% {
+                transform: translate(3px, -3px);
+                text-shadow: 0 0 12px rgba(0,255,255,0.7), 0 0 25px rgba(0,255,255,0.5),
+                             0px -3px 0px rgba(255,0,0,0.7), 3px 0px 0px rgba(0,255,0,0.7);
+            }
+            75% {
+                transform: translate(-2px, 2px);
+                text-shadow: 0 0 12px rgba(0,255,255,0.7), 0 0 25px rgba(0,255,255,0.5),
+                             2px 2px 0px rgba(255,0,0,0.7), -2px -2px 0px rgba(0,255,0,0.7);
+            }
+            100% {
+                transform: translate(0);
+                text-shadow: 0 0 12px rgba(0,255,255,0.7), 0 0 25px rgba(0,255,255,0.5),
+                             -2px 3px 0px rgba(255,0,0,0.7), 3px -2px 0px rgba(0,255,0,0.7);
+            }
+        }
+
+        #audio-toggle {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(0,255,255,0.4);
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 0 15px rgba(0,255,255,0.4);
+        }
+
+        #audio-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+            border-color: rgba(0,255,255,0.7);
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(0,255,255,0.6);
+        }
+
+        #audio-toggle svg {
+            fill: white;
+            width: 28px;
+            height: 28px;
+            transition: fill 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="webgl-container"></div>
+    <div id="content-overlay">
+        <h1 id="main-text">Това е моят e-mail,да.</h1>
+    </div>
+
+    <audio id="background-audio" loop muted>
+        <!-- For optimal experience, replace this with a very subtle, ethereal, ambient sound. -->
+        <!-- Example: a long, evolving drone or soft, atmospheric pads. -->
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div id="audio-toggle">
+        <svg id="audio-icon-muted" style="display: block;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .9-.23 1.74-.63 2.5l1.45 1.45c.56-1.14.88-2.47.88-3.95 0-3.59-2.57-6.72-6-7.44v2.06c2.25.62 4 2.67 4 5.38zM5 9v6h4l5 5V4L9 9H5zm7 0v.48L9.48 7H7v4h2.48L12 11.52zm-3.15 2.65L8 10.83v2.34l.85-.85z"/></svg>
+        <svg id="audio-icon-unmuted" style="display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 4.45v15.1c2.86-.77 5-3.36 5-6.55s-2.14-5.78-5-6.55z"/></svg>
+    </div>
+
+    <script>
+        let scene, camera, renderer, material, mesh;
+        let uniforms;
+        const webglContainer = document.getElementById('webgl-container');
+        const mainText = document.getElementById('main-text');
+        const backgroundAudio = document.getElementById('background-audio');
+        const audioToggleButton = document.getElementById('audio-toggle');
+        const audioIconMuted = document.getElementById('audio-icon-muted');
+        const audioIconUnmuted = document.getElementById('audio-icon-unmuted');
+        let isMuted = true;
+
+        // Vertex Shader - Simple passthrough
+        const vertexShader = `
+            void main() {
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+
+        // Fragment Shader - Advanced Aurora/Nebula Effect
+        const fragmentShader = `
+            uniform float u_time;
+            uniform vec2 u_resolution;
+            uniform vec2 u_mouse;
+
+            // Hash function for random numbers
+            float hash(float n) { return fract(sin(n) * 43758.5453123); }
+
+            // 2D Noise function
+            float noise(vec2 p) {
+                vec2 ip = floor(p);
+                vec2 fp = fract(p);
+                fp = fp * fp * (3.0 - 2.0 * fp); // Smoothstep interpolation
+                float a = hash(ip.x + hash(ip.y));
+                float b = hash(ip.x + 1.0 + hash(ip.y));
+                float c = hash(ip.x + hash(ip.y + 1.0));
+                float d = hash(ip.x + 1.0 + hash(ip.y + 1.0));
+                return mix(mix(a, b, fp.x), mix(c, d, fp.x), fp.y);
+            }
+
+            // Fractal Brownian Motion (FBM)
+            float fbm(vec2 p) {
+                float f = 0.0;
+                f += 0.5000 * noise(p);
+                f += 0.2500 * noise(p * 2.0);
+                f += 0.1250 * noise(p * 4.0);
+                f += 0.0625 * noise(p * 8.0);
+                f += 0.03125 * noise(p * 16.0);
+                return f;
+            }
+
+            void main() {
+                vec2 st = gl_FragCoord.xy / u_resolution.xy;
+                st.x *= u_resolution.x / u_resolution.y; // Correct aspect ratio
+
+                // Animate and distort the texture coordinates
+                vec2 p = st * 4.0; // Scale up for more detail
+                p += vec2(sin(u_time * 0.1) * 0.5, cos(u_time * 0.08) * 0.5); // Gentle drift
+
+                float f = fbm(p + fbm(p + u_time * 0.1)); // Layered FBM for complex patterns
+
+                // Color palette for a vibrant nebula/aurora
+                vec3 colorA = vec3(0.05, 0.0, 0.15); // Deep violet
+                vec3 colorB = vec3(0.1, 0.2, 0.4);   // Dark blue
+                vec3 colorC = vec3(0.4, 0.8, 0.9);   // Cyan/light blue
+                vec3 colorD = vec3(0.9, 0.5, 0.1);   // Orange
+                vec3 colorE = vec3(1.0, 0.8, 0.3);   // Gold/yellow
+
+                // Blend colors based on FBM value
+                vec3 finalColor = mix(colorA, colorB, smoothstep(0.0, 0.3, f));
+                finalColor = mix(finalColor, colorC, smoothstep(0.2, 0.6, f));
+                finalColor = mix(finalColor, colorD, smoothstep(0.5, 0.8, f));
+                finalColor = mix(finalColor, colorE, smoothstep(0.7, 1.0, f));
+
+                // Add subtle mouse interaction to distort the field
+                vec2 mouse_norm = u_mouse / u_resolution;
+                mouse_norm.y = 1.0 - mouse_norm.y; // Invert Y for shader
+                float dist_to_mouse = distance(st, mouse_norm);
+                float mouseInfluence = 1.0 - smoothstep(0.0, 0.3, dist_to_mouse);
+                finalColor += vec3(0.1, 0.1, 0.1) * mouseInfluence;
+
+                // Add a subtle vignette effect
+                float vignette = smoothstep(0.0, 0.8, length(st - 0.5) * 2.0);
+                finalColor *= (1.0 - vignette * 0.4);
+
+                gl_FragColor = vec4(finalColor, 1.0);
+            }
+        `;
+
+        function init() {
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 1;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio); // Improve quality on high-DPI screens
+            webglContainer.appendChild(renderer.domElement);
+
+            const geometry = new THREE.PlaneGeometry(2, 2);
+
+            uniforms = {
+                u_time: { value: 0.0 },
+                u_resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                u_mouse: { value: new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2) } // Initialize mouse to center
+            };
+
+            material = new THREE.ShaderMaterial({
+                uniforms: uniforms,
+                vertexShader: vertexShader,
+                fragmentShader: fragmentShader
+            });
+
+            mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            window.addEventListener('resize', onWindowResize);
+            window.addEventListener('mousemove', onMouseMove);
+
+            // GSAP entrance animation for text
+            gsap.to(mainText, {
+                opacity: 1,
+                y: 0,
+                duration: 1.8,
+                ease: "power4.out",
+                delay: 0.8
+            });
+
+            // Glitch effect on hover
+            mainText.addEventListener('mouseenter', () => {
+                mainText.classList.add('glitch-effect');
+            });
+
+            mainText.addEventListener('mouseleave', () => {
+                mainText.classList.remove('glitch-effect');
+            });
+
+            // Click interaction: subtle camera shake and background pulse
+            mainText.addEventListener('click', () => {
+                gsap.to(camera.position, {
+                    x: Math.random() * 0.05 - 0.025,
+                    y: Math.random() * 0.05 - 0.025,
+                    duration: 0.1,
+                    yoyo: true,
+                    repeat: 1,
+                    ease: "power1.out",
+                    onComplete: () => {
+                        gsap.to(camera.position, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+                    }
+                });
+
+                // Briefly intensify shader colors
+                gsap.to(material.uniforms.u_time, {
+                    value: material.uniforms.u_time.value + 1.0, // A quick jump in time for a visual burst
+                    duration: 0.3,
+                    ease: "power2.out",
+                    yoyo: true,
+                    repeat: 1,
+                    overwrite: true
+                });
+            });
+
+            audioToggleButton.addEventListener('click', toggleAudio);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            uniforms.u_resolution.value.set(window.innerWidth, window.innerHeight);
+        }
+
+        function onMouseMove(event) {
+            uniforms.u_mouse.value.x = event.clientX;
+            uniforms.u_mouse.value.y = window.innerHeight - event.clientY; // Invert Y for WebGL
+        }
+
+        function animate(time) {
+            requestAnimationFrame(animate);
+            uniforms.u_time.value = time * 0.001;
+            renderer.render(scene, camera);
+        }
+
+        function toggleAudio() {
+            if (isMuted) {
+                backgroundAudio.muted = false;
+                backgroundAudio.volume = 0.3; // Set a subtle volume
+                backgroundAudio.play().catch(e => console.error("Audio play failed:", e));
+                audioIconMuted.style.display = 'none';
+                audioIconUnmuted.style.display = 'block';
+            } else {
+                backgroundAudio.muted = true;
+                audioIconMuted.style.display = 'block';
+                audioIconUnmuted.style.display = 'none';
+            }
+            isMuted = !isMuted;
+        }
+
+        window.onload = function() {
+            init();
+            animate(0);
+        };
+    </script>
+</body>
+</html>
