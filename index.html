@@ -88,30 +88,49 @@
     </div>
 
 <script>
-/* --- DUCK FOLLOWING CURSOR --- */
+/* --- WALKING DUCKS THAT FOLLOW THE MOUSE --- */
 const ducks = [];
 const duckCount = 5;
-for (let i=0; i<duckCount; i++) {
+const walkFrames = ["🦆", "🦆"]; // could be replaced with sprite frames
+
+for (let i = 0; i < duckCount; i++) {
     const span = document.createElement("span");
     span.classList.add("duck");
-    span.textContent = "🦆";
+    span.textContent = walkFrames[0];
     document.body.appendChild(span);
-    ducks.push({ el: span, x: window.innerWidth/2, y: window.innerHeight/2 });
+    ducks.push({
+        el: span,
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        frame: 0
+    });
 }
-let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
-document.addEventListener("mousemove", e => { mouseX = e.clientX; mouseY = e.clientY; });
-function animateDucks(){
-    ducks.forEach((duck, index) => {
-        let targetX = (index===0) ? mouseX : ducks[index-1].x;
-        let targetY = (index===0) ? mouseY : ducks[index-1].y;
-        duck.x += (targetX - duck.x) * 0.2;
-        duck.y += (targetY - duck.y) * 0.2;
+
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+document.addEventListener("mousemove", e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+});
+
+function moveDucks() {
+    ducks.forEach(duck => {
+        const dx = mouseX - duck.x;
+        const dy = mouseY - duck.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist > 5) { // move toward cursor
+            duck.x += (dx / dist) * 2; // speed
+            duck.y += (dy / dist) * 2;
+            duck.frame = (duck.frame + 1) % walkFrames.length; // walk animation
+            duck.el.textContent = walkFrames[duck.frame];
+        }
         duck.el.style.left = duck.x + "px";
         duck.el.style.top = duck.y + "px";
     });
-    requestAnimationFrame(animateDucks);
 }
-animateDucks();
+
+setInterval(moveDucks, 50); // movement & animation speed
 
 /* --- FLOWER GROW MINI-GAME --- */
 const flowerEmojis = ["🌸","🌻","🌼","🌹","🌷","💐"];
@@ -122,7 +141,6 @@ document.addEventListener("click", e => {
     flower.style.left = e.pageX + "px";
     flower.style.top = e.pageY + "px";
     document.body.appendChild(flower);
-    // grow after a short delay
     setTimeout(()=>flower.classList.add("grown"), 100);
 });
 
