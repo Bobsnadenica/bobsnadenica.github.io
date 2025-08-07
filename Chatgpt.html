@@ -1,119 +1,130 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>BEANS & SAUSAGE 4EVER!!! 😂🌭🫘🔥</title>
-  <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Chewy', cursive;
-      background: linear-gradient(45deg, #ffcc00, #ff6699, #66ffcc);
-      color: #fff;
-      text-align: center;
-      padding: 2em;
-      animation: rainbow 5s infinite;
-    }
-    @keyframes rainbow {
-      0% {background-position: 0%;}
-      100% {background-position: 100%;}
-    }
-    h1 {
-      font-size: 4em;
-      margin-bottom: 0.2em;
-    }
-    .spinner {
-      display: inline-block;
-      font-size: 3em;
-      animation: spin 3s linear infinite;
-      margin: 1em;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .button {
-      font-size: 2em;
-      padding: 1em;
-      margin: 1em;
-      background: #ff3399;
-      border: none;
-      border-radius: 15px;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .button:hover {
-      transform: scale(1.1);
-    }
-    .input-container {
-      margin: 2em;
-    }
-    input {
-      font-size: 1.5em;
-      padding: 0.5em;
-      border-radius: 10px;
-      border: none;
-    }
-    #bean-output {
-      font-size: 1.5em;
-      margin-top: 1em;
-    }
-    .ticker {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: #222;
-      color: #fff;
-      font-size: 1.2em;
-      padding: 0.5em;
-      animation: ticker 30s linear infinite;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-    .ticker span {
-      display: inline-block;
-      padding-right: 100%;
-    }
-    @keyframes ticker {
-      0% {transform: translateX(100%);}
-      100% {transform: translateX(-100%);}
-    }
-    audio {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-  <h1>BEANS & SAUSAGE 4EVER!!! 🌭🫘🤣🔥</h1>
-  <div class="spinner">🌭</div>
-  <p>“Einstein once said beans > relativity 🧠➡️🫘”</p>
-  <p>“Never trust a man without a sausage 🌭🤔”</p>
-  <p>“Beans are just spicy water balloons 💦🫘🔥”</p>
+<!DOCTYPE html> <html lang="bg"> <head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width,initial-scale=1"> <title>Beans & Sausage MEMEVENTURES — Chatgpt.html</title> <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Gloria+Hallelujah&display=swap" rel="stylesheet"> <style> *{box-sizing:border-box} html,body{height:100%} body{ margin:0; font-family:"Gloria Hallelujah", "Chewy", cursive, sans-serif; background:#fdebd0; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:18px; padding:28px; } .sky{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; background:linear-gradient(180deg,#fff7e6,#ffefcc 40%,#ffd6a5 100%); } .emoji-bg{ position:absolute; inset:0; z-index:0; mix-blend-mode:screen; opacity:0.95; transform:translateZ(0); } .emoji{ position:absolute; font-size:64px; opacity:0.18; user-select:none; filter:drop-shadow(0 6px 6px rgba(0,0,0,0.15)); transform-origin:center; } header{ z-index:5; text-align:center; margin-top:6vh; } h1{ font-family:"Chewy", "Gloria Hallelujah", cursive; font-size:8.5rem; line-height:0.85; margin:0; color:#3b2b1f; text-shadow:4px 6px 0 rgba(255,255,255,0.6), -3px -2px 0 rgba(255,248,220,0.4); transform:skewY(-2deg); } h2{ margin:6px 0 0 0; font-size:2.4rem; color:#7a3b2a; letter-spacing:1px; } .subhead{ margin-top:8px; font-size:1.25rem; color:#5a3a2a; } main{ z-index:5; width:100%; max-width:1200px; display:grid; grid-template-columns:1fr 420px; gap:18px; align-items:start; padding:18px; } .left{ background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,250,240,0.6)); border-radius:16px; padding:22px; box-shadow:0 10px 30px rgba(0,0,0,0.12); min-height:420px; } .right{ background:linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,245,230,0.7)); border-radius:16px; padding:22px; box-shadow:0 10px 30px rgba(0,0,0,0.12); } .giant-btn{ display:inline-grid; place-items:center; font-size:3.5rem; padding:20px 28px; margin:8px; border-radius:24px; border:6px solid #fff5e6; background:linear-gradient(180deg,#fff8ee,#ffe6cc); box-shadow:0 8px 18px rgba(0,0,0,0.12); cursor:pointer; transition:transform .18s ease; user-select:none; } .giant-btn:active{transform:scale(.96)} .btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px} .quote{ font-size:1.45rem; margin-top:12px; padding:14px; border-radius:12px; background:rgba(255,255,255,0.6); box-shadow:inset 0 2px 0 rgba(255,255,255,0.6); } .meme-area{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:12px; } .meme{ padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff9f2,#fff2e8); font-size:1.05rem; text-align:center; } .sausage-spin{ font-size:8rem; display:inline-block; animation:spin 6s linear infinite; transform-origin:center; filter: drop-shadow(0 8px 10px rgba(0,0,0,0.2)); } @keyframes spin{ from{transform:rotate(0deg)} to{transform:rotate(360deg)} } .input-row{ display:flex; gap:8px; margin-top:12px; } input[type="text"]{ flex:1; padding:12px 14px; border-radius:12px; border:4px solid #fff2e0; font-size:1.1rem; background:#fffaf0; } button.small{ padding:10px 12px; border-radius:10px; border:4px solid #fff2e0; background:#fff6ee; cursor:pointer; font-size:1.1rem; } .response{ margin-top:12px; font-size:1.15rem; padding:10px; border-radius:10px; background:#fffdf8; } .ticker{ position:fixed; bottom:0; left:0; right:0; background:linear-gradient(90deg,#ffd8a8,#ffecb8); color:#3b2b1f; padding:8px 12px; font-size:1.15rem; display:flex; align-items:center; z-index:9; box-shadow:0 -8px 30px rgba(0,0,0,0.08); overflow:hidden; } .ticker .marquee{ white-space:nowrap; display:inline-block; padding-left:100%; animation:marq 18s linear infinite; font-weight:700; } @keyframes marq{ from{transform:translateX(0)} to{transform:translateX(-100%)} } .footer-icons{ display:flex; gap:10px; margin-top:10px; justify-content:center; } .sidebar-section{ margin-bottom:18px; } .big-emoji{ font-size:4rem; } .game-box, .consp-box{ padding:12px; border-radius:12px; background:linear-gradient(180deg,#fffdf6,#fff6e8); font-size:1.05rem; } .randomize{ margin-top:8px; padding:10px 12px; border-radius:10px; background:#fff6ea; border:4px solid #fff2e0; cursor:pointer; font-weight:700; } @media (max-width:1000px){ main{grid-template-columns:1fr; padding:12px} h1{font-size:5.2rem} } </style> </head> <body> <div class="sky" aria-hidden="true"> <div class="emoji-bg" id="emojiBg"></div> </div> <header> <h1>BEANS & SAUSAGE 🍽️🥳</h1> <h2>THE OFFICIAL ABSURD MEME-CADEMY OF LEGENDARY LUNCHES 🍲🌭🫘</h2> <div class="subhead">Giant emojis, tiny logic, infinite silliness 😜🤪🫕</div> </header> <main> <section class="left"> <div style="display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap"> <div style="display:flex;align-items:center;gap:12px"> <div class="sausage-spin">🌭</div> <div style="font-size:1.25rem;font-weight:800">Featured Ridiculous Fact</div> </div> <div style="text-align:right"> <div style="font-size:3rem">🫘🌭🫘</div> </div> </div> <div class="quote" id="mainQuote">"Beans once conquered a sausage. The sausage complimented the beans and they became best friends." — Ancient Bean Oracle 🫘✨</div> <div class="btn-row" style="margin-top:16px"> <div class="giant-btn" onclick="doPointless('explode')">💥 POP THE BEAN 💥</div> <div class="giant-btn" onclick="doPointless('sing')">🎶 SING SAUSAGE SONG 🎶</div> <div class="giant-btn" onclick="doPointless('summon')">🔔 SUMMON MINI SAUSAGE 🔔</div> <div class="giant-btn" onclick="doPointless('facts')">📜 RANDOM FACTS 📜</div> </div> <div class="meme-area" id="memeArea"> <div class="meme">"If beans could talk they'd say: 'More toast please' 🍞🫘"</div> <div class="meme">"Sausage philosophy: always roll with the heat 🌶️🌭"</div> <div class="meme">"BREAKING: Local bean claims to have seen a sausage with wings 🪽🌭 (it was a hot dog kite)"</div> <div class="meme">"Quote: 'Never trust a bean that laughs alone.' — Anonymous Bean" 😂🫘</div> </div> <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap"> <button class="small" onclick="openPopup('meme','You found the sacred baked bean! 🫘🙏')">🔍 Find Sacred Bean</button> <button class="small" onclick="openPopup('meme','Sausage winked at you. You wink back. Friendship formed. 🌭🤝')">😉 Sausage Wink</button> <button class="small" onclick="openPopup('meme','Warning: Beans may contain traces of giggles. 😂')">⚠️ Giggle Warning</button> </div> <div style="margin-top:18px;font-size:1rem;color:#6b3b2a"> <div style="font-weight:800;margin-bottom:6px">Tell us your bean secret 😳🫘</div> <div class="input-row"> <input type="text" id="beanInput" placeholder="I once..."> <button class="small" onclick="revealSecret()">Reveal 🕵️‍♀️</button> </div> <div class="response" id="secretResponse">No secrets yet. Spill the beans! 🫘</div> </div> </section> <aside class="right"> <div class="sidebar-section"> <div style="display:flex;align-items:center;gap:12px"> <div style="font-size:2rem">🎯</div> <div style="font-weight:900;font-size:1.2rem">Game of the Day</div> </div> <div class="game-box" id="gameBox">Loading today's totally legitimate game... 🎮</div> <button class="randomize" onclick="randomizeGame()">RANDOMIZE GAME 🎲</button> </div> <div class="sidebar-section"> <div style="display:flex;align-items:center;gap:12px"> <div style="font-size:2rem">🕵️</div> <div style="font-weight:900;font-size:1.2rem">Conspiracy Corner</div> </div> <div class="consp-box" id="conspBox">Loading a perfectly reasonable conspiracy... 🧠</div> <button class="randomize" onclick="randomizeConspiracy()">MYSTIFY ME 😵‍💫</button> </div> <div style="text-align:center"> <div style="font-weight:900;font-size:1.1rem">Sausage Soundboard 🔊</div> <div style="display:flex;gap:8px;justify-content:center;margin-top:8px"> <button class="small" onclick="playClip('boop')">🔔 Boop</button> <button class="small" onclick="playClip('sizzle')">🥓 Sizzle</button> <button class="small" onclick="playClip('wah')">🎺 Wah</button> </div> <div style="margin-top:12px;font-size:4rem">🍳🫕🌭</div> </div> <div style="margin-top:12px;text-align:center"> <div style="font-weight:900">Meme Generator</div> <div style="margin-top:8px"> <button class="randomize" onclick="generateMeme()">GENERATE RIDICULOUS MEME 🤡</button> </div> </div> <div class="footer-icons" style="margin-top:18px"> <div class="big-emoji">🫘</div> <div class="big-emoji">🌭</div> <div class="big-emoji">🍞</div> </div> </aside> </main> <div class="ticker" aria-hidden="true"> <div class="marquee" id="tickerText">📰 HOT: Beans and Sausage declare mutual admiration society • FAKE NEWS: Sausage elected mayor of Sandwich Town • MEME ALERT: Eternal Bean Dance trending • SPOOKY: Beans whisper at night • 🍽️😜</div> </div> <div id="popRoot" style="position:fixed;inset:0;display:none;place-items:center;z-index:9999"></div>
 
-  <button class="button" onclick="alert('💥 SAUSAGE CANNON ACTIVATED 💥\n🌭🌭🌭 PEW PEW PEW 🌭🌭🌭')">Launch the Sausage Cannon 🌭💥</button>
-  <button class="button" onclick="alert('🫘 WARNING: Bean Overload Detected! 🫘💣')">Unleash the Beans 🫘😱</button>
-  <button class="button" onclick="alert('🔥 HOT DOG DANCE MODE: ON 🔥')">Start Sausage Dance 💃🌭🕺</button>
-
-  <div class="input-container">
-    <p>Tell us your bean secret 😳🫘</p>
-    <input type="text" id="bean-secret" placeholder="I once..." onkeydown="if(event.key==='Enter'){revealSecret()}">
-    <div id="bean-output"></div>
-  </div>
-
-  <audio autoplay loop>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-  </audio>
-
-  <div class="ticker"><span>🌭 BREAKING: Sausage elected President! 🇺🇸🗳️ | 🫘 New study reveals beans cure boredom! 😴➡️😂 | 🌭 Beans & Sausage enter the Metaverse! 🧑‍💻🫘🔥</span></div>
-
-  <script>
-    function revealSecret() {
-      let secret = document.getElementById('bean-secret').value;
-      let response = "😲 You did WHAT with beans?! 🫘🤯";
-      if(secret.toLowerCase().includes("sausage")) {
-        response = "🌭 Sausage secrets are sacred. 🤫🌭";
-      }
-      document.getElementById('bean-output').innerText = response;
+<script>
+    const emojiBg = document.getElementById('emojiBg');
+    const icons = ['🫘','🌭','🍞','🥓','🫕','🍳','🌶️','🧂','🫘'];
+    for(let i=0;i<36;i++){
+        const s=document.createElement('div');
+        s.className='emoji';
+        s.textContent=icons[Math.floor(Math.random()*icons.length)];
+        s.style.left=Math.random()*110+'%';
+        s.style.top=Math.random()*110+'%';
+        s.style.fontSize=(40+Math.random()*160)+'px';
+        s.style.opacity=(0.06+Math.random()*0.25).toFixed(2);
+        s.style.transform='rotate('+Math.floor(Math.random()*360)+'deg)';
+        emojiBg.appendChild(s);
     }
-  </script>
-</body>
-</html>
+    function openPopup(mode,message){
+        const container=document.createElement('div');
+        container.style.position='fixed';
+        container.style.left='50%';
+        container.style.top='50%';
+        container.style.transform='translate(-50%,-50%) scale(0.95)';
+        container.style.padding='22px';
+        container.style.background='linear-gradient(180deg,#fffdf6,#fff2e8)';
+        container.style.border='8px solid #fff2e0';
+        container.style.borderRadius='18px';
+        container.style.fontSize='1.4rem';
+        container.style.boxShadow='0 20px 60px rgba(0,0,0,0.25)';
+        container.style.zIndex=99999;
+        container.style.textAlign='center';
+        const txt=document.createElement('div');
+        txt.innerHTML=message + '<div style="font-size:2.4rem;margin-top:12px">🫘🌭🫘</div>';
+        container.appendChild(txt);
+        const btn=document.createElement('button');
+        btn.textContent='CLOSE ✖️';
+        btn.style.marginTop='12px';
+        btn.style.padding='8px 12px';
+        btn.style.borderRadius='10px';
+        btn.onclick=()=>{document.body.removeChild(container);};
+        container.appendChild(btn);
+        document.body.appendChild(container);
+        setTimeout(()=>{container.style.transform='translate(-50%,-50%) scale(1)';},20);
+        if(mode==='meme'){playClip('wah')}
+    }
+    function doPointless(action){
+        if(action==='explode'){openPopup('meme','BOOM! A bean exploded into confetti of tiny sausages 🎉🌭'); playClip('boop')}
+        if(action==='sing'){openPopup('meme','🎵 Sausage serenade activated: "Oooo bean you make me toast" 🎶'); playClip('sizzle')}
+        if(action==='summon'){openPopup('meme','A mini sausage appeared and demanded ketchup. You complied. 🌭👑'); playClip('boop')}
+        if(action==='facts'){const facts=['Sausages secretly take salsa lessons.','Beans actually dream in polka dots.','One bean wrote a novel about toast.'];const f=facts[Math.floor(Math.random()*facts.length)];document.getElementById('mainQuote').textContent='"'+f+'" • — Very Official Bean Institute 🫘'; playClip('wah')}
+    }
+    function revealSecret(){
+        const val=document.getElementById('beanInput').value.trim();
+        const responses=[
+            "We shall guard your secret with a fork and a napkin. 🤫🍴",
+            "The beans whisper your secret at dawn. They giggle. 🫘😳",
+            "SECRET LEAK: You actually prefer sausages without mustard. Shh! 🌭🤐",
+            "Legend: This bean once ate a hero's sandwich. We forgive you. 🥲🍞",
+            "Your secret has been turned into a meme. Enjoy the fame. 📸🫘"
+        ];
+        const out=val? ("You confessed: '"+val+"' — " + responses[Math.floor(Math.random()*responses.length)]) : "No beans spilled! Try typing something scandalous. 🫘😏";
+        document.getElementById('secretResponse').textContent=out;
+        playClip('boop');
+    }
+    const games=[
+        "Bean Toss: How many beans can you catapult into a mug? 🎯",
+        "Sausage Stack: Stack sausages without them toppling. 🌭🌭🌭",
+        "Toast Run: Guide the toast to safety from the hungry bean. 🏃🍞",
+        "Hot Dog Hop: Rhythm game for dancing sausages. 🕺🌭",
+        "Bean Bingo: Bingo, but with beans. Classic. 🫘"
+    ];
+    function randomizeGame(){document.getElementById('gameBox').textContent=games[Math.floor(Math.random()*games.length)]; playClip('sizzle')}
+    const conspiracies=[
+        "The Sausage Moon: Sausages control tides to make beans dance. 🌝🌭",
+        "Beans are tiny ancient philosophers disguised as legumes. 🧠🫘",
+        "All forks are listening devices for the Royal Sausage Council. 🍴🤖",
+        "Ketchup is a tracking agent, relish is the decoder. 🍅🧩",
+        "There is a secret underground bean orchestra under every supermarket. 🎻🫘"
+    ];
+    function randomizeConspiracy(){document.getElementById('conspBox').textContent=conspiracies[Math.floor(Math.random()*conspiracies.length)]; playClip('wah')}
+    function generateMeme(){
+        const tops=["WHEN THE BEAN","IF THE SAUSAGE","ME, AT 3AM","MY FRIEND ATE A BEAN"];
+        const mids=["decides to go to college","starts a podcast","sings the national toast","becomes a DJ"];
+        const bots=["and the crowd goes WOOF","and everyone cries with joy","and the toaster applauds","and ketchup showers happen"];
+        const meme = tops[Math.floor(Math.random()*tops.length)] + " " + mids[Math.floor(Math.random()*mids.length)] + " — " + bots[Math.floor(Math.random()*bots.length)] + " 😂🌭🫘";
+        const div=document.createElement('div');
+        div.className='meme';
+        div.textContent=meme;
+        document.getElementById('memeArea').prepend(div);
+        playClip('boop');
+    }
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playTone(freq,dur,vol){
+        try{
+            const o=audioCtx.createOscillator();
+            const g=audioCtx.createGain();
+            o.type='sine';
+            o.frequency.value=freq;
+            g.gain.value=vol;
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            o.start();
+            setTimeout(()=>{o.stop();},dur);
+        }catch(e){}
+    }
+    function playClip(name){
+        if(audioCtx.state==='suspended'){audioCtx.resume().catch(()=>{});}
+        if(name==='boop'){playTone(880,120,0.02)}
+        if(name==='sizzle'){playTone(440,260,0.02); setTimeout(()=>playTone(660,120,0.015),120)}
+        if(name==='wah'){playTone(260,300,0.02); setTimeout(()=>playTone(220,180,0.015),160)}
+    }
+    setInterval(()=>{const t=document.getElementById('tickerText'); t.textContent = ["📰 BREAKING: Beans gain sentience and demand equal rights!","🍽️ SAUSAGE FASHION: Link between sausages and top hats discovered","😂 MEME: Bean does the floss; internet collapses","🔔 PSA: Do not feed your salad to sausages"].join(" • ");},9000);
+    window.addEventListener('load',()=>{document.getElementById('gameBox').textContent=games[Math.floor(Math.random()*games.length)]; document.getElementById('conspBox').textContent=conspiracies[Math.floor(Math.random()*conspiracies.length)];});
+    (function animateEmojis(){
+        const els=document.querySelectorAll('.emoji');
+        els.forEach((el,i)=>{
+            const x = parseFloat(el.style.left);
+            const y = parseFloat(el.style.top);
+            const nx = (x + Math.sin(Date.now()/2000 + i) * 0.15) % 120;
+            const ny = (y + Math.cos(Date.now()/1800 + i) * 0.12) % 120;
+            el.style.left = (nx<0?nx+100:nx) + '%';
+            el.style.top = (ny<0?ny+100:ny) + '%';
+            el.style.transform = 'rotate(' + (Math.sin(Date.now()/500 + i)*30) + 'deg)';
+        });
+        requestAnimationFrame(animateEmojis);
+    })();
+    document.addEventListener('click',()=>{try{audioCtx.resume()}catch(e){}});
+    setInterval(()=>{const q=document.getElementById('mainQuote'); const pool=["Beans once rented a kayak and never returned it. 🛶🫘","Sausage's favorite movie is 'The Great Grill' 🎬🌭","If a bean sneezes, the toast applauds. 👏🍞"]; q.textContent = '"'+pool[Math.floor(Math.random()*pool.length)]+'" — MEMEARCHIVE';},7000);
+</script>
+
+</body> </html>
