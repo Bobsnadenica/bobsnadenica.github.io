@@ -1,7 +1,8 @@
 import openai
+import os
 from datetime import datetime
 
-openai.api_key = "YOUR_OPENAI_API_KEY"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 prompt = """Create a index.html file that serves as the front page for a fun, engaging, and professional website dedicated to Beans & Sausage. The design should showcase your best HTML and CSS skills, combining creativity with a clean layout. The website should:
 - Include a header with a logo
