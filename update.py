@@ -4,19 +4,15 @@ from datetime import datetime
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-prompt = """Create a whimsical and animated homepage for a Beans & Sausage World. The design should transport visitors into a cartoon-like universe where beans and sausages are the main characters. This should feel like a fun, meme-driven website, as if beans and sausages are living their own animated lives. 
-The page should be colorful, interactive, and engaging with playful animations and effects.
-Key Features:
-    Header: A playful logo that features animated beans and sausages bouncing or dancing around.
-    Fun Animation: Beans and sausages interacting in an animated environment. For example, sausages might be rolling down a hill, beans bouncing up and down, or having a party. Maybe they interact with each other in funny ways (slapstick humor!).
-    Meme-Inspired Design: Bright colors (warm tones like reds, oranges, yellows), quirky typography (think Comic Sans, Poppins, or something friendly and playful), and silly effects like beans jumping out of the screen.
-    Featured Sections:
-        Bean World: An area where beans can be seen in different "roles" (bean superheroes, bean musicians, etc.).
-        Sausage Adventures: A section where sausages embark on hilarious adventures—sailing on a hot dog boat, having a BBQ party, etc.
-        Interactive Animation: Hover effects where beans and sausages react to your cursor (like they follow the mouse or move when clicked).
-    Mobile Responsiveness: The page should still feel engaging and fun on mobile. Beans and sausages should shrink or adjust to fit the screen without losing their charm.
-    Footer: A "Contact" section with a funny twist like "Want to talk to the beans? Just send a message to the Sausage HQ."
-Let the design be playful, and the layout should be clean yet eccentric. The whole page should feel like it's a meme playground for beans and sausages, with surprising little animations and humor popping up everywhere.
+prompt = """Create a full standalone HTML page named Chatgpt.html that is a joke meme site themed around "beans and sausage". Make it fun, ridiculous, and full of emojis everywhere possible 😂🌭🫘🔥.
+There should be zero code comments. Use a silly font from Google Fonts (like 'Comic Neue' or 'Chewy'), giant headings like “BEANS & SAUSAGE 4EVER!!!” and random silly facts or fake quotes about beans and sausages (e.g. “Einstein once said beans > relativity 🧠➡️🫘”).
+The background should be colorful or use a gradient, use huge emoji buttons that do pointless things (like "Launch the Sausage Cannon 🌭💥"), and show popups or meme quotes when clicked.
+Also include:
+    Random memes or fake news ticker at the bottom (like “BREAKING: Sausage elected President 🌭🇺🇸”)
+    An auto-playing bean-themed sound/music (host from an online source or simulate)
+    A spinning sausage GIF or rotating emoji
+    An input box that says “Tell us your bean secret 😳🫘” and just prints a funny response
+The more emojis the better. Make it absolutely ridiculous, but valid HTML. No external JS files – everything inline. Do not explain anything, just give the raw HTML.
 """
 
 response = openai.chat.completions.create(
