@@ -6,7 +6,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 prompt = """Create a full standalone HTML page named Chatgpt.html that is a joke meme site themed around "beans and sausage". Make it fun, ridiculous, and full of emojis everywhere possible.
 There should be zero code comments. Use a silly font from Google Fonts, giant headings and random silly facts or fake quotes about beans and sausages.
-The background should be colorful or use a gradient, use huge emoji buttons that do pointless things, and show popups or meme quotes when clicked.
+The background should be beans and sausages, use huge emoji buttons that do pointless things, and show popups or meme quotes when clicked.
 Also include:
     Random memes or fake news ticker at the bottom
     An auto-playing bean-themed sound/music
