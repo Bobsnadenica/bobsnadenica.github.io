@@ -12,7 +12,7 @@ prompt = """Create a index.html file that serves as the front page for a fun, en
 """
 
 response = openai.chat.completions.create(
-    model="gpt-4",
+    model="gpt-3.5-turbo",
     messages=[{"role": "user", "content": prompt}],
 )
 
