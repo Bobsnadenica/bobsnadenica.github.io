@@ -1,73 +1,74 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Димитър Тодоров</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            height: 100vh; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            font-family: 'Inter', sans-serif;
-            background: #0a0a0a; color: #e0e0e0;
-            overflow: hidden; position: relative; cursor: none;
-        }
-        .background-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(40,40,40,0.3) 0%, transparent 70%);
-            z-index: 0; animation: fadePulse 8s ease-in-out infinite;
-        }
-        @keyframes fadePulse { 0%,100%{opacity:0.4;} 50%{opacity:0.7;} }
-        h1 {
-            font-size: 7rem; font-weight: 900; text-transform: uppercase;
-            background: linear-gradient(45deg, #e0e0e0, #a0a0a0);
-            -webkit-background-clip: text; color: transparent;
-            position: relative; z-index: 1; animation: slideIn 1s ease;
-            text-align: center;
-        }
-        h1::after {
-            content: ''; position: absolute; bottom: -10px; left: 0; width: 100%; height: 4px;
-            background: linear-gradient(90deg, #4a4a4a, #8a8a8a);
-            transform: scaleX(0); animation: underline 1s 0.5s ease forwards;
-        }
-        h2 { font-size: 1.5rem; color: #aaa; z-index: 1; text-align: center; }
-        @keyframes slideIn { from{transform:translateY(50px);opacity:0;} to{transform:translateY(0);opacity:1;} }
-        @keyframes underline { to { transform: scaleX(1); } }
-        .nav-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;
-            margin-top: 3rem; z-index: 1; max-width: 800px;
-        }
-        .nav-grid a {
-            text-decoration: none; color: #e0e0e0; font-size: 1.25rem;
-            padding: 1rem; background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px; text-align: center;
-            position: relative; transition: 0.3s;
-        }
-        .nav-grid a:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-            background: rgba(255,255,255,0.1);
-        }
-        /* Ducks */
-        .duck { position: fixed; pointer-events: none; font-size: 2rem; z-index: 9999; transform: translate(-50%, -50%); }
-        /* Water drops */
-        .drop {
-            position: absolute; width: 10px; height: 10px; border-radius: 50%;
-            background: lightblue; animation: fall 1s linear forwards;
-            pointer-events: none;
-        }
-        @keyframes fall {
-            to { transform: translateY(50px); opacity: 0; }
-        }
-        /* Cat and fact container */
-        .cat-fact-container {
-            margin-top: 2rem; text-align: center; z-index: 1; max-width: 400px;
-        }
-        .cat-img { width: 100%; border-radius: 10px; }
-        .fact { font-size: 1rem; color: #ddd; margin-top: 0.5rem; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Димитър Тодоров</title>
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        height:100vh; display:flex; flex-direction:column;
+        justify-content:center; align-items:center;
+        font-family:'Inter',sans-serif;
+        background:#0a0a0a; color:#e0e0e0;
+        overflow:hidden; position:relative; cursor:none;
+    }
+    .background-overlay {
+        position:absolute; top:0; left:0; width:100%; height:100%;
+        background:radial-gradient(circle at center, rgba(40,40,40,0.3) 0%, transparent 70%);
+        animation:fadePulse 8s ease-in-out infinite;
+    }
+    @keyframes fadePulse {0%,100%{opacity:0.4;}50%{opacity:0.7;}}
+    h1 {
+        font-size:7rem; font-weight:900; text-transform:uppercase;
+        background:linear-gradient(45deg, #e0e0e0, #a0a0a0);
+        -webkit-background-clip:text; color:transparent;
+        z-index:1; animation:slideIn 1s ease; text-align:center;
+    }
+    h1::after {
+        content:''; position:absolute; bottom:-10px; left:0;
+        width:100%; height:4px;
+        background:linear-gradient(90deg, #4a4a4a, #8a8a8a);
+        transform:scaleX(0); animation:underline 1s 0.5s ease forwards;
+    }
+    h2 { font-size:1.5rem; color:#aaa; z-index:1; text-align:center; }
+    @keyframes slideIn {from{transform:translateY(50px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+    @keyframes underline {to{transform:scaleX(1);}}
+    .nav-grid {
+        display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem;
+        margin-top:3rem; z-index:1; max-width:800px;
+    }
+    .nav-grid a {
+        text-decoration:none; color:#e0e0e0; font-size:1.25rem;
+        padding:1rem; background:rgba(255,255,255,0.05);
+        border:1px solid rgba(255,255,255,0.1); border-radius:8px;
+        text-align:center; transition:0.3s;
+    }
+    .nav-grid a:hover {
+        transform:translateY(-4px);
+        box-shadow:0 8px 20px rgba(0,0,0,0.5);
+        background:rgba(255,255,255,0.1);
+    }
+    /* Ducks */
+    .duck {
+        position:fixed; pointer-events:none;
+        font-size:2rem; z-index:9999;
+        transform:translate(-50%, -50%);
+    }
+    /* Flowers */
+    .flower {
+        position:absolute; font-size:1.5rem; pointer-events:none;
+        transform:translate(-50%, -50%) scale(0.5);
+        transition:transform 0.5s ease;
+    }
+    .flower.grown { transform:translate(-50%, -50%) scale(1); }
+    /* Cat & fact */
+    .cat-fact-container {
+        margin-top:2rem; text-align:center; z-index:1; max-width:400px;
+    }
+    .cat-img { width:100%; border-radius:10px; }
+    .fact { font-size:1rem; color:#ddd; margin-top:0.5rem; }
+</style>
 </head>
 <body>
     <div class="background-overlay"></div>
@@ -86,59 +87,60 @@
         <div id="fact" class="fact"></div>
     </div>
 
-    <script>
-        /* Ducks following cursor */
-        const ducks = [];
-        const duckEmoji = Array(5).fill("🦆");
-        duckEmoji.forEach(d => {
-            const span = document.createElement("span");
-            span.classList.add("duck");
-            span.textContent = d;
-            document.body.appendChild(span);
-            ducks.push({ el: span, x: 0, y: 0 });
-        });
-        let mouseX=0, mouseY=0;
-        document.addEventListener("mousemove", e => { mouseX = e.clientX; mouseY = e.clientY; });
-        function animateDucks(){
-            ducks.forEach((duck,i)=>{
-                const target = i===0 ? {x:mouseX,y:mouseY} : ducks[i-1];
-                duck.x += (target.x - duck.x) * 0.2;
-                duck.y += (target.y - duck.y) * 0.2;
-                duck.el.style.left = duck.x+"px";
-                duck.el.style.top = duck.y+"px";
-            });
-            requestAnimationFrame(animateDucks);
-        }
-        animateDucks();
+<script>
+/* --- DUCK FOLLOWING CURSOR --- */
+const ducks = [];
+const duckCount = 5;
+for (let i=0; i<duckCount; i++) {
+    const span = document.createElement("span");
+    span.classList.add("duck");
+    span.textContent = "🦆";
+    document.body.appendChild(span);
+    ducks.push({ el: span, x: window.innerWidth/2, y: window.innerHeight/2 });
+}
+let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+document.addEventListener("mousemove", e => { mouseX = e.clientX; mouseY = e.clientY; });
+function animateDucks(){
+    ducks.forEach((duck, index) => {
+        let targetX = (index===0) ? mouseX : ducks[index-1].x;
+        let targetY = (index===0) ? mouseY : ducks[index-1].y;
+        duck.x += (targetX - duck.x) * 0.2;
+        duck.y += (targetY - duck.y) * 0.2;
+        duck.el.style.left = duck.x + "px";
+        duck.el.style.top = duck.y + "px";
+    });
+    requestAnimationFrame(animateDucks);
+}
+animateDucks();
 
-        /* Watering flowers effect */
-        document.addEventListener("click", e => {
-            for(let i=0;i<5;i++){
-                const drop = document.createElement("div");
-                drop.className = "drop";
-                drop.style.left = e.pageX + "px";
-                drop.style.top = e.pageY + "px";
-                document.body.appendChild(drop);
-                setTimeout(()=>drop.remove(),1000);
-            }
-        });
+/* --- FLOWER GROW MINI-GAME --- */
+const flowerEmojis = ["🌸","🌻","🌼","🌹","🌷","💐"];
+document.addEventListener("click", e => {
+    const flower = document.createElement("div");
+    flower.className = "flower";
+    flower.textContent = flowerEmojis[Math.floor(Math.random()*flowerEmojis.length)];
+    flower.style.left = e.pageX + "px";
+    flower.style.top = e.pageY + "px";
+    document.body.appendChild(flower);
+    // grow after a short delay
+    setTimeout(()=>flower.classList.add("grown"), 100);
+});
 
-        /* Daily cat + fun fact */
-        async function loadCatAndFact(){
-            try {
-                // Random cat image
-                const catRes = await fetch("https://api.thecatapi.com/v1/images/search");
-                const catData = await catRes.json();
-                document.getElementById("cat-img").src = catData[0].url;
-                // Fun animal fact
-                const factRes = await fetch("https://catfact.ninja/fact");
-                const factData = await factRes.json();
-                document.getElementById("fact").textContent = factData.fact;
-            } catch(e){
-                document.getElementById("fact").textContent = "Не успях да заредя коте днес 😿";
-            }
-        }
-        loadCatAndFact();
-    </script>
+/* --- DAILY CAT + FACT --- */
+async function loadCatAndFact(){
+    try {
+        const catRes = await fetch("https://api.thecatapi.com/v1/images/search");
+        const catData = await catRes.json();
+        document.getElementById("cat-img").src = catData[0].url;
+
+        const factRes = await fetch("https://catfact.ninja/fact");
+        const factData = await factRes.json();
+        document.getElementById("fact").textContent = factData.fact;
+    } catch(e){
+        document.getElementById("fact").textContent = "Не успях да заредя коте 😿";
+    }
+}
+loadCatAndFact();
+</script>
 </body>
 </html>
