@@ -10,12 +10,12 @@ prompt = """Create a index.html file that serves as the front page for a fun, en
 - Have a responsive design for mobile devices
 """
 
-response = openai.ChatCompletion.create(
+response = openai.chat.completions.create(
     model="gpt-4",
     messages=[{"role": "user", "content": prompt}],
 )
 
-content = response['choices'][0]['message']['content']
+content = response.choices[0].message.content
 
 html = f"""<!DOCTYPE html>
 <html>
