@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,6 +22,7 @@
             color: #e0e0e0;
             overflow: hidden;
             position: relative;
+            cursor: none; /* hide default cursor */
         }
 
         .background-overlay {
@@ -52,6 +53,7 @@
             position: relative;
             z-index: 1;
             animation: slideIn 1s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
         }
 
         h1::after {
@@ -65,6 +67,16 @@
             transform: scaleX(0);
             transform-origin: left;
             animation: underline 1s 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-top: 0.5rem;
+            color: #aaa;
+            position: relative;
+            z-index: 1;
+            text-align: center;
         }
 
         @keyframes slideIn {
@@ -126,13 +138,11 @@
             h1 {
                 font-size: 4rem;
             }
-
             .nav-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1rem;
                 max-width: 90%;
             }
-
             .nav-grid a {
                 font-size: 1rem;
                 padding: 0.8rem;
@@ -143,21 +153,66 @@
             h1 {
                 font-size: 3rem;
             }
-
             .nav-grid {
                 grid-template-columns: 1fr;
             }
+        }
+
+        /* Duck cursor style */
+        .duck {
+            position: fixed;
+            pointer-events: none;
+            font-size: 2rem;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
         }
     </style>
 </head>
 <body>
     <div class="background-overlay"></div>
     <h1>Здрасти!</h1>
+    <h2>Това е просто тест</h2>
     <div class="nav-grid">
         <a href="Grok.html">Grok</a>
         <a href="Chatgpt.html">ChatGPT</a>
         <a href="Deepseek.html">DeepSeek</a>
         <a href="Gemini.html">Gemini</a>
     </div>
+
+    <script>
+        const ducks = [];
+        const duckCount = 5;
+        const duckEmoji = ["🦆","🦆","🦆","🦆","🦆"];
+
+        for (let i = 0; i < duckCount; i++) {
+            const span = document.createElement("span");
+            span.classList.add("duck");
+            span.textContent = duckEmoji[i];
+            document.body.appendChild(span);
+            ducks.push({ el: span, x: 0, y: 0 });
+        }
+
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener("mousemove", e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateDucks() {
+            ducks.forEach((duck, index) => {
+                if (index === 0) {
+                    duck.x += (mouseX - duck.x) * 0.2;
+                    duck.y += (mouseY - duck.y) * 0.2;
+                } else {
+                    duck.x += (ducks[index - 1].x - duck.x) * 0.2;
+                    duck.y += (ducks[index - 1].y - duck.y) * 0.2;
+                }
+                duck.el.style.left = duck.x + "px";
+                duck.el.style.top = duck.y + "px";
+            });
+            requestAnimationFrame(animateDucks);
+        }
+        animateDucks();
+    </script>
 </body>
 </html>
