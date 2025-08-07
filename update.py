@@ -17,8 +17,7 @@ response = openai.ChatCompletion.create(
 
 content = response['choices'][0]['message']['content']
 
-html = f"""
-<!DOCTYPE html>
+html = f"""<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
@@ -26,7 +25,7 @@ html = f"""
   </head>
   <body>
     <h1>Fun Fact for {datetime.utcnow().strftime('%Y-%m-%d')}</h1>
-    <p>{content}</p>
+    {content}
   </body>
 </html>
 """
