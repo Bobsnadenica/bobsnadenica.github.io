@@ -1,11 +1,128 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Daily Grok Update</title>
-  </head>
-  <body>
-    <h1>Fun Fact for 2025-08-08</h1>
-    <p>Failed to fetch Grok response due to error: 403 Client Error: Forbidden for url: https://api.x.ai/v1/chat/completions</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🥳 BEAN & SAUSAGE MANIA 🌭🫘</title>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Permanent Marker', cursive;
+      background: url('https://images.unsplash.com/photo-1607631560991-974f46b9c6e5') repeat;
+      background-size: 200px;
+      color: #ff00ff;
+      text-align: center;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-size: 100px;
+      text-shadow: 5px 5px #00ff00;
+      margin: 20px;
+      animation: wobble 1.8s infinite;
+    }
+    h2 {
+      font-size: 60px;
+      color: #ffff00;
+      text-shadow: 3px 3px #ff4500;
+    }
+    p {
+      font-size: 28px;
+      margin: 15px;
+    }
+    .emoji-btn {
+      font-size: 50px;
+      padding: 25px 50px;
+      margin: 15px;
+      border: 6px dashed #00ffff;
+      border-radius: 25px;
+      background: #ff4500;
+      cursor: pointer;
+      transition: transform 0.4s;
+    }
+    .emoji-btn:hover {
+      transform: scale(1.3);
+    }
+    .ticker {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #00ff00;
+      color: #ff00ff;
+      font-size: 22px;
+      padding: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .ticker span {
+      display: inline-block;
+      animation: scroll 15s linear infinite;
+    }
+    .spinning-sausage {
+      animation: rotate 4s linear infinite;
+      font-size: 120px;
+      margin: 25px;
+    }
+    .input-box {
+      font-size: 26px;
+      padding: 20px;
+      width: 350px;
+      border: 6px solid #ffff00;
+      background: #ff69b4;
+      margin: 25px;
+    }
+    .game-box {
+      background: #00ff00;
+      padding: 25px;
+      margin: 25px;
+      border-radius: 20px;
+    }
+    @keyframes wobble {
+      0% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+      100% { transform: rotate(-5deg); }
+    }
+    @keyframes rotate {
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes scroll {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+  </style>
+</head>
+<body>
+  <audio autoplay loop>
+    <source src="https://www.myinstants.com/media/sounds/bean-jam.mp3" type="audio/mp3">
+  </audio>
+  <h1>🌭 BEAN BONANZA & SAUSAGE SPECTACULAR 🫘🎉</h1>
+  <div class="spinning-sausage">🌭</div>
+  <h2>🫘 WELCOME TO THE BEAN PARTY! 🥳🌭</h2>
+  <p>💥 "Sausages are just beans with dreams!" - Professor Fartington 😜</p>
+  <p>🚨 FACT: Beans were currency in ancient Beanland! 💰🫘</p>
+  <p>🕵️‍♂️ CONSPIRACY: The moon is a giant bean controlling sausages! 🌙🫘</p>
+  <button class="emoji-btn" onclick="alert('🫘 BEANS ARE ALIVE AND WATCHING YOU! 👀💥')">🫘 BEAN BOOM 💥</button>
+  <button class="emoji-btn" onclick="alert('🌭 SAUSAGES ARE PLOTTING WORLD DOMINATION! 😈')">🌭 SAUSAGE SCHEME 😱</button>
+  <button class="emoji-btn" onclick="alert('🥳 BEANS MAKE YOU DANCE FOREVER! 💃🫘')">🫘 DANCING BEANS 🕺</button>
+  <div>
+    <input class="input-box" type="text" placeholder="Tell us your bean secret 😳🫘" oninput="this.value ? alert('😂 Your secret is... BEANS FUEL ALIEN SPACESHIPS! 🛸🫘') : null">
+  </div>
+  <div class="game-box">
+    <h2>🎮 GAME OF THE DAY: SAUSAGE SLAM! 🌭</h2>
+    <p>Smack virtual sausages with beans for points! 🥳 Win a golden bean! 🏆</p>
+    <button class="emoji-btn" onclick="alert('💥 You slammed a sausage! +50 BEAN POINTS! 🫘')">🌭 SLAM NOW! 🥊</button>
+  </div>
+  <p>🤓 "One bean a day keeps the sadness away!" - Bean Guru 😎</p>
+  <p>🌟 FACT: Sausages sing when you cook them! 🎶🌭</p>
+  <div class="ticker">
+    <span>📰 BEAN BULLETIN: Sausage invasion stopped by bean army! 🫘 | Woman claims beans predict the future! 🔮 | Sausage festival ends in chaos! 😱🌭 | Beans found to increase IQ by 420%! 🧠</span>
+  </div>
+  <script>
+    document.querySelectorAll('.emoji-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.style.background = '#' + Math.floor(Math.random()*16777215).toString(16);
+      });
+    });
+  </script>
+</body>
 </html>
