@@ -9,17 +9,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --text-color: #e0e0e0;
-            --secondary-text-color: #aaa;
-            --link-bg-color: rgba(255, 255, 255, 0.05);
-            --link-border-color: rgba(255, 255, 255, 0.1);
-            --link-hover-bg-color: rgba(255, 255, 255, 0.1);
-            --primary-gradient: linear-gradient(45deg, #e0e0e0, #a0a0a0);
-            --underline-gradient: linear-gradient(90deg, #4a4a4a, #8a8a8a);
+            --bg-color: #e6f3e6;
+            --text-color: #333;
+            --secondary-text-color: #555;
+            --link-bg-color: rgba(139, 195, 74, 0.2);
+            --link-border-color: rgba(139, 195, 74, 0.4);
+            --link-hover-bg-color: rgba(139, 195, 74, 0.3);
+            --primary-gradient: linear-gradient(45deg, #2e7d32, #4caf50);
+            --underline-gradient: linear-gradient(90deg, #388e3c, #66bb6a);
         }
 
-        /* Base & Layout */
         *, *::before, *::after {
             margin: 0;
             padding: 0;
@@ -31,7 +30,7 @@
             overflow: hidden;
             font-family: 'Inter', sans-serif;
             color: var(--text-color);
-            cursor: none;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="%234caf50" d="M13.5 3s-2.8 0-4.5 1.5C6.8 6.7 3 12 3 12s3.8 5.3 6 7.5c1.7 1.5 4.5 1.5 4.5 1.5s2.8 0 4.5-1.5c2.2-2.2 6-7.5 6-7.5s-3.8-5.3-6-7.5C16.3 3 13.5 3 13.5 3zm-1 2c1.4 0 2.7.7 3.5 1.8 1.3 1.7 3.4 4.7 4.2 6.2-.8 1.5-2.9 4.5-4.2 6.2-.8 1-2.1 1.8-3.5 1.8s-2.7-.7-3.5-1.8c-1.3-1.7-3.4-4.7-4.2-6.2.8-1.5 2.9-4.5 4.2-6.2.8-1 2.1-1.8 3.5-1.8z"/><path fill="%23fff" d="M12.5 7a.5.5 0 0 0-.5.5v4.3l-1.8 1.7-.7-.7 2.5-2.4V7.5h.5z"/></svg>'), auto;
         }
 
         body {
@@ -44,31 +43,18 @@
             text-align: center;
         }
 
-        /* Starfield Background - Now includes the dark background color */
-        .starfield {
+        .garden {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--bg-color); /* The fix: apply the dark background here */
+            background: var(--bg-color) url('https://images.unsplash.com/photo-1508948956644-0017e603d109?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
             z-index: -1;
             overflow: hidden;
-        }
-        .star {
-            position: absolute;
-            background: #fff;
-            box-shadow: 0 0 4px 1px rgba(255,255,255,0.8);
-            border-radius: 50%;
-            animation: twinkle linear infinite;
+            filter: brightness(0.9) saturate(1.2);
         }
 
-        @keyframes twinkle {
-            0%, 100% { transform: scale(0.5); opacity: 0; }
-            50% { transform: scale(1.2); opacity: 1; }
-        }
-
-        /* Header & Content */
         h1, h2, .nav-grid, .cat-fact-container {
             z-index: 1;
         }
@@ -83,6 +69,7 @@
             position: relative;
             animation: slideIn 1s ease forwards;
             padding-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         h1::after {
@@ -103,6 +90,7 @@
             color: var(--secondary-text-color);
             margin-top: 1rem;
             max-width: 600px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         @keyframes slideIn {
@@ -114,7 +102,6 @@
             to { transform: translateX(-50%) scaleX(1); }
         }
 
-        /* Navigation Grid */
         .nav-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -138,16 +125,18 @@
 
         .nav-grid a:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
             background: var(--link-hover-bg-color);
         }
 
-        /* Cat & Fact Section */
         .cat-fact-container {
             margin-top: 2rem;
             text-align: center;
             max-width: 400px;
             padding: 0 1rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            padding: 1rem;
         }
 
         .cat-img {
@@ -155,6 +144,7 @@
             height: auto;
             border-radius: 10px;
             display: block;
+            border: 2px solid var(--link-border-color);
         }
 
         .fact {
@@ -163,7 +153,6 @@
             margin-top: 0.5rem;
         }
 
-        /* Ducks */
         .duck {
             position: fixed;
             pointer-events: none;
@@ -194,7 +183,6 @@
             to { transform: translate(-50%, -45%) rotate(10deg); }
         }
 
-        /* Flowers */
         .flower {
             position: absolute;
             font-size: 1.5rem;
@@ -202,15 +190,32 @@
             transform: translate(-50%, -50%) scale(0.5);
             transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             z-index: 100;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
         }
         
         .flower.grown {
             transform: translate(-50%, -50%) scale(1);
         }
+
+        .animated-flower {
+            position: absolute;
+            font-size: 1rem;
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0.3);
+            transition: transform 2s ease-in-out, opacity 2s ease-in-out;
+            z-index: 90;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            opacity: 0.7;
+        }
+
+        .animated-flower.growing {
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
-    <div class="starfield"></div>
+    <div class="garden"></div>
     
     <h1>Здрасти!</h1>
     
@@ -230,23 +235,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            /* --- STARFIELD --- */
-            const starfield = document.querySelector('.starfield');
-            const starCount = 100;
-            const starSize = () => Math.random() * 2 + 1;
-            const starDuration = () => Math.random() * 2 + 1;
-
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = `${Math.random() * 100}vw`;
-                star.style.top = `${Math.random() * 100}vh`;
-                star.style.width = star.style.height = `${starSize()}px`;
-                star.style.animationDuration = `${starDuration()}s`;
-                star.style.animationDelay = `${Math.random() * starDuration()}s`;
-                starfield.appendChild(star);
-            }
-
             /* --- DUCK PARADE --- */
             const ducks = [];
             const duckCount = 5;
@@ -302,16 +290,47 @@
             }
             animateDucks();
 
-            /* --- FLOWER GROW MINI-GAME --- */
-            const flowerEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐"];
+            /* --- FLOWER PLANTING MINI-GAME --- */
+            const flowerEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🥀", "🌱", "🌴"];
             document.addEventListener("click", e => {
+                // Avoid planting flowers over nav-grid or cat-fact-container
+                if (!e.target.closest('.nav-grid') && !e.target.closest('.cat-fact-container')) {
+                    const flower = document.createElement("div");
+                    flower.className = "flower";
+                    flower.textContent = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+                    flower.style.left = `${e.pageX}px`;
+                    flower.style.top = `${e.pageY}px`;
+                    document.body.appendChild(flower);
+                    setTimeout(() => flower.classList.add("grown"), 100);
+                }
+            });
+
+            /* --- ANIMATED GROWING FLOWERS --- */
+            const animatedFlowerEmojis = ["🌱", "🌿", "🌷"];
+            const animatedFlowers = [];
+
+            // Create 5 animated flowers at random positions
+            for (let i = 0; i < 5; i++) {
                 const flower = document.createElement("div");
-                flower.className = "flower";
-                flower.textContent = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
-                flower.style.left = `${e.pageX}px`;
-                flower.style.top = `${e.pageY}px`;
+                flower.className = "animated-flower";
+                flower.textContent = animatedFlowerEmojis[0]; // Start as a seedling
+                flower.style.left = `${Math.random() * (window.innerWidth - 50) + 25}px`;
+                flower.style.top = `${Math.random() * (window.innerHeight - 50) + 25}px`;
                 document.body.appendChild(flower);
-                setTimeout(() => flower.classList.add("grown"), 100);
+                animatedFlowers.push({ el: flower, stage: 0 });
+            }
+
+            document.addEventListener("click", e => {
+                animatedFlowers.forEach(flower => {
+                    const rect = flower.el.getBoundingClientRect();
+                    const distance = Math.hypot(e.clientX - (rect.left + rect.width / 2), e.clientY - (rect.top + rect.height / 2));
+                    if (distance < 50 && flower.stage < animatedFlowerEmojis.length - 1) {
+                        flower.stage++;
+                        flower.el.textContent = animatedFlowerEmojis[flower.stage];
+                        flower.el.classList.add("growing");
+                        setTimeout(() => flower.el.classList.remove("growing"), 2000); // Reset animation
+                    }
+                });
             });
 
             /* --- DAILY CAT + FACT --- */
