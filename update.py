@@ -14,7 +14,7 @@ grok_api_key = os.getenv("GROK_API_KEY")
 grok_api_url = "https://api.x.ai/v1/chat/completions"
 
 # Prompt for both APIs
-prompt = """Make a single html page about the wildest conspiracy theories. Make it nice, show some skills, go crazy. Use lots of different techniques to showcase your website building skills"""
+prompt = """Make a single html page about the wildest conspiracy theories. Make it nice, show some skills, go crazy. Use lots of different techniques to showcase your website building skills. Make sure you give lots of info."""
 
 # Fetch response from OpenAI
 openai_content = None
