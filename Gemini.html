@@ -3,729 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Rabbit Hole: Wildest Conspiracy Theories</title>
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Lato:wght@300;400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <title>The Rabbit Hole: A Guide to Wild Conspiracy Theories</title>
+    <!-- Use a fun font like Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* CSS Reset & Basic Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary-bg: #1a1a2e;
-            --secondary-bg: #0f3460;
-            --accent-color: #e94560;
-            --text-color-light: #e0e0e0;
-            --text-color-dark: #333;
-            --border-color: #533483;
-            --shadow-color: rgba(0, 0, 0, 0.6);
-        }
-
         body {
-            font-family: 'Lato', sans-serif;
-            background: var(--primary-bg) url('https://www.transparenttextures.com/patterns/dark-geometric.png'); /* Pattern for texture */
-            color: var(--text-color-light);
-            line-height: 1.6;
-            overflow-x: hidden; /* Prevent horizontal scroll from animations */
-            perspective: 1000px; /* For 3D transforms */
+            font-family: 'Inter', sans-serif;
         }
-
-        /* Utility Classes */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        /* Custom scrollbar to add a bit of flair */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-
-        .section-heading {
-            font-family: 'Oswald', sans-serif;
-            font-size: 3.5em;
-            color: var(--accent-color);
-            text-align: center;
-            margin-bottom: 60px;
-            text-shadow: 4px 4px 8px var(--shadow-color);
-            position: relative;
-            animation: fadeInDown 1.5s ease-out;
-            transform-origin: center top;
+        ::-webkit-scrollbar-track {
+            background: #111827; /* dark bg */
         }
-
-        .section-heading::after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 5px;
-            background-color: var(--border-color);
-            margin: 15px auto 0;
-            border-radius: 5px;
-            transform: scaleX(0);
-            animation: expandLine 2s forwards 0.5s;
+        ::-webkit-scrollbar-thumb {
+            background-color: #6366f1; /* purple */
+            border-radius: 4px;
         }
-
-        /* Header */
-        header {
-            background: linear-gradient(45deg, var(--secondary-bg), var(--primary-bg));
-            padding: 40px 0;
-            text-align: center;
-            border-bottom: 5px solid var(--border-color);
-            box-shadow: 0 8px 16px var(--shadow-color);
-            position: relative;
-            overflow: hidden;
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
         }
-
-        header::before {
-            content: '👽'; /* Alien emoji as a subtle background element */
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            font-size: 150px;
-            opacity: 0.1;
-            transform: rotate(-30deg);
-            animation: floatAndFade 10s infinite ease-in-out;
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        header::after {
-            content: '👁️'; /* Eye emoji */
-            position: absolute;
-            bottom: -20px;
-            right: -20px;
-            font-size: 150px;
-            opacity: 0.1;
-            transform: rotate(40deg);
-            animation: floatAndFade 12s infinite reverse ease-in-out;
+        .card:hover {
+            transform: translateY(-8px) rotate(1deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
-
-        .main-title {
-            font-family: 'Creepster', cursive;
-            font-size: 6em;
-            color: var(--accent-color);
-            text-shadow: 6px 6px 12px var(--shadow-color);
-            letter-spacing: 5px;
-            margin-bottom: 10px;
-            animation: pulsate 2s infinite alternate ease-in-out;
-        }
-
-        .subtitle {
-            font-family: 'Oswald', sans-serif;
-            font-size: 1.8em;
-            color: var(--text-color-light);
-            letter-spacing: 2px;
-            opacity: 0;
-            animation: fadeIn 2s forwards 1s;
-        }
-
-        /* Navigation */
-        nav {
-            background-color: var(--border-color);
-            padding: 15px 0;
-            text-align: center;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(5px); /* Blurry nav for sticky effect */
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-        }
-
-        nav a {
-            color: var(--text-color-light);
-            text-decoration: none;
-            font-family: 'Oswald', sans-serif;
-            font-size: 1.2em;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        nav a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.1);
-            transition: left 0.3s ease;
-        }
-
-        nav a:hover::before {
-            left: 0;
-        }
-
-        nav a:hover {
-            background-color: var(--accent-color);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        /* Main Content Grid */
-        main {
-            padding: 60px 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            animation: slideInUp 1.5s ease-out;
-        }
-
-        .conspiracy-card {
-            background: linear-gradient(135deg, var(--secondary-bg), #0e2b4f);
-            border: 2px solid var(--border-color);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 20px var(--shadow-color);
-            transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
-
-        .conspiracy-card:hover {
-            transform: translateY(-10px) rotateX(5deg) rotateY(5deg) scale(1.02);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.8);
-            z-index: 1; /* Bring hovered card to front */
-        }
-
-        .conspiracy-card::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            right: -20px;
-            bottom: -20px;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            z-index: 0;
-        }
-
-        .conspiracy-card:hover::before {
-            opacity: 1;
-        }
-
-        .card-icon {
-            font-size: 3em;
-            text-align: center;
-            margin-bottom: 20px;
-            animation: bounceIn 1.5s ease-out;
-        }
-
-        .card-icon svg {
-            width: 80px;
-            height: 80px;
-            fill: var(--accent-color);
+        .card-header-icon {
             transition: transform 0.3s ease;
         }
-
-        .conspiracy-card:hover .card-icon svg {
-            transform: rotate(360deg) scale(1.1);
+        .card-header[aria-expanded="true"] .card-header-icon {
+            transform: rotate(180deg);
         }
-
-        .card-title {
-            font-family: 'Oswald', sans-serif;
-            font-size: 2em;
-            color: var(--accent-color);
-            margin-bottom: 15px;
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-        }
-
-        .card-content p {
-            font-size: 1.1em;
-            color: var(--text-color-light);
-            margin-bottom: 15px;
-            line-height: 1.8;
-            text-align: justify;
-        }
-
-        .read-more {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            padding: 12px 25px;
-            background-color: var(--accent-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
-
-        .read-more:hover {
-            background-color: #c93550;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.5);
-        }
-
-        /* Footer */
-        footer {
-            background: linear-gradient(45deg, var(--primary-bg), var(--secondary-bg));
-            padding: 30px 0;
-            text-align: center;
-            color: var(--text-color-light);
-            border-top: 5px solid var(--border-color);
-            margin-top: 60px;
-            box-shadow: 0 -8px 16px var(--shadow-color);
-            position: relative;
+        .collapsible-content {
+            max-height: 0;
             overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
         }
-
-        footer::before {
-            content: '🌌'; /* Galaxy emoji */
-            position: absolute;
-            top: 10px;
-            left: 10%;
-            font-size: 80px;
-            opacity: 0.08;
-            animation: rotateAndScale 15s infinite linear;
+        .collapsible-content.expanded {
+            max-height: 1000px; /* A large value to allow for smooth transition */
         }
-
-        footer::after {
-            content: '🕵️'; /* Detective emoji */
-            position: absolute;
-            bottom: 10px;
-            right: 10%;
-            font-size: 80px;
-            opacity: 0.08;
-            animation: rotateAndScale 15s infinite reverse linear;
-        }
-
-        .footer-text {
-            font-size: 1.1em;
-            margin-bottom: 10px;
-        }
-
-        .social-links {
-            margin-top: 15px;
-        }
-
-        .social-links a {
-            color: var(--accent-color);
-            font-size: 1.8em;
-            margin: 0 15px;
-            transition: transform 0.3s ease, color 0.3s ease;
-        }
-
-        .social-links a:hover {
-            color: white;
-            transform: scale(1.2) rotate(10deg);
-        }
-
-        /* Fancy Button (Example for hidden content) */
-        .hidden-content-toggle {
-            display: block;
-            margin: 40px auto;
-            padding: 15px 30px;
-            font-size: 1.3em;
-            font-family: 'Oswald', sans-serif;
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .hidden-content-toggle::before {
-            content: '🤫';
-            position: absolute;
-            top: 50%;
-            left: 10px;
-            transform: translateY(-50%);
-            font-size: 1.5em;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .hidden-content-toggle:hover::before {
-            opacity: 1;
-        }
-
-        .hidden-content-toggle::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #ff0000, #ff7b00);
-            z-index: -1;
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.5s ease;
-        }
-
-        .hidden-content-toggle:hover::after {
-            transform: scaleX(1);
-        }
-
-        .hidden-section {
-            display: none;
-            background-color: #2b2b4d;
-            border: 3px dashed var(--border-color);
-            padding: 30px;
-            margin-top: 30px;
-            border-radius: 15px;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-        }
-
-        .hidden-section.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .hidden-section h3 {
-            font-family: 'Creepster', cursive;
-            font-size: 2.5em;
-            color: #ffdd57;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-        }
-
-        .hidden-section p {
-            font-size: 1.2em;
-            color: #c0c0c0;
-            line-height: 1.7;
-        }
-
-        /* Keyframe Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes expandLine {
-            from { transform: scaleX(0); }
-            to { transform: scaleX(1); }
-        }
-
-        @keyframes pulsate {
-            0% { transform: scale(1); text-shadow: 6px 6px 12px var(--shadow-color); }
-            100% { transform: scale(1.03); text-shadow: 8px 8px 15px rgba(0,0,0,0.8); }
-        }
-
-        @keyframes floatAndFade {
-            0% { transform: translate(0, 0) rotate(0deg); opacity: 0.1; }
-            50% { transform: translate(10px, 15px) rotate(10deg); opacity: 0.15; }
-            100% { transform: translate(0, 0) rotate(0deg); opacity: 0.1; }
-        }
-
-        @keyframes slideInUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes bounceIn {
-            0%, 20%, 40%, 60%, 80%, 100% {
-                transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
-            }
-            0% { opacity: 0; transform: scale3d(0.3, 0.3, 0.3); }
-            20% { transform: scale3d(1.1, 1.1, 1.1); }
-            40% { transform: scale3d(0.9, 0.9, 0.9); }
-            60% { opacity: 1; transform: scale3d(1.03, 1.03, 1.03); }
-            80% { transform: scale3d(0.97, 0.97, 0.97); }
-            100% { opacity: 1; transform: scale3d(1, 1, 1); }
-        }
-
-        @keyframes rotateAndScale {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.05); }
-            100% { transform: rotate(360deg) scale(1); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 900px) {
-            .section-heading {
-                font-size: 2.8em;
-            }
-
-            .main-title {
-                font-size: 4.5em;
-            }
-
-            .subtitle {
-                font-size: 1.5em;
-            }
-
-            nav ul {
-                flex-wrap: wrap;
-                gap: 15px;
-            }
-
-            .conspiracy-card {
-                padding: 20px;
-            }
-
-            .card-title {
-                font-size: 1.8em;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .section-heading {
-                font-size: 2.2em;
-                margin-bottom: 40px;
-            }
-
-            .main-title {
-                font-size: 3em;
-            }
-
-            .subtitle {
-                font-size: 1.2em;
-            }
-
-            nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            main {
-                padding: 30px 0;
-            }
-
-            .conspiracy-card {
-                margin: 0 10px; /* Add some side margin for smaller screens */
-            }
-
-            .card-title {
-                font-size: 1.5em;
-            }
-
-            .card-content p {
-                font-size: 1em;
-            }
-
-            .hidden-content-toggle {
-                font-size: 1.1em;
-                padding: 12px 20px;
-            }
-        }
-
     </style>
 </head>
-<body>
-    <header>
-        <div class="container">
-            <h1 class="main-title">The Rabbit Hole</h1>
-            <p class="subtitle">Unveiling the World's Wildest Conspiracy Theories</p>
-        </div>
+<body class="gradient-bg text-gray-100 min-h-screen">
+
+    <!-- Header Section -->
+    <header class="py-12 md:py-24 text-center">
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 mb-4">
+            The Rabbit Hole
+        </h1>
+        <p class="text-xl md:text-2xl font-light text-gray-300 max-w-3xl mx-auto px-4">
+            A deep dive into the world's most unbelievable and widespread conspiracy theories. Are they true? You decide.
+        </p>
     </header>
 
-    <nav>
-        <div class="container">
-            <ul>
-                <li><a href="#about">About</a></li>
-                <li><a href="#theories">Theories</a></li>
-                <li><a href="#illuminate">Illuminate</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
+    <!-- Main Content Grid -->
+    <main class="container mx-auto px-4 py-8 md:py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Card 1: Flat Earth Theory -->
+            <div class="card bg-gray-900 p-6 rounded-3xl shadow-2xl border border-gray-700">
+                <h2 class="text-2xl font-bold text-pink-400 mb-2">The Flat Earth</h2>
+                <p class="text-gray-400 mb-4">The idea that our planet is not a sphere, but a flat disc surrounded by an ice wall (Antarctica).</p>
+                <div class="bg-gray-800 rounded-xl p-4">
+                    <button class="card-header w-full flex justify-between items-center text-left text-lg font-semibold text-gray-200"
+                            onclick="toggleCollapse(this.nextElementSibling)"
+                            aria-expanded="false"
+                            aria-controls="flat-earth-content">
+                        <span>Details of the Theory</span>
+                        <svg class="card-header-icon w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="flat-earth-content" class="collapsible-content pt-4">
+                        <p class="text-gray-300 leading-relaxed">
+                            Proponents of the Flat Earth model believe that all evidence of a spherical Earth—including satellite images, global navigation, and the existence of time zones—is part of a massive, coordinated deception by governments like NASA. According to some versions of the theory, the "ice wall" of Antarctica holds the oceans in, and beyond it lies a vast, unknown territory. They often cite a "celestial dome" over the Earth and use personal, pseudo-scientific experiments to "prove" their claims. The origins of this modern resurgence can be traced back to the 19th century, but it has gained significant traction in the internet age through social media and online communities.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: QAnon -->
+            <div class="card bg-gray-900 p-6 rounded-3xl shadow-2xl border border-gray-700">
+                <h2 class="text-2xl font-bold text-pink-400 mb-2">The QAnon "Storm"</h2>
+                <p class="text-gray-400 mb-4">A sprawling conspiracy theory alleging a secret cabal of Satan-worshipping pedophiles controls the world.</p>
+                <div class="bg-gray-800 rounded-xl p-4">
+                    <button class="card-header w-full flex justify-between items-center text-left text-lg font-semibold text-gray-200"
+                            onclick="toggleCollapse(this.nextElementSibling)"
+                            aria-expanded="false"
+                            aria-controls="qanon-content">
+                        <span>The "Deep State" Explained</span>
+                        <svg class="card-header-icon w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="qanon-content" class="collapsible-content pt-4">
+                        <p class="text-gray-300 leading-relaxed">
+                            Originating on a fringe internet message board in 2017, QAnon centers on a supposed government insider named "Q" who posted cryptic messages, or "Q drops." These posts claimed that a "Deep State" composed of Democratic politicians, Hollywood celebrities, and business leaders was running a global child sex-trafficking ring. They believed that Donald Trump was secretly fighting this cabal and that a future event called "The Storm" would see the mass arrest and execution of these figures. The theory has absorbed other pre-existing conspiracies, like "Pizzagate," and has been linked to real-world acts of violence and political extremism.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Chemtrails -->
+            <div class="card bg-gray-900 p-6 rounded-3xl shadow-2xl border border-gray-700">
+                <h2 class="text-2xl font-bold text-pink-400 mb-2">Chemtrails</h2>
+                <p class="text-gray-400 mb-4">The belief that contrails from aircraft are actually chemical or biological agents being sprayed on the population.</p>
+                <div class="bg-gray-800 rounded-xl p-4">
+                    <button class="card-header w-full flex justify-between items-center text-left text-lg font-semibold text-gray-200"
+                            onclick="toggleCollapse(this.nextElementSibling)"
+                            aria-expanded="false"
+                            aria-controls="chemtrails-content">
+                        <span>The "Spraying" De-mystified</span>
+                        <svg class="card-header-icon w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="chemtrails-content" class="collapsible-content pt-4">
+                        <p class="text-gray-300 leading-relaxed">
+                            The "chemtrails" theory posits that the condensation trails (contrails) left by jet engines are not simple ice crystals, but are toxic substances being dispersed for nefarious reasons. These reasons vary from population control and mind control to weather modification and biological warfare. Proponents distinguish "chemtrails" from "contrails" by their persistence in the sky, often noting that some trails linger and spread out into cirrus-like clouds, while others dissipate quickly. The scientific consensus is that all these phenomena are normal contrails, and their appearance is entirely dependent on atmospheric conditions like temperature and humidity.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: Area 51 -->
+            <div class="card bg-gray-900 p-6 rounded-3xl shadow-2xl border border-gray-700">
+                <h2 class="text-2xl font-bold text-pink-400 mb-2">Area 51 & Aliens</h2>
+                <p class="text-gray-400 mb-4">The secret military base in Nevada is said to house and reverse-engineer crashed alien spacecraft.</p>
+                <div class="bg-gray-800 rounded-xl p-4">
+                    <button class="card-header w-full flex justify-between items-center text-left text-lg font-semibold text-gray-200"
+                            onclick="toggleCollapse(this.nextElementSibling)"
+                            aria-expanded="false"
+                            aria-controls="area51-content">
+                        <span>The Truth Is Out There... Or Is It?</span>
+                        <svg class="card-header-icon w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="area51-content" class="collapsible-content pt-4">
+                        <p class="text-gray-300 leading-relaxed">
+                            Located deep in the Nevada desert, Area 51 was a highly classified U.S. military installation for decades, its existence only officially acknowledged in 2013. The secrecy fueled decades of speculation, most famously that the base was home to alien technology and even extraterrestrial bodies from the 1947 Roswell UFO incident. Claims by individuals like Bob Lazar, who said he worked on an alien spacecraft at the base, further cemented this myth in popular culture. While the base's true purpose was the testing of advanced aircraft like the U-2 spy plane, the conspiracy theory remains deeply ingrained in the public imagination.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5: The Moon Landing Hoax -->
+            <div class="card bg-gray-900 p-6 rounded-3xl shadow-2xl border border-gray-700">
+                <h2 class="text-2xl font-bold text-pink-400 mb-2">Faking the Moon Landing</h2>
+                <p class="text-gray-400 mb-4">The theory that the Apollo moon landings were faked by NASA to win the Space Race.</p>
+                <div class="bg-gray-800 rounded-xl p-4">
+                    <button class="card-header w-full flex justify-between items-center text-left text-lg font-semibold text-gray-200"
+                            onclick="toggleCollapse(this.nextElementSibling)"
+                            aria-expanded="false"
+                            aria-controls="moon-landing-content">
+                        <span>Analyzing the "Evidence"</span>
+                        <svg class="card-header-icon w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="moon-landing-content" class="collapsible-content pt-4">
+                        <p class="text-gray-300 leading-relaxed">
+                            This theory claims that the iconic 1969 moon landing, and subsequent missions, were elaborate hoaxes filmed on a soundstage, possibly directed by Stanley Kubrick. Proponents point to supposed inconsistencies in the photos and videos as "proof," such as the American flag appearing to wave in a vacuum, the absence of stars in the sky, and shadows that seem to point in different directions. All of these claims have been debunked by the scientific community with explanations tied to the physics of space and photography, but the theory has persisted for decades, fueled by a general distrust of government and media.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6: Reptilian Shapeshifters -->
+            <div class="card bg-gray-900 p-6 rounded-3xl shadow-2xl border border-gray-700">
+                <h2 class="text-2xl font-bold text-pink-400 mb-2">Reptilian Shapeshifters</h2>
+                <p class="text-gray-400 mb-4">The idea that a race of reptilian humanoids secretly controls the world by infiltrating positions of power.</p>
+                <div class="bg-gray-800 rounded-xl p-4">
+                    <button class="card-header w-full flex justify-between items-center text-left text-lg font-semibold text-gray-200"
+                            onclick="toggleCollapse(this.nextElementSibling)"
+                            aria-expanded="false"
+                            aria-controls="reptilians-content">
+                        <span>Are They in Charge?</span>
+                        <svg class="card-header-icon w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="reptilians-content" class="collapsible-content pt-4">
+                        <p class="text-gray-300 leading-relaxed">
+                            Popularized by conspiracy theorist David Icke, this theory asserts that a race of alien reptoids from the Alpha Draconis star system, known as the "Anunnaki," have been secretly interbreeding with humans for centuries. These reptilian shapeshifters, Icke claims, have infiltrated governments, royal families (most notably the British Royal family), and financial institutions to manipulate global events and establish a totalitarian control over humanity. The theory draws on ancient myths and is a prime example of a modern conspiracy that incorporates elements from science fiction and ufology.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </nav>
-
-    <main class="container">
-        <section id="about">
-            <h2 class="section-heading">Welcome, Truth Seeker...</h2>
-            <p style="text-align: center; font-size: 1.3em; margin-bottom: 50px; color: #a0a0a0;">
-                Prepare to question everything you thought you knew. Here, we delve into the shadowy corners of the internet and beyond, where official narratives crumble and hidden agendas come to light. Are you ready to see what they don't want you to see?
-            </p>
-        </section>
-
-        <section id="theories">
-            <h2 class="section-heading">The Theories You've Been Warned About</h2>
-
-            <div class="conspiracy-card">
-                <div class="card-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                    </svg>
-                </div>
-                <h3 class="card-title">Flat Earth Society</h3>
-                <div class="card-content">
-                    <p>Despite centuries of scientific consensus and photographic evidence from space, a growing movement believes our planet is not a globe, but a flat disc enclosed by an ice wall, guarded by NASA.</p>
-                    <p>They argue that all space images are faked and gravity is merely an illusion. The sun and moon are just spotlights orbiting above the disc. What if Columbus had it right?</p>
-                </div>
-                <a href="#" class="read-more">Uncover the "Truth"</a>
-            </div>
-
-            <div class="conspiracy-card">
-                <div class="card-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v2h-2V7zm0 4h2v6h-2v-6z"/>
-                    </svg>
-                </div>
-                <h3 class="card-title">New World Order (NWO)</h3>
-                <div class="card-content">
-                    <p>A secret cabal of global elites, often linked to the Illuminati, Bilderberg Group, and other shadowy organizations, are supposedly orchestrating world events to establish a totalitarian global government.</p>
-                    <p>From financial crises to wars, every major event is a calculated step towards absolute control, with mass surveillance and depopulation agendas at their core. Are you just a pawn in their game?</p>
-                </div>
-                <a href="#" class="read-more">Connect the Dots</a>
-            </div>
-
-            <div class="conspiracy-card">
-                <div class="card-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.63 15.63l-4.24-4.24 1.41-1.41 2.83 2.83 5.66-5.66 1.41 1.41-7.07 7.07z"/>
-                    </svg>
-                </div>
-                <h3 class="card-title">Moon Landing Hoax</h3>
-                <div class="card-content">
-                    <p>Believers claim NASA faked the Apollo moon landings in a Hollywood studio, perhaps to win the Cold War space race or distract from earthly problems.</p>
-                    <p>Evidence cited includes the waving flag in a vacuum, parallel shadows, and the absence of stars in photographs. Is the giant leap for mankind just a giant lie?</p>
-                </div>
-                <a href="#" class="read-more">Examine the "Evidence"</a>
-            </div>
-
-            <div class="conspiracy-card">
-                <div class="card-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 2c-4.97 0-9 4.03-9 9 0 4.24 3.01 7.7 6.94 8.72l-1.64 1.64c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 18.41l3.29 3.29c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41l-1.64-1.64C19.99 18.7 23 15.24 23 11c0-4.97-4.03-9-9-9zm0 17c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-                    </svg>
-                </div>
-                <h3 class="card-title">Chemtrails</h3>
-                <div class="card-content">
-                    <p>Those long-lasting condensation trails left by aircraft aren't just water vapor; they're supposedly "chemtrails" – chemical or biological agents sprayed for nefarious purposes.</p>
-                    <p>Reasons range from population control and weather manipulation to mind control and disease propagation. Look up next time. What are they really spraying?</p>
-                </div>
-                <a href="#" class="read-more">Witness the Skies</a>
-            </div>
-
-            <div class="conspiracy-card">
-                <div class="card-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                    </svg>
-                </div>
-                <h3 class="card-title">Reptilian Shape-shifters</h3>
-                <div class="card-content">
-                    <p>Spearheaded by David Icke, this theory posits that a secret race of reptilian humanoids from another dimension or planet control humanity by shape-shifting into powerful leaders.</p>
-                    <p>Royalty, politicians, celebrities – many prominent figures are alleged to be these beings in disguise, pulling the strings behind global events. Can you spot them?</p>
-                </div>
-                <a href="#" class="read-more">Spot the Scales</a>
-            </div>
-
-            <div class="conspiracy-card">
-                <div class="card-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M21 5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5zm-4 14H7V5h10v14zM10 7h4v2h-4V7zm0 4h4v2h-4v-2zm0 4h4v2h-4v-2z"/>
-                    </svg>
-                </div>
-                <h3 class="card-title">Denver Airport Murals</h3>
-                <div class="card-content">
-                    <p>The murals and strange symbols within Denver International Airport are believed by some to depict a New World Order agenda, including genocide, environmental destruction, and a future totalitarian state.</p>
-                    <p>Underground bunkers, a massive runway layout resembling a swastika, and bizarre gargoyles fuel speculation that the airport is a hub for sinister forces. Is it a portal to the NWO?</p>
-                </div>
-                <a href="#" class="read-more">Decode the Art</a>
-            </div>
-        </section>
-
-        <section id="illuminate">
-            <h2 class="section-heading">What Else Are They Hiding?</h2>
-            <button class="hidden-content-toggle" id="toggleHiddenContent">Click to Reveal Top Secret Information</button>
-
-            <div class="hidden-section" id="secretSection">
-                <h3>PROJECT LOOKING GLASS: Truth Revealed?</h3>
-                <p>Rumors persist of a clandestine government project, "Project Looking Glass," involving advanced technology that allows the viewing of possible future timelines.</p>
-                <p>It's said to have been used to identify and control significant events, manipulating the course of history towards a predetermined outcome. But for whom? And at what cost?</p>
-                <p><em>(Disclaimer: This content is purely for entertainment and explores fictional conspiracy theories. Do not take literally.)</em></p>
-                <p style="margin-top: 20px; font-style: italic; font-size: 0.9em;">...the truth is out there, but perhaps not in this paragraph.</p>
-            </div>
-        </section>
     </main>
 
-    <footer id="contact">
-        <div class="container">
-            <p class="footer-text">&copy; 2025 The Rabbit Hole. All "rights" reserved. Or are they?</p>
-            <p class="footer-text">Found a glitch in the matrix? Contact us:</p>
-            <div class="social-links">
-                <a href="mailto:info@rabbithole.com" aria-label="Email Us"><i class="fas fa-envelope"></i></a>
-                <a href="https://twitter.com/yourconspiracy" target="_blank" rel="noopener noreferrer" aria-label="Follow on Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="https://facebook.com/yourconspiracy" target="_blank" rel="noopener noreferrer" aria-label="Follow on Facebook"><i class="fab fa-facebook-f"></i></a>
-            </div>
-            <p class="footer-text" style="margin-top: 20px; font-size: 0.8em;"><em>Warning: Excessive exposure to these theories may cause critical thinking. Proceed with caution.</em></p>
-        </div>
+    <!-- Footer Section -->
+    <footer class="text-center py-8 md:py-12 bg-gray-900 mt-16">
+        <p class="text-gray-500 text-sm">
+            Disclaimer: This page is for entertainment and educational purposes only. All information presented here is based on popular conspiracy theories, which are generally not supported by scientific evidence or mainstream consensus.
+        </p>
     </footer>
 
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
+    <!-- JavaScript for collapsible sections -->
     <script>
-        // Smooth scrolling for navigation
-        document.querySelectorAll('nav a').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // JavaScript for the hidden content toggle
-        document.getElementById('toggleHiddenContent').addEventListener('click', function() {
-            const secretSection = document.getElementById('secretSection');
-            secretSection.classList.toggle('active');
-            if (secretSection.classList.contains('active')) {
-                this.textContent = 'Hide Top Secret Information';
-            } else {
-                this.textContent = 'Click to Reveal Top Secret Information';
-            }
-        });
-
-        // Simple Intersection Observer for section heading animations
-        const sectionHeadings = document.querySelectorAll('.section-heading');
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.3 // Trigger when 30% of the heading is visible
-        };
-
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
-                    entry.target.querySelector('::after').style.animationPlayState = 'running'; // Restart line animation
-                    observer.unobserve(entry.target); // Only animate once
-                }
-            });
-        }, observerOptions);
-
-        sectionHeadings.forEach(heading => {
-            heading.style.animationPlayState = 'paused'; // Pause on load
-            if (heading.querySelector('::after')) {
-                 // Check if ::after exists (it's a pseudo-element, styling directly isn't possible from JS in this way for animations)
-                 // A common workaround is to toggle a class that has the animation property.
-                 // For now, we'll let the CSS handle initial ::after animation.
-            }
-            observer.observe(heading);
-        });
-
-        // Parallax effect (subtle) for background if possible with more complex setup, for this example we'll stick to fixed background.
-        // A more advanced effect would involve JS listening to scroll events and adjusting background-position.
+        function toggleCollapse(element) {
+            const isExpanded = element.classList.toggle('expanded');
+            const button = element.previousElementSibling;
+            button.setAttribute('aria-expanded', isExpanded);
+        }
     </script>
+
 </body>
 </html>
-```
