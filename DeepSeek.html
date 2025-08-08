@@ -3,177 +3,618 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🫘🌭 BEANZ N SAUSAGEZ 🌭🫘</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik+Bubbles&display=swap" rel="stylesheet">
+    <title>Conspiracy Theory Wonderland</title>
     <style>
+        :root {
+            --main-color: #8b0000;
+            --secondary-color: #333;
+            --accent-color: #ffcc00;
+            --text-color: #f0f0f0;
+            --panel-bg: rgba(20, 20, 20, 0.85);
+        }
+        
+        @font-face {
+            font-family: 'Conspiracy';
+            src: url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+        }
+        
         body {
-            font-family: 'Rubik Bubbles', cursive;
-            background-image: url('https://i.imgur.com/JQHq3Wj.jpg');
-            color: #ffcc00;
-            text-align: center;
-            text-shadow: 3px 3px 0 #ff0000, 5px 5px 0 #000;
+            font-family: 'Conspiracy', 'Courier New', monospace;
+            background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1000&auto=format') fixed;
+            background-size: cover;
+            color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            line-height: 1.6;
             overflow-x: hidden;
         }
-        h1 {
-            font-size: 5rem;
-            margin: 10px;
+        
+        .parallax {
+            perspective: 1px;
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
-        h2 {
-            font-size: 3rem;
-            margin: 5px;
-        }
-        .container {
-            background-color: rgba(139, 69, 19, 0.8);
-            border: 10px dashed #ffcc00;
-            border-radius: 50px;
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 900px;
-        }
-        button {
-            font-family: 'Rubik Bubbles', cursive;
-            font-size: 3rem;
-            background: #ff0000;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            margin: 10px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        button:hover {
-            transform: scale(1.2) rotate(10deg);
-        }
-        #sausageSpin {
-            animation: spin 2s linear infinite;
-            font-size: 5rem;
-            display: inline-block;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        #newsTicker {
-            position: fixed;
+        
+        .parallax-layer {
+            position: absolute;
+            top: 0;
+            right: 0;
             bottom: 0;
             left: 0;
-            right: 0;
-            background: #000;
-            color: #fff;
-            padding: 10px;
-            font-size: 1.5rem;
-            white-space: nowrap;
+        }
+        
+        .parallax-layer-base {
+            transform: translateZ(0);
+        }
+        
+        .parallax-layer-back {
+            transform: translateZ(-1px) scale(2);
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
+            color: var(--accent-color);
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            border-bottom: 3px solid var(--accent-color);
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin: 0;
+            text-shadow: 3px 3px 5px #000;
+            animation: flicker 8s infinite alternate;
+        }
+        
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow: 0 0 10px var(--accent-color), 
+                             0 0 20px var(--accent-color), 
+                             0 0 30px var(--accent-color), 
+                             0 0 40px var(--main-color),
+                             0 0 70px var(--main-color),
+                             0 0 80px var(--main-color),
+                             0 0 100px var(--main-color),
+                             0 0 150px var(--main-color);
+            }
+            20%, 24%, 55% {        
+                text-shadow: none;
+            }
+        }
+        
+        .tagline {
+            font-style: italic;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .red-string {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: repeating-linear-gradient(
+                to right,
+                var(--main-color),
+                var(--main-color) 10px,
+                var(--accent-color) 10px,
+                var(--accent-color) 20px
+            );
+            z-index: 100;
+            top: 50%;
+            transform: rotate(-2deg);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .theory-card {
+            background: var(--panel-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid var(--accent-color);
+            position: relative;
             overflow: hidden;
         }
-        input {
-            font-family: 'Rubik Bubbles', cursive;
-            font-size: 1.5rem;
-            padding: 10px;
-            margin: 20px;
-            width: 300px;
-            border: 5px dotted #ffcc00;
-            background: #ff9966;
+        
+        .theory-card:hover {
+            transform: translateY(-10px) rotate(1deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
         }
-        .game-box {
-            background: #8b4513;
-            padding: 15px;
-            margin: 20px;
-            border: 5px solid #ff0000;
-            border-radius: 20px;
+        
+        .theory-card::before {
+            content: "CLASSIFIED";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            opacity: 0.3;
         }
-        .conspiracy {
-            background: #000;
-            padding: 15px;
-            margin: 20px;
-            border: 3px solid #00ff00;
-            border-radius: 10px;
-            font-size: 1.2rem;
+        
+        .theory-card h2 {
+            color: var(--accent-color);
+            margin-top: 0;
+            border-bottom: 1px dashed var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .credibility-meter {
+            height: 8px;
+            background: #333;
+            margin: 1rem 0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .credibility-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #ff0000);
+        }
+        
+        .credibility-label {
+            font-size: 0.8rem;
+            text-align: right;
+            margin-top: -1.2rem;
+            opacity: 0.7;
+        }
+        
+        .interactive-section {
+            grid-column: 1 / -1;
+            background: var(--panel-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background: var(--accent-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -12px;
+            background: var(--main-color);
+            border: 4px solid var(--accent-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .right::after {
+            left: -12px;
+        }
+        
+        .timeline-content {
+            padding: 20px 30px;
+            background: var(--panel-bg);
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        footer {
+            background: var(--secondary-color);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-top: 3px solid var(--accent-color);
+        }
+        
+        .alien-eye {
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #00ff00 0%, #003300 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 20px #00ff00;
+            cursor: pointer;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(0, 255, 0, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
+            }
+        }
+        
+        .hidden-message {
+            color: transparent;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 0.8rem;
+            transition: all 0.5s;
+        }
+        
+        .hidden-message:hover {
+            color: var(--accent-color);
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item::after {
+                left: 18px;
+            }
+            
+            .left::after, .right::after {
+                left: 18px;
+            }
+            
+            .right {
+                left: 0%;
+            }
+        }
+        
+        /* 3D Flip Card */
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            height: 300px;
+            grid-column: span 2;
+        }
+        
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .flip-card-front {
+            background: linear-gradient(45deg, var(--main-color), var(--secondary-color));
+            color: var(--text-color);
+            border: 3px solid var(--accent-color);
+        }
+        
+        .flip-card-back {
+            background: linear-gradient(45deg, var(--secondary-color), var(--main-color));
+            color: var(--text-color);
+            transform: rotateY(180deg);
+            border: 3px dashed var(--accent-color);
+        }
+        
+        /* Glitch effect */
+        .glitch {
+            position: relative;
+        }
+        
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff00ff;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #00ffff;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); }
+            10% { clip: rect(112px, 9999px, 76px, 0); }
+            20% { clip: rect(85px, 9999px, 77px, 0); }
+            30% { clip: rect(27px, 9999px, 97px, 0); }
+            40% { clip: rect(64px, 9999px, 98px, 0); }
+            50% { clip: rect(61px, 9999px, 85px, 0); }
+            60% { clip: rect(99px, 9999px, 114px, 0); }
+            70% { clip: rect(34px, 9999px, 115px, 0); }
+            80% { clip: rect(98px, 9999px, 129px, 0); }
+            90% { clip: rect(43px, 9999px, 96px, 0); }
+            100% { clip: rect(82px, 9999px, 64px, 0); }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 119px, 0); }
+            10% { clip: rect(66px, 9999px, 72px, 0); }
+            20% { clip: rect(40px, 9999px, 83px, 0); }
+            30% { clip: rect(79px, 9999px, 66px, 0); }
+            40% { clip: rect(66px, 9999px, 44px, 0); }
+            50% { clip: rect(89px, 9999px, 62px, 0); }
+            60% { clip: rect(29px, 9999px, 86px, 0); }
+            70% { clip: rect(64px, 9999px, 98px, 0); }
+            80% { clip: rect(78px, 9999px, 52px, 0); }
+            90% { clip: rect(55px, 9999px, 53px, 0); }
+            100% { clip: rect(35px, 9999px, 87px, 0); }
         }
     </style>
 </head>
 <body>
-    <audio autoplay loop>
-        <source src="https://www.soundjay.com/mechanical/sounds/can-opener-01.mp3" type="audio/mpeg">
-    </audio>
-
-    <h1>🫘🌭 WELCOME TO BEANZ N SAUSAGEZ 🌭🫘</h1>
-    
-    <div class="container">
-        <h2>THE #1 SITE FOR BEAN & SAUSAGE ENTHUSIASTS 🎉🤯</h2>
-        
-        <div id="sausageSpin">🌭</div>
-        
-        <h2>PRESS THE BUTTONZ!!!</h2>
-        <button onclick="alert('BEAN ALERT! 🚨🫘 BEAN ALERT! 🚨🫘')">🫘</button>
-        <button onclick="alert('SAUSAGE POWER ACTIVATED! 💪🌭')">🌭</button>
-        <button onclick="alert('THE BEANZ... THEY KNOW... 👀🫘')">😱</button>
-        <button onclick="document.body.style.backgroundColor = 'brown'">💩</button>
-        
-        <h2>TELL US YOUR BEAN SECRET 😳🫘</h2>
-        <input type="text" placeholder="Whisper your bean truth..." id="beanSecret">
-        <button onclick="document.getElementById('beanSecret').value = 'BEANZ BEANZ THE MAGICAL FRUIT 🎶🫘💨'">SUBMIT</button>
-        
-        <div class="game-box">
-            <h2>🎮 GAME OF THE DAY 🎮</h2>
-            <p>Sausage Simulator 2024 🌭🏆</p>
-            <p>Roll your sausage down a hill and collect beans! 🏔️🫘</p>
-            <button onclick="alert('HIGH SCORE! 69420 POINTS! 🏆🌭')">PLAY NOW</button>
+    <div class="parallax">
+        <div class="parallax-layer parallax-layer-back"></div>
+        <div class="parallax-layer parallax-layer-base">
+            <header>
+                <div class="red-string"></div>
+                <h1 class="glitch" data-text="CONSPIRACY THEORY WONDERLAND">CONSPIRACY THEORY WONDERLAND</h1>
+                <p class="tagline">"The truth is out there... but they don't want you to see it"</p>
+            </header>
+            
+            <div class="container">
+                <div class="theory-card">
+                    <h2>Flat Earth Theory</h2>
+                    <p>The Earth is actually flat, and all space agencies are part of a global conspiracy to hide this fact. NASA's budget goes to CGI artists who fake space footage.</p>
+                    <div class="credibility-meter">
+                        <div class="credibility-fill" style="width: 5%"></div>
+                    </div>
+                    <div class="credibility-label">Credibility: 5%</div>
+                </div>
+                
+                <div class="theory-card">
+                    <h2>Reptilian Elite</h2>
+                    <p>Shape-shifting reptilian aliens control the world by taking human form and gaining political power. Key figures like Queen Elizabeth II and many US presidents are allegedly reptilians.</p>
+                    <div class="credibility-meter">
+                        <div class="credibility-fill" style="width: 2%"></div>
+                    </div>
+                    <div class="credibility-label">Credibility: 2%</div>
+                </div>
+                
+                <div class="theory-card">
+                    <h2>Moon Landing Hoax</h2>
+                    <p>The Apollo moon landings were faked by NASA and possibly Stanley Kubrick to win the Space Race against the Soviets. The "moon" footage was shot in a studio.</p>
+                    <div class="credibility-meter">
+                        <div class="credibility-fill" style="width: 1%"></div>
+                    </div>
+                    <div class="credibility-label">Credibility: 1%</div>
+                </div>
+                
+                <div class="theory-card">
+                    <h2>Birds Aren't Real</h2>
+                    <p>All birds were replaced by government surveillance drones in the 1970s. The "extinct" birds were actually decommissioned older drone models.</p>
+                    <div class="credibility-meter">
+                        <div class="credibility-fill" style="width: 0.5%"></div>
+                    </div>
+                    <div class="credibility-label">Credibility: 0.5%</div>
+                </div>
+                
+                <div class="theory-card">
+                    <h2>Denver Airport</h2>
+                    <p>Denver International Airport is actually a massive underground bunker for the global elite, with murals depicting the New World Order and a secret subway to a hidden city.</p>
+                    <div class="credibility-meter">
+                        <div class="credibility-fill" style="width: 3%"></div>
+                    </div>
+                    <div class="credibility-label">Credibility: 3%</div>
+                </div>
+                
+                <div class="theory-card">
+                    <h2>Chemtrails</h2>
+                    <p>The white trails behind planes are actually chemicals sprayed by governments to control weather, manipulate human DNA, or pacify populations.</p>
+                    <div class="credibility-meter">
+                        <div class="credibility-fill" style="width: 0.1%"></div>
+                    </div>
+                    <div class="credibility-label">Credibility: 0.1%</div>
+                </div>
+                
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h2>SECRET THEORY</h2>
+                            <p>Hover to reveal the truth they don't want you to know</p>
+                            <p style="font-size: 3rem;">👁️</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h2>Simulation Theory</h2>
+                            <p>Our entire reality is an advanced computer simulation created by a more intelligent civilization. "Glitches in the Matrix" are evidence of this, including déjà vu and Mandela Effects.</p>
+                            <div class="credibility-meter">
+                                <div class="credibility-fill" style="width: 15%"></div>
+                            </div>
+                            <div class="credibility-label">Credibility: 15% (but how would we know?)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="interactive-section">
+                    <h2>Conspiracy Timeline</h2>
+                    <div class="timeline">
+                        <div class="timeline-item left">
+                            <div class="timeline-content">
+                                <h3>1969: Moon Landing</h3>
+                                <p>Alleged moon landing occurs. Conspiracy theorists claim it was filmed in a studio.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item right">
+                            <div class="timeline-content">
+                                <h3>1980: Project Blue Beam</h3>
+                                <p>Rumored NASA project to fake a second coming of Christ or alien invasion using holograms.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item left">
+                            <div class="timeline-content">
+                                <h3>1995: Denver Airport Opens</h3>
+                                <p>Construction includes bizarre murals and underground facilities fueling conspiracy theories.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item right">
+                            <div class="timeline-content">
+                                <h3>2001: 9/11</h3>
+                                <p>Theories emerge about controlled demolitions and government foreknowledge of attacks.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item left">
+                            <div class="timeline-content">
+                                <h3>2020: COVID-19</h3>
+                                <p>Pandemic spawns theories about 5G, microchips in vaccines, and planned depopulation.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Disclaimer: This site is for entertainment purposes only. Please don't base your worldview on these theories.</p>
+                <p>But then again... that's exactly what THEY would want you to think.</p>
+                <p class="hidden-message">Meet at the usual place. The owl is not what it seems.</p>
+            </footer>
         </div>
-        
-        <div class="conspiracy">
-            <h2>🔮 BEANSPIRACY THEORY 🔮</h2>
-            <p>THE GOVERNMENT IS HIDING THE 3RD TYPE OF BEAN 🕵️‍♂️🫘 THEY WANT US TO ONLY KNOW BAKED AND KIDNEY BEANS BUT THE TRUTH IS OUT THERE!!!</p>
-        </div>
-        
-        <h2>BEAN FACTS (PROBABLY TRUE) 📚🫘</h2>
-        <p>1. The average sausage contains 7.3 smiles per bite 😃🌭</p>
-        <p>2. Beans were the original currency in ancient Babelonia 💰🫘</p>
-        <p>3. If you eat 69 beans in one sitting, you gain temporary flight abilities 🦅💨</p>
     </div>
     
-    <div id="newsTicker">
-        🚨 BREAKING: Local man turns into bean after eating too many sausages 🚨 | 🌭 SAUSAGE SALES UP 420% THIS YEAR | 🫘 SCIENTISTS DISCOVER BEANS CAN TALK (THEY JUST CHOOSE NOT TO) | 🌭🌭🌭 3 SAUSAGES MERGED TO FORM MEGA-SAUSAGE | 🫘 BEAN FESTIVAL CANCELED DUE TO "TOO MANY BEANS"
-    </div>
-
+    <div class="alien-eye pulse" id="alienEye"></div>
+    
     <script>
-        const ticker = document.getElementById('newsTicker');
-        let pos = 0;
-        setInterval(() => {
-            pos--;
-            if (pos < -ticker.scrollWidth) pos = window.innerWidth;
-            ticker.style.transform = `translateX(${pos}px)`;
-        }, 20);
+        // Alien eye follower
+        document.addEventListener('mousemove', function(e) {
+            const eye = document.getElementById('alienEye');
+            eye.style.display = 'block';
+            eye.style.left = (e.pageX - 25) + 'px';
+            eye.style.top = (e.pageY - 25) + 'px';
+            
+            // Random chance to make the eye blink
+            if (Math.random() < 0.01) {
+                eye.style.height = '5px';
+                setTimeout(() => {
+                    eye.style.height = '50px';
+                }, 200);
+            }
+        });
         
+        // Easter egg - click the eye 5 times
+        let clickCount = 0;
+        document.getElementById('alienEye').addEventListener('click', function() {
+            clickCount++;
+            if (clickCount === 5) {
+                alert("You've been initiated into the Illuminati. Expect your membership card by owl post.");
+                clickCount = 0;
+            }
+        });
+        
+        // Parallax effect
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.pageYOffset;
+            const backLayer = document.querySelector('.parallax-layer-back');
+            backLayer.style.transform = `translateZ(-1px) scale(2) translateY(${scrollPosition * 0.5}px)`;
+        });
+        
+        // Typewriter effect for hidden message
+        const hiddenMessage = document.querySelector('.hidden-message');
+        let messageRevealed = false;
+        
+        hiddenMessage.addEventListener('mouseover', function() {
+            if (!messageRevealed) {
+                messageRevealed = true;
+                const text = this.textContent;
+                this.textContent = '';
+                
+                let i = 0;
+                const typing = setInterval(() => {
+                    if (i < text.length) {
+                        this.textContent += text.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(typing);
+                    }
+                }, 50);
+            }
+        });
+        
+        // Random glitch effect on theory cards
         setInterval(() => {
-            const emojis = ['🫘', '🌭', '💨', '🤢', '🎉', '👑', '💩'];
-            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-            const floatingEmoji = document.createElement('div');
-            floatingEmoji.textContent = randomEmoji;
-            floatingEmoji.style.position = 'fixed';
-            floatingEmoji.style.left = Math.random() * window.innerWidth + 'px';
-            floatingEmoji.style.top = '-50px';
-            floatingEmoji.style.fontSize = (Math.random() * 30 + 20) + 'px';
-            floatingEmoji.style.animation = `float ${Math.random() * 5 + 3}s linear forwards`;
-            document.body.appendChild(floatingEmoji);
+            const cards = document.querySelectorAll('.theory-card');
+            const randomCard = cards[Math.floor(Math.random() * cards.length)];
+            
+            randomCard.style.transform = 'translateY(-10px) rotate(1deg)';
+            randomCard.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.7)';
             
             setTimeout(() => {
-                floatingEmoji.remove();
-            }, 5000);
-        }, 300);
-        
-        document.head.insertAdjacentHTML('beforeend', `
-            <style>
-                @keyframes float {
-                    to {
-                        transform: translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 360}deg);
-                    }
-                }
-            </style>
-        `);
+                randomCard.style.transform = '';
+                randomCard.style.boxShadow = '';
+            }, 1000);
+        }, 5000);
     </script>
 </body>
 </html>
