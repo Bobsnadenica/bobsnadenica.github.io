@@ -209,7 +209,7 @@
         .animated-flower {
             position: absolute;
             font-size: 1rem;
-            pointer-events: auto; /* Changed to auto so it can be clicked */
+            pointer-events: auto;
             transform: translate(-50%, -50%) scale(0.3);
             transition: transform 2s ease-in-out, opacity 2s ease-in-out;
             z-index: 90;
@@ -304,8 +304,8 @@
             animateDucks();
 
             /* --- FLOWER PLANTING LOGIC --- */
-            const singlePlantEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🍄", "🍄‍🟫"];
-            const continuousPlantEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🥀", "🌱", "🌴"];
+            const singlePlantEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🍄", "🍄‍🟫", "🌲", "🌳", "🌵", "🍀", "🌷"];
+            const continuousPlantEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🥀", "🌱", "🌴", "🌲", "🌳", "🌵", "🍀", "🌷"];
             let flowerInterval = null;
             let mouseDownTimeout = null;
             
@@ -323,7 +323,7 @@
                 flowerContainer.appendChild(plant);
                 
                 setTimeout(() => plant.classList.add("grown"), 10);
-                setTimeout(() => plant.remove(), 5000);
+                // Note: The plant no longer removes itself, it's permanent
             }
 
             // Function to create plants at random positions
@@ -341,7 +341,7 @@
                 flowerContainer.appendChild(plant);
                 
                 setTimeout(() => plant.classList.add("grown"), 10);
-                setTimeout(() => plant.remove(), 5000);
+                // Note: The plant no longer removes itself, it's permanent
             }
 
             document.addEventListener("mousedown", e => {
@@ -367,24 +367,12 @@
                 flowerInterval = null;
             });
             
-            /* --- FLOWER PLANTING MINI-GAME --- */
-            // The logic from your request is now integrated here
-            const miniGameFlowerEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🥀", "🌱", "🌴"];
-            document.addEventListener("click", e => {
-                if (!e.target.closest('.nav-grid') && !e.target.closest('.cat-fact-container') && !e.target.closest('.animated-flower')) {
-                    const flower = document.createElement("div");
-                    flower.className = "flower";
-                    flower.textContent = miniGameFlowerEmojis[Math.floor(Math.random() * miniGameFlowerEmojis.length)];
-                    flower.style.left = `${e.pageX}px`;
-                    flower.style.top = `${e.pageY}px`;
-                    flowerContainer.appendChild(flower); // Append to the flower-container
-                    setTimeout(() => flower.classList.add("grown"), 100);
-                    setTimeout(() => flower.remove(), 5000);
-                }
-            });
-
+            /* --- FLOWER PLANTING MINI-GAME (re-integrated) --- */
+            // The single-click functionality from the mini-game is now the primary click behavior.
+            // Clicking a quick, un-held button will plant a single plant at the cursor position.
+            
             /* --- ANIMATED GROWING FLOWERS --- */
-            const animatedFlowerEmojis = ["🌱", "🌿", "🌷"];
+            const animatedFlowerEmojis = ["🌱", "🌿", "🌷", "🍄", "🌳"];
             const animatedFlowers = [];
 
             for (let i = 0; i < 5; i++) {
@@ -430,4 +418,3 @@
     </script>
 </body>
 </html>
-```
