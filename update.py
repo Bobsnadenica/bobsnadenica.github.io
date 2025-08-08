@@ -14,18 +14,7 @@ grok_api_key = os.getenv("GROK_API_KEY")
 grok_api_url = "https://api.x.ai/v1/chat/completions"
 
 # Prompt for both APIs
-prompt = """Create a full standalone HTML page that is a joke meme site themed around "beans and sausage". Make it fun, ridiculous, and full of emojis everywhere possible.
-There should be zero code comments. Use a silly font from Google Fonts, giant headings and random silly facts or fake quotes about beans and sausages.
-The background should be beans and sausages, use huge emoji buttons that do pointless things, and show popups or meme quotes when clicked.
-Also include:
-    Random memes or fake news ticker at the bottom
-    An auto-playing bean-themed sound/music
-    A spinning sausage GIF or rotating emoji
-    An input box that says “Tell us your bean secret 😳🫘” and just prints a funny response
-    Random game of the day
-    A random conspiracy theory
-The more emojis the better. Make it absolutely ridiculous, but valid HTML. No external JS files – everything inline. Do not explain anything, just give the raw HTML.
-"""
+prompt = """Make a single html page about the wildest conspiracy theories. Make it nice, show some skills, go crazy. Use lots of different techniques to showcase your website building skills"""
 
 # Fetch response from OpenAI
 openai_content = None
