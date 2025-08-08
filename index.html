@@ -50,6 +50,7 @@
             left: 0;
             width: 100%;
             height: 100%;
+            /* A better grass background image */
             background: var(--bg-color) url('https://images.unsplash.com/photo-1549400263-888995a9735a?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1920&h=1080') no-repeat center center/cover;
             z-index: -1;
             overflow: hidden;
@@ -206,20 +207,19 @@
             opacity: 1;
         }
 
-        .animated-flower {
+        .animated-plant {
             position: absolute;
-            font-size: 1rem;
-            pointer-events: auto;
-            transform: translate(-50%, -50%) scale(0.3);
-            transition: transform 2s ease-in-out, opacity 2s ease-in-out;
-            z-index: 90;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-            opacity: 0.7;
+            font-size: 2rem;
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(1);
+            animation: gentleSway 5s ease-in-out infinite alternate;
+            z-index: 0;
+            opacity: 0.9;
         }
 
-        .animated-flower.growing {
-            transform: translate(-50%, -50%) scale(1.2);
-            opacity: 1;
+        @keyframes gentleSway {
+            from { transform: translate(-50%, -50%) rotate(-2deg); }
+            to { transform: translate(-50%, -50%) rotate(2deg); }
         }
     </style>
 </head>
@@ -303,19 +303,17 @@
             }
             animateDucks();
 
-            /* --- FLOWER PLANTING LOGIC --- */
-            const singlePlantEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🍄", "🍄‍🟫", "🌲", "🌳", "🌵", "🍀", "🌷"];
-            const continuousPlantEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🥀", "🌱", "🌴", "🌲", "🌳", "🌵", "🍀", "🌷"];
+            /* --- GARDEN PLANTING LOGIC --- */
+            const allPlantEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🍄", "🍄‍🟫", "🌲", "🌳", "🌵", "🍀", "🌷"];
             let flowerInterval = null;
             let mouseDownTimeout = null;
             
             const flowerContainer = document.querySelector('.flower-container');
             
-            // Function to create a single plant at the cursor position
-            function createSinglePlant(x, y) {
+            function createPlant(x, y, isRandom = false) {
                 const plant = document.createElement("div");
                 plant.className = "flower";
-                plant.textContent = singlePlantEmojis[Math.floor(Math.random() * singlePlantEmojis.length)];
+                plant.textContent = allPlantEmojis[Math.floor(Math.random() * allPlantEmojis.length)];
                 
                 plant.style.left = `${x}px`;
                 plant.style.top = `${y}px`;
@@ -323,32 +321,13 @@
                 flowerContainer.appendChild(plant);
                 
                 setTimeout(() => plant.classList.add("grown"), 10);
-                // Note: The plant no longer removes itself, it's permanent
-            }
-
-            // Function to create plants at random positions
-            function createContinuousPlants() {
-                const plant = document.createElement("div");
-                plant.className = "flower";
-                plant.textContent = continuousPlantEmojis[Math.floor(Math.random() * continuousPlantEmojis.length)];
-                
-                const randomX = Math.random() * window.innerWidth;
-                const randomY = Math.random() * window.innerHeight;
-                
-                plant.style.left = `${randomX}px`;
-                plant.style.top = `${randomY}px`;
-                
-                flowerContainer.appendChild(plant);
-                
-                setTimeout(() => plant.classList.add("grown"), 10);
-                // Note: The plant no longer removes itself, it's permanent
             }
 
             document.addEventListener("mousedown", e => {
-                if (!e.target.closest('.nav-grid') && !e.target.closest('.cat-fact-container') && !e.target.closest('.animated-flower')) {
+                if (!e.target.closest('.nav-grid') && !e.target.closest('.cat-fact-container')) {
                     mouseDownTimeout = setTimeout(() => {
-                        createContinuousPlants();
-                        flowerInterval = setInterval(createContinuousPlants, 100);
+                        createPlant(Math.random() * window.innerWidth, Math.random() * window.innerHeight, true);
+                        flowerInterval = setInterval(() => createPlant(Math.random() * window.innerWidth, Math.random() * window.innerHeight, true), 100);
                     }, 200);
                 }
             });
@@ -357,8 +336,8 @@
                 if (mouseDownTimeout) {
                     clearTimeout(mouseDownTimeout);
                     if (!flowerInterval) {
-                         if (!e.target.closest('.nav-grid') && !e.target.closest('.cat-fact-container') && !e.target.closest('.animated-flower')) {
-                            createSinglePlant(e.pageX, e.pageY);
+                         if (!e.target.closest('.nav-grid') && !e.target.closest('.cat-fact-container')) {
+                            createPlant(e.pageX, e.pageY);
                         }
                     }
                 }
@@ -367,36 +346,20 @@
                 flowerInterval = null;
             });
             
-            /* --- FLOWER PLANTING MINI-GAME (re-integrated) --- */
-            // The single-click functionality from the mini-game is now the primary click behavior.
-            // Clicking a quick, un-held button will plant a single plant at the cursor position.
-            
-            /* --- ANIMATED GROWING FLOWERS --- */
-            const animatedFlowerEmojis = ["🌱", "🌿", "🌷", "🍄", "🌳"];
-            const animatedFlowers = [];
+            /* --- ANIMATED BACKGROUND PLANTS --- */
+            const animatedPlantEmojis = ["🌱", "🌿", "🌷", "🍄", "🌳", "🌾"];
+            const plantCount = 20; // Number of permanent animated plants
 
-            for (let i = 0; i < 5; i++) {
-                const flower = document.createElement("div");
-                flower.className = "animated-flower";
-                flower.textContent = animatedFlowerEmojis[0];
-                flower.style.left = `${Math.random() * (window.innerWidth - 50) + 25}px`;
-                flower.style.top = `${Math.random() * (window.innerHeight - 50) + 25}px`;
-                document.body.appendChild(flower);
-                animatedFlowers.push({ el: flower, stage: 0 });
+            for (let i = 0; i < plantCount; i++) {
+                const plant = document.createElement("div");
+                plant.className = "animated-plant";
+                plant.textContent = animatedPlantEmojis[Math.floor(Math.random() * animatedPlantEmojis.length)];
+                plant.style.left = `${Math.random() * 100}vw`;
+                plant.style.top = `${Math.random() * 100}vh`;
+                plant.style.fontSize = `${Math.random() * 1.5 + 1}rem`; // Random size
+                plant.style.animationDelay = `${Math.random() * 5}s`; // Stagger animation
+                flowerContainer.appendChild(plant);
             }
-
-            document.addEventListener("click", e => {
-                animatedFlowers.forEach(flower => {
-                    const rect = flower.el.getBoundingClientRect();
-                    const distance = Math.hypot(e.clientX - (rect.left + rect.width / 2), e.clientY - (rect.top + rect.height / 2));
-                    if (distance < 50 && flower.stage < animatedFlowerEmojis.length - 1) {
-                        flower.stage++;
-                        flower.el.textContent = animatedFlowerEmojis[flower.stage];
-                        flower.el.classList.add("growing");
-                        setTimeout(() => flower.el.classList.remove("growing"), 2000);
-                    }
-                });
-            });
 
             /* --- DAILY CAT + FACT --- */
             async function loadCatAndFact() {
