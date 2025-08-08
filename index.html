@@ -30,7 +30,6 @@
             height: 100%;
             overflow: hidden;
             font-family: 'Inter', sans-serif;
-            background: var(--bg-color);
             color: var(--text-color);
             cursor: none;
         }
@@ -45,20 +44,28 @@
             text-align: center;
         }
 
-        /* Background & Effects */
-        .background-overlay {
+        /* Starfield Background - Now includes the dark background color */
+        .starfield {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, rgba(40, 40, 40, 0.3) 0%, transparent 70%);
-            animation: fadePulse 8s ease-in-out infinite;
+            background: var(--bg-color); /* The fix: apply the dark background here */
+            z-index: -1;
+            overflow: hidden;
+        }
+        .star {
+            position: absolute;
+            background: #fff;
+            box-shadow: 0 0 4px 1px rgba(255,255,255,0.8);
+            border-radius: 50%;
+            animation: twinkle linear infinite;
         }
 
-        @keyframes fadePulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.7; }
+        @keyframes twinkle {
+            0%, 100% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
         }
 
         /* Header & Content */
@@ -164,7 +171,7 @@
             transform: translate(-50%, -50%);
             user-select: none;
             will-change: transform, left, top;
-            transition: transform 0.1s linear; /* Smooths the waddle animation */
+            transition: transform 0.1s linear;
         }
         
         .big-duck {
@@ -193,7 +200,7 @@
             font-size: 1.5rem;
             pointer-events: none;
             transform: translate(-50%, -50%) scale(0.5);
-            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* More playful spring effect */
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             z-index: 100;
         }
         
@@ -203,7 +210,7 @@
     </style>
 </head>
 <body>
-    <div class="background-overlay"></div>
+    <div class="starfield"></div>
     
     <h1>Здрасти!</h1>
     <h2>Всеки ден Тези 4 AI правят забавна страница на тема "Боб с Наденица" - всеки ден е различна, може би. Вижте разликите</h2>
@@ -222,6 +229,23 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            /* --- STARFIELD --- */
+            const starfield = document.querySelector('.starfield');
+            const starCount = 100;
+            const starSize = () => Math.random() * 2 + 1;
+            const starDuration = () => Math.random() * 2 + 1;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+                star.style.width = star.style.height = `${starSize()}px`;
+                star.style.animationDuration = `${starDuration()}s`;
+                star.style.animationDelay = `${Math.random() * starDuration()}s`;
+                starfield.appendChild(star);
+            }
+
             /* --- DUCK PARADE --- */
             const ducks = [];
             const duckCount = 5;
@@ -258,7 +282,7 @@
 
                 ducks.forEach((duck, index) => {
                     let targetX, targetY;
-                    let speed = (index === 0) ? 0.3 : 0.1; // Big duck is faster, babies are slower
+                    let speed = (index === 0) ? 0.3 : 0.1;
 
                     targetX = prevDuckX;
                     targetY = prevDuckY;
