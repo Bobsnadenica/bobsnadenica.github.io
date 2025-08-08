@@ -1,3 +1,24 @@
+This is an excellent idea\! We can easily get the single-click functionality back while keeping the continuous growing effect you liked. We'll also add a few mushrooms to the mix for variety. I'll also show you the code to disable text selection.
+
+Here is the updated code.
+
+### Changes Made to the Code
+
+1.  **Single-Click Flower/Mushroom**:
+      * I've added a new function, `createSingleFlower()`, which is called when you simply click the mouse button.
+      * This function chooses either a flower or a mushroom emoji at random.
+      * The single-click flowers/mushrooms are placed at the exact cursor position, providing a different effect from the continuous background growth.
+2.  **`mousedown` and `mouseup` Events**:
+      * The continuous flower growth is now tied specifically to holding the mouse button down (`mousedown` and a short delay) and stops when you release it (`mouseup`).
+      * If you just click and release quickly, only a single flower or mushroom will appear. If you hold it, the continuous random growth will begin.
+3.  **Disable Text Selection**:
+      * I added a CSS rule (`user-select: none;`) to prevent text from being highlighted when you click and drag. This is a common practice for interactive pages like this.
+
+-----
+
+### Updated Code
+
+```html
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -30,7 +51,8 @@
             overflow: hidden;
             font-family: 'Inter', sans-serif;
             color: var(--text-color);
-            cursor: none; /* Hide default cursor */
+            cursor: none;
+            user-select: none; /* Disables text selection */
         }
 
         body {
@@ -49,7 +71,6 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* New background image with grass */
             background: var(--bg-color) url('https://images.unsplash.com/photo-1549400263-888995a9735a?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1920&h=1080') no-repeat center center/cover;
             z-index: -1;
             overflow: hidden;
@@ -205,7 +226,6 @@
             transform: translate(-50%, -50%) scale(1);
             opacity: 1;
         }
-        /* Removed big-flower and rain styles as they are no longer needed for this effect */
 
         .animated-flower {
             position: absolute;
@@ -305,51 +325,73 @@
             animateDucks();
 
             /* --- FLOWER PLANTING LOGIC --- */
-            const flowerEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🥀", "🌱", "🌴"];
-            let isMouseHeld = false;
+            const singlePlantEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🍄", "🍄‍🟫"];
+            const continuousPlantEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🥀", "🌱", "🌴"];
             let flowerInterval = null;
+            let mouseDownTimeout = null;
             
             const flowerContainer = document.querySelector('.flower-container');
             
-            function createFlower() {
-                const flower = document.createElement("div");
-                flower.className = "flower";
-                // Get a random flower emoji
-                flower.textContent = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+            // Function to create a single plant at the cursor position
+            function createSinglePlant(x, y) {
+                const plant = document.createElement("div");
+                plant.className = "flower";
+                plant.textContent = singlePlantEmojis[Math.floor(Math.random() * singlePlantEmojis.length)];
                 
-                // Set a random position within the viewport
+                plant.style.left = `${x}px`;
+                plant.style.top = `${y}px`;
+                
+                flowerContainer.appendChild(plant);
+                
+                setTimeout(() => plant.classList.add("grown"), 10);
+                setTimeout(() => plant.remove(), 5000);
+            }
+
+            // Function to create plants at random positions
+            function createContinuousPlants() {
+                const plant = document.createElement("div");
+                plant.className = "flower";
+                plant.textContent = continuousPlantEmojis[Math.floor(Math.random() * continuousPlantEmojis.length)];
+                
                 const randomX = Math.random() * window.innerWidth;
                 const randomY = Math.random() * window.innerHeight;
                 
-                flower.style.left = `${randomX}px`;
-                flower.style.top = `${randomY}px`;
+                plant.style.left = `${randomX}px`;
+                plant.style.top = `${randomY}px`;
                 
-                flowerContainer.appendChild(flower);
+                flowerContainer.appendChild(plant);
                 
-                // Trigger the growth animation
-                setTimeout(() => flower.classList.add("grown"), 10);
-                
-                // Clean up old flowers after they've grown to avoid memory issues
-                setTimeout(() => flower.remove(), 5000);
+                setTimeout(() => plant.classList.add("grown"), 10);
+                setTimeout(() => plant.remove(), 5000);
             }
 
             document.addEventListener("mousedown", e => {
                 if (!e.target.closest('.nav-grid') && !e.target.closest('.cat-fact-container')) {
-                    isMouseHeld = true;
-                    // Immediately create the first flower
-                    createFlower();
-                    // Start an interval to create a new flower every 100ms
-                    flowerInterval = setInterval(createFlower, 100);
+                    // Start a timer. If released quickly, it's a click. If held, it's a hold.
+                    mouseDownTimeout = setTimeout(() => {
+                        createContinuousPlants(); // Create one immediately on hold
+                        flowerInterval = setInterval(createContinuousPlants, 100);
+                    }, 200); // 200ms delay to differentiate click from hold
                 }
             });
 
-            document.addEventListener("mouseup", () => {
-                isMouseHeld = false;
-                clearInterval(flowerInterval); // Stop the flower-growing loop
+            document.addEventListener("mouseup", e => {
+                // Check if the button was released before the timeout
+                if (mouseDownTimeout) {
+                    clearTimeout(mouseDownTimeout);
+                    // It was a quick click, so create a single plant at the release point
+                    if (!flowerInterval) {
+                         if (!e.target.closest('.nav-grid') && !e.target.closest('.cat-fact-container')) {
+                            createSinglePlant(e.pageX, e.pageY);
+                        }
+                    }
+                }
+                clearInterval(flowerInterval);
+                mouseDownTimeout = null;
+                flowerInterval = null;
             });
 
             /* --- ANIMATED GROWING FLOWERS --- */
-            // This section remains unchanged from your original code.
             const animatedFlowerEmojis = ["🌱", "🌿", "🌷"];
             const animatedFlowers = [];
 
@@ -396,3 +438,4 @@
     </script>
 </body>
 </html>
+```
