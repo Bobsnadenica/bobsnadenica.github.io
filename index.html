@@ -20,10 +20,12 @@
     }
     @keyframes fadePulse {0%,100%{opacity:0.4;}50%{opacity:0.7;}}
     h1 {
-        font-size:7rem; font-weight:900; text-transform:uppercase;
+        font-size:clamp(2rem, 8vw, 5rem); /* responsive size */
+        font-weight:900; text-transform:uppercase;
         background:linear-gradient(45deg, #e0e0e0, #a0a0a0);
         -webkit-background-clip:text; color:transparent;
         z-index:1; animation:slideIn 1s ease; text-align:center;
+        position:relative;
     }
     h1::after {
         content:''; position:absolute; bottom:-10px; left:0;
@@ -31,16 +33,16 @@
         background:linear-gradient(90deg, #4a4a4a, #8a8a8a);
         transform:scaleX(0); animation:underline 1s 0.5s ease forwards;
     }
-    h2 { font-size:1.5rem; color:#aaa; z-index:1; text-align:center; }
+    h2 { font-size:clamp(1rem, 3vw, 1.5rem); color:#aaa; z-index:1; text-align:center; }
     @keyframes slideIn {from{transform:translateY(50px);opacity:0;}to{transform:translateY(0);opacity:1;}}
     @keyframes underline {to{transform:scaleX(1);}}
     .nav-grid {
-        display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem;
-        margin-top:3rem; z-index:1; max-width:800px;
+        display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); 
+        gap:1rem; margin-top:3rem; z-index:1; width:90%; max-width:800px;
     }
     .nav-grid a {
-        text-decoration:none; color:#e0e0e0; font-size:1.25rem;
-        padding:1rem; background:rgba(255,255,255,0.05);
+        text-decoration:none; color:#e0e0e0; font-size:1.1rem;
+        padding:0.75rem; background:rgba(255,255,255,0.05);
         border:1px solid rgba(255,255,255,0.1); border-radius:8px;
         text-align:center; transition:0.3s;
     }
@@ -64,10 +66,27 @@
     .flower.grown { transform:translate(-50%, -50%) scale(1); }
     /* Cat & fact */
     .cat-fact-container {
-        margin-top:2rem; text-align:center; z-index:1; max-width:400px;
+        margin-top:2rem; text-align:center; z-index:1; max-width:400px; padding:0 1rem;
     }
     .cat-img { width:100%; border-radius:10px; }
     .fact { font-size:1rem; color:#ddd; margin-top:0.5rem; }
+    /* Catch Game */
+    .target {
+        position:absolute;
+        font-size:2rem;
+        cursor:pointer;
+        user-select:none;
+        transition:transform 0.2s;
+    }
+    .scoreboard {
+        position:fixed;
+        top:10px; right:10px;
+        background:rgba(0,0,0,0.5);
+        padding:0.5rem 1rem;
+        border-radius:8px;
+        font-size:1rem;
+        z-index:10000;
+    }
 </style>
 </head>
 <body>
@@ -86,6 +105,8 @@
         <img id="cat-img" class="cat-img" alt="Daily Cat">
         <div id="fact" class="fact"></div>
     </div>
+
+    <div class="scoreboard">Точки: <span id="score">0</span></div>
 
 <script>
 /* --- DUCK FOLLOWING CURSOR --- */
@@ -122,7 +143,6 @@ document.addEventListener("click", e => {
     flower.style.left = e.pageX + "px";
     flower.style.top = e.pageY + "px";
     document.body.appendChild(flower);
-    // grow after a short delay
     setTimeout(()=>flower.classList.add("grown"), 100);
 });
 
@@ -141,6 +161,31 @@ async function loadCatAndFact(){
     }
 }
 loadCatAndFact();
+
+/* --- CATCH THE EMOJI GAME --- */
+let score = 0;
+function spawnTarget(){
+    const target = document.createElement("div");
+    target.className = "target";
+    target.textContent = "🐇"; // rabbit to catch
+    const x = Math.random() * (window.innerWidth - 50);
+    const y = Math.random() * (window.innerHeight - 50);
+    target.style.left = x + "px";
+    target.style.top = y + "px";
+    document.body.appendChild(target);
+
+    const removeTimeout = setTimeout(()=> target.remove(), 2000);
+
+    target.addEventListener("click", () => {
+        score++;
+        document.getElementById("score").textContent = score;
+        target.style.transform = "scale(1.5)";
+        setTimeout(()=> target.remove(), 200);
+        clearTimeout(removeTimeout);
+    });
+}
+// spawn every 3 seconds
+setInterval(spawnTarget, 3000);
 </script>
 </body>
 </html>
