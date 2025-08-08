@@ -14,7 +14,7 @@ grok_api_key = os.getenv("GROK_API_KEY")
 grok_api_url = "https://api.x.ai/v1/chat/completions"
 
 # Prompt for both APIs
-prompt = """Create a full standalone HTML page named Chatgpt.html that is a joke meme site themed around "beans and sausage". Make it fun, ridiculous, and full of emojis everywhere possible.
+prompt = """Create a full standalone HTML page that is a joke meme site themed around "beans and sausage". Make it fun, ridiculous, and full of emojis everywhere possible.
 There should be zero code comments. Use a silly font from Google Fonts, giant headings and random silly facts or fake quotes about beans and sausages.
 The background should be beans and sausages, use huge emoji buttons that do pointless things, and show popups or meme quotes when clicked.
 Also include:
