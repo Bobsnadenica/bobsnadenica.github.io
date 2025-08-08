@@ -49,10 +49,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--bg-color) url('https://images.unsplash.com/photo-1508948956644-0017e603d109?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            /* New background image with grass */
+            background: var(--bg-color) url('https://images.unsplash.com/photo-1549400263-888995a9735a?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1920&h=1080') no-repeat center center/cover;
             z-index: -1;
             overflow: hidden;
             filter: brightness(0.9) saturate(1.2);
+        }
+        
+        .flower-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
 
         h1, h2, .nav-grid, .cat-fact-container {
@@ -185,39 +196,16 @@
             position: absolute;
             font-size: 1rem;
             pointer-events: none;
-            transform: translate(-50%, -50%) scale(0.5);
-            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            z-index: 100;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            transform: translate(-50%, -50%) scale(0.1);
+            opacity: 0;
+            transition: transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 1s ease-in;
         }
 
         .flower.grown {
             transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
         }
-
-        .big-flower {
-            font-size: 2.5rem;
-            transform: translate(-50%, -50%) scale(0.5);
-            transition: transform 2s ease-in-out, font-size 2s ease-in-out;
-        }
-
-        .big-flower.grown {
-            transform: translate(-50%, -50%) scale(1.5);
-            font-size: 3rem;
-        }
-
-        .rain {
-            position: absolute;
-            font-size: 1rem;
-            pointer-events: none;
-            z-index: 101;
-            animation: rainDrop 0.5s linear;
-        }
-
-        @keyframes rainDrop {
-            from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-            to { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-        }
+        /* Removed big-flower and rain styles as they are no longer needed for this effect */
 
         .animated-flower {
             position: absolute;
@@ -238,6 +226,7 @@
 </head>
 <body>
     <div class="garden"></div>
+    <div class="flower-container"></div>
     
     <h1>Здрасти!</h1>
     
@@ -259,7 +248,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             /* --- CURSOR DUCK AND FOLLOWERS --- */
             const ducks = [];
-            const duckCount = 5; // 1 cursor duck + 4 followers
+            const duckCount = 5;
             const duckEmojis = ["🦆"];
             const babyDuckEmojis = ["🐥", "🐤"];
 
@@ -286,18 +275,16 @@
             });
 
             function animateDucks() {
-                ducks[0].x = mouseX; // Cursor duck follows mouse exactly
+                ducks[0].x = mouseX;
                 ducks[0].y = mouseY;
                 ducks[0].el.style.left = `${ducks[0].x}px`;
                 ducks[0].el.style.top = `${ducks[0].y}px`;
 
-                // Followers move with a bouncy, delayed animation
                 for (let i = 1; i < ducks.length; i++) {
                     const prevDuck = ducks[i - 1];
                     const duck = ducks[i];
-                    const delay = i * 100; // Delay increases for each follower
                     const distance = Math.hypot(duck.x - prevDuck.x, duck.y - prevDuck.y);
-                    const maxDistance = 30; // Keep followers close
+                    const maxDistance = 30;
 
                     if (distance > maxDistance) {
                         const angle = Math.atan2(prevDuck.y - duck.y, prevDuck.x - duck.x);
@@ -305,7 +292,6 @@
                         duck.targetY = prevDuck.y - Math.sin(angle) * maxDistance;
                     }
 
-                    // Bounce effect using easing
                     const speed = 0.1;
                     duck.x += (duck.targetX - duck.x) * speed;
                     duck.y += (duck.targetY - duck.y) * speed;
@@ -318,52 +304,52 @@
             }
             animateDucks();
 
-            /* --- FLOWER PLANTING AND RAINING MECHANIC --- */
+            /* --- FLOWER PLANTING LOGIC --- */
             const flowerEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🥀", "🌱", "🌴"];
-            const bigFlowerEmojis = ["🌺", "🌻", "🌹", "💐"];
-            let isMouseDown = false;
-            let rainInterval = null;
+            let isMouseHeld = false;
+            let flowerInterval = null;
+            
+            const flowerContainer = document.querySelector('.flower-container');
+            
+            function createFlower() {
+                const flower = document.createElement("div");
+                flower.className = "flower";
+                // Get a random flower emoji
+                flower.textContent = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+                
+                // Set a random position within the viewport
+                const randomX = Math.random() * window.innerWidth;
+                const randomY = Math.random() * window.innerHeight;
+                
+                flower.style.left = `${randomX}px`;
+                flower.style.top = `${randomY}px`;
+                
+                flowerContainer.appendChild(flower);
+                
+                // Trigger the growth animation
+                setTimeout(() => flower.classList.add("grown"), 10);
+                
+                // Clean up old flowers after they've grown to avoid memory issues
+                setTimeout(() => flower.remove(), 5000);
+            }
 
             document.addEventListener("mousedown", e => {
                 if (!e.target.closest('.nav-grid') && !e.target.closest('.cat-fact-container')) {
-                    isMouseDown = true;
-                    const flower = document.createElement("div");
-                    flower.className = "flower";
-                    flower.textContent = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
-                    flower.style.left = `${e.pageX}px`;
-                    flower.style.top = `${e.pageY}px`;
-                    document.body.appendChild(flower);
-                    setTimeout(() => flower.classList.add("grown"), 100);
-
-                    // Start raining effect after 500ms hold
-                    rainInterval = setTimeout(() => {
-                        if (isMouseDown) {
-                            flower.className = "big-flower";
-                            flower.textContent = bigFlowerEmojis[Math.floor(Math.random() * bigFlowerEmojis.length)];
-                            setTimeout(() => flower.classList.add("grown"), 100);
-
-                            // Create rain effect
-                            const rainDrops = 10;
-                            for (let i = 0; i < rainDrops; i++) {
-                                const rain = document.createElement("div");
-                                rain.className = "rain";
-                                rain.textContent = "💧";
-                                rain.style.left = `${e.pageX + (Math.random() - 0.5) * 50}px`;
-                                rain.style.top = `${e.pageY - 50 + (Math.random() - 0.5) * 50}px`;
-                                document.body.appendChild(rain);
-                                setTimeout(() => rain.remove(), 500);
-                            }
-                        }
-                    }, 500);
+                    isMouseHeld = true;
+                    // Immediately create the first flower
+                    createFlower();
+                    // Start an interval to create a new flower every 100ms
+                    flowerInterval = setInterval(createFlower, 100);
                 }
             });
 
             document.addEventListener("mouseup", () => {
-                isMouseDown = false;
-                clearTimeout(rainInterval);
+                isMouseHeld = false;
+                clearInterval(flowerInterval); // Stop the flower-growing loop
             });
 
             /* --- ANIMATED GROWING FLOWERS --- */
+            // This section remains unchanged from your original code.
             const animatedFlowerEmojis = ["🌱", "🌿", "🌷"];
             const animatedFlowers = [];
 
