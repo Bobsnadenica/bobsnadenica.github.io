@@ -30,7 +30,7 @@
             overflow: hidden;
             font-family: 'Inter', sans-serif;
             color: var(--text-color);
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="%234caf50" d="M13.5 3s-2.8 0-4.5 1.5C6.8 6.7 3 12 3 12s3.8 5.3 6 7.5c1.7 1.5 4.5 1.5 4.5 1.5s2.8 0 4.5-1.5c2.2-2.2 6-7.5 6-7.5s-3.8-5.3-6-7.5C16.3 3 13.5 3 13.5 3zm-1 2c1.4 0 2.7.7 3.5 1.8 1.3 1.7 3.4 4.7 4.2 6.2-.8 1.5-2.9 4.5-4.2 6.2-.8 1-2.1 1.8-3.5 1.8s-2.7-.7-3.5-1.8c-1.3-1.7-3.4-4.7-4.2-6.2.8-1.5 2.9-4.5 4.2-6.2.8-1 2.1-1.8 3.5-1.8z"/><path fill="%23fff" d="M12.5 7a.5.5 0 0 0-.5.5v4.3l-1.8 1.7-.7-.7 2.5-2.4V7.5h.5z"/></svg>'), auto;
+            cursor: none; /* Hide default cursor */
         }
 
         body {
@@ -157,44 +157,66 @@
             position: fixed;
             pointer-events: none;
             z-index: 9999;
-            transform: translate(-50%, -50%);
             user-select: none;
             will-change: transform, left, top;
-            transition: transform 0.1s linear;
-        }
-        
-        .big-duck {
-            font-size: 3rem;
-            animation: waddleBig 0.3s infinite alternate;
         }
 
-        .small-duck {
-            font-size: 1.5rem;
-            animation: waddleSmall 0.4s infinite alternate;
+        .cursor-duck {
+            font-size: 2.5rem;
+            animation: waddleCursor 0.3s infinite alternate;
         }
 
-        @keyframes waddleBig {
+        .follower-duck {
+            font-size: 1.2rem;
+            animation: waddleFollower 0.4s infinite alternate;
+        }
+
+        @keyframes waddleCursor {
             from { transform: translate(-50%, -50%) rotate(-5deg) scale(1.1); }
             to { transform: translate(-50%, -50%) rotate(5deg) scale(1.1); }
         }
 
-        @keyframes waddleSmall {
-            from { transform: translate(-50%, -55%) rotate(-10deg); }
-            to { transform: translate(-50%, -45%) rotate(10deg); }
+        @keyframes waddleFollower {
+            from { transform: translate(-50%, -50%) rotate(-10deg) scale(1); }
+            to { transform: translate(-50%, -50%) rotate(10deg) scale(1); }
         }
 
         .flower {
             position: absolute;
-            font-size: 1.5rem;
+            font-size: 1rem;
             pointer-events: none;
             transform: translate(-50%, -50%) scale(0.5);
             transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             z-index: 100;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
         }
-        
+
         .flower.grown {
             transform: translate(-50%, -50%) scale(1);
+        }
+
+        .big-flower {
+            font-size: 2.5rem;
+            transform: translate(-50%, -50%) scale(0.5);
+            transition: transform 2s ease-in-out, font-size 2s ease-in-out;
+        }
+
+        .big-flower.grown {
+            transform: translate(-50%, -50%) scale(1.5);
+            font-size: 3rem;
+        }
+
+        .rain {
+            position: absolute;
+            font-size: 1rem;
+            pointer-events: none;
+            z-index: 101;
+            animation: rainDrop 0.5s linear;
+        }
+
+        @keyframes rainDrop {
+            from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            to { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
         }
 
         .animated-flower {
@@ -235,26 +257,24 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            /* --- DUCK PARADE --- */
+            /* --- CURSOR DUCK AND FOLLOWERS --- */
             const ducks = [];
-            const duckCount = 5;
+            const duckCount = 5; // 1 cursor duck + 4 followers
             const duckEmojis = ["🦆"];
             const babyDuckEmojis = ["🐥", "🐤"];
 
             for (let i = 0; i < duckCount; i++) {
                 const span = document.createElement("span");
                 span.classList.add("duck");
-
                 if (i === 0) {
-                    span.classList.add("big-duck");
+                    span.classList.add("cursor-duck");
                     span.textContent = duckEmojis[0];
                 } else {
-                    span.classList.add("small-duck");
+                    span.classList.add("follower-duck");
                     span.textContent = babyDuckEmojis[(i - 1) % babyDuckEmojis.length];
                 }
-
                 document.body.appendChild(span);
-                ducks.push({ el: span, x: window.innerWidth / 2, y: window.innerHeight / 2 });
+                ducks.push({ el: span, x: window.innerWidth / 2, y: window.innerHeight / 2, targetX: window.innerWidth / 2, targetY: window.innerHeight / 2 });
             }
 
             let mouseX = window.innerWidth / 2;
@@ -266,35 +286,47 @@
             });
 
             function animateDucks() {
-                let prevDuckX = mouseX;
-                let prevDuckY = mouseY;
+                ducks[0].x = mouseX; // Cursor duck follows mouse exactly
+                ducks[0].y = mouseY;
+                ducks[0].el.style.left = `${ducks[0].x}px`;
+                ducks[0].el.style.top = `${ducks[0].y}px`;
 
-                ducks.forEach((duck, index) => {
-                    let targetX, targetY;
-                    let speed = (index === 0) ? 0.3 : 0.1;
+                // Followers move with a bouncy, delayed animation
+                for (let i = 1; i < ducks.length; i++) {
+                    const prevDuck = ducks[i - 1];
+                    const duck = ducks[i];
+                    const delay = i * 100; // Delay increases for each follower
+                    const distance = Math.hypot(duck.x - prevDuck.x, duck.y - prevDuck.y);
+                    const maxDistance = 30; // Keep followers close
 
-                    targetX = prevDuckX;
-                    targetY = prevDuckY;
+                    if (distance > maxDistance) {
+                        const angle = Math.atan2(prevDuck.y - duck.y, prevDuck.x - duck.x);
+                        duck.targetX = prevDuck.x - Math.cos(angle) * maxDistance;
+                        duck.targetY = prevDuck.y - Math.sin(angle) * maxDistance;
+                    }
 
-                    duck.x += (targetX - duck.x) * speed;
-                    duck.y += (targetY - duck.y) * speed;
+                    // Bounce effect using easing
+                    const speed = 0.1;
+                    duck.x += (duck.targetX - duck.x) * speed;
+                    duck.y += (duck.targetY - duck.y) * speed;
 
                     duck.el.style.left = `${duck.x}px`;
                     duck.el.style.top = `${duck.y}px`;
-
-                    prevDuckX = duck.x;
-                    prevDuckY = duck.y;
-                });
+                }
 
                 requestAnimationFrame(animateDucks);
             }
             animateDucks();
 
-            /* --- FLOWER PLANTING MINI-GAME --- */
+            /* --- FLOWER PLANTING AND RAINING MECHANIC --- */
             const flowerEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🥀", "🌱", "🌴"];
-            document.addEventListener("click", e => {
-                // Avoid planting flowers over nav-grid or cat-fact-container
+            const bigFlowerEmojis = ["🌺", "🌻", "🌹", "💐"];
+            let isMouseDown = false;
+            let rainInterval = null;
+
+            document.addEventListener("mousedown", e => {
                 if (!e.target.closest('.nav-grid') && !e.target.closest('.cat-fact-container')) {
+                    isMouseDown = true;
                     const flower = document.createElement("div");
                     flower.className = "flower";
                     flower.textContent = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
@@ -302,18 +334,43 @@
                     flower.style.top = `${e.pageY}px`;
                     document.body.appendChild(flower);
                     setTimeout(() => flower.classList.add("grown"), 100);
+
+                    // Start raining effect after 500ms hold
+                    rainInterval = setTimeout(() => {
+                        if (isMouseDown) {
+                            flower.className = "big-flower";
+                            flower.textContent = bigFlowerEmojis[Math.floor(Math.random() * bigFlowerEmojis.length)];
+                            setTimeout(() => flower.classList.add("grown"), 100);
+
+                            // Create rain effect
+                            const rainDrops = 10;
+                            for (let i = 0; i < rainDrops; i++) {
+                                const rain = document.createElement("div");
+                                rain.className = "rain";
+                                rain.textContent = "💧";
+                                rain.style.left = `${e.pageX + (Math.random() - 0.5) * 50}px`;
+                                rain.style.top = `${e.pageY - 50 + (Math.random() - 0.5) * 50}px`;
+                                document.body.appendChild(rain);
+                                setTimeout(() => rain.remove(), 500);
+                            }
+                        }
+                    }, 500);
                 }
+            });
+
+            document.addEventListener("mouseup", () => {
+                isMouseDown = false;
+                clearTimeout(rainInterval);
             });
 
             /* --- ANIMATED GROWING FLOWERS --- */
             const animatedFlowerEmojis = ["🌱", "🌿", "🌷"];
             const animatedFlowers = [];
 
-            // Create 5 animated flowers at random positions
             for (let i = 0; i < 5; i++) {
                 const flower = document.createElement("div");
                 flower.className = "animated-flower";
-                flower.textContent = animatedFlowerEmojis[0]; // Start as a seedling
+                flower.textContent = animatedFlowerEmojis[0];
                 flower.style.left = `${Math.random() * (window.innerWidth - 50) + 25}px`;
                 flower.style.top = `${Math.random() * (window.innerHeight - 50) + 25}px`;
                 document.body.appendChild(flower);
@@ -328,7 +385,7 @@
                         flower.stage++;
                         flower.el.textContent = animatedFlowerEmojis[flower.stage];
                         flower.el.classList.add("growing");
-                        setTimeout(() => flower.el.classList.remove("growing"), 2000); // Reset animation
+                        setTimeout(() => flower.el.classList.remove("growing"), 2000);
                     }
                 });
             });
