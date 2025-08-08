@@ -1,100 +1,210 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Димитър Тодоров</title>
-<style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-        height:100vh; display:flex; flex-direction:column;
-        justify-content:center; align-items:center;
-        font-family:'Inter',sans-serif;
-        background:#0a0a0a; color:#e0e0e0;
-        overflow:hidden; position:relative; cursor:none;
-    }
-    .background-overlay {
-        position:absolute; top:0; left:0; width:100%; height:100%;
-        background:radial-gradient(circle at center, rgba(40,40,40,0.3) 0%, transparent 70%);
-        animation:fadePulse 8s ease-in-out infinite;
-    }
-    @keyframes fadePulse {0%,100%{opacity:0.4;}50%{opacity:0.7;}}
-    h1 {
-        font-size:clamp(2rem, 8vw, 5rem);
-        font-weight:900; text-transform:uppercase;
-        background:linear-gradient(45deg, #e0e0e0, #a0a0a0);
-        -webkit-background-clip:text; color:transparent;
-        z-index:1; animation:slideIn 1s ease; text-align:center;
-        position:relative;
-    }
-    h1::after {
-        content:''; position:absolute; bottom:-10px; left:0;
-        width:100%; height:4px;
-        background:linear-gradient(90deg, #4a4a4a, #8a8a8a);
-        transform:scaleX(0); animation:underline 1s 0.5s ease forwards;
-    }
-    h2 { font-size:clamp(1rem, 3vw, 1.5rem); color:#aaa; z-index:1; text-align:center; }
-    @keyframes slideIn {from{transform:translateY(50px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-    @keyframes underline {to{transform:scaleX(1);}}
-    .nav-grid {
-        display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); 
-        gap:1rem; margin-top:3rem; z-index:1; width:90%; max-width:800px;
-    }
-    .nav-grid a {
-        text-decoration:none; color:#e0e0e0; font-size:1.1rem;
-        padding:0.75rem; background:rgba(255,255,255,0.05);
-        border:1px solid rgba(255,255,255,0.1); border-radius:8px;
-        text-align:center; transition:0.3s;
-    }
-    .nav-grid a:hover {
-        transform:translateY(-4px);
-        box-shadow:0 8px 20px rgba(0,0,0,0.5);
-        background:rgba(255,255,255,0.1);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Димитър Тодоров</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #e0e0e0;
+            --secondary-text-color: #aaa;
+            --link-bg-color: rgba(255, 255, 255, 0.05);
+            --link-border-color: rgba(255, 255, 255, 0.1);
+            --link-hover-bg-color: rgba(255, 255, 255, 0.1);
+            --primary-gradient: linear-gradient(45deg, #e0e0e0, #a0a0a0);
+            --underline-gradient: linear-gradient(90deg, #4a4a4a, #8a8a8a);
+        }
 
-    /* Ducks */
-    .duck {
-        position: fixed;
-        pointer-events: none;
-        z-index: 9999;
-        transform: translate(-50%, -50%);
-        user-select: none;
-        will-change: transform, left, top;
-    }
-    .big-duck {
-        font-size: 3rem;
-        animation: waddleBig 0.3s infinite alternate;
-    }
-    .small-duck {
-        font-size: 1.5rem;
-        animation: waddleSmall 0.4s infinite alternate;
-    }
-    @keyframes waddleBig {
-        from { transform: translate(-50%, -50%) rotate(-5deg) scale(1.1); }
-        to   { transform: translate(-50%, -50%) rotate(5deg) scale(1.1); }
-    }
-    @keyframes waddleSmall {
-        from { transform: translate(-50%, -55%) rotate(-10deg); }
-        to   { transform: translate(-50%, -45%) rotate(10deg); }
-    }
+        /* Base & Layout */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* Flowers */
-    .flower {
-        position:absolute; font-size:1.5rem; pointer-events:none;
-        transform:translate(-50%, -50%) scale(0.5);
-        transition:transform 0.5s ease;
-    }
-    .flower.grown { transform:translate(-50%, -50%) scale(1); }
-    /* Cat & fact */
-    .cat-fact-container {
-        margin-top:2rem; text-align:center; z-index:1; max-width:400px; padding:0 1rem;
-    }
-    .cat-img { width:100%; border-radius:10px; }
-    .fact { font-size:1rem; color:#ddd; margin-top:0.5rem; }
-</style>
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            cursor: none;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        /* Background & Effects */
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(40, 40, 40, 0.3) 0%, transparent 70%);
+            animation: fadePulse 8s ease-in-out infinite;
+        }
+
+        @keyframes fadePulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Header & Content */
+        h1, h2, .nav-grid, .cat-fact-container {
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 8vw, 5rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            color: transparent;
+            position: relative;
+            animation: slideIn 1s ease forwards;
+            padding-bottom: 20px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 100%;
+            max-width: 300px;
+            height: 4px;
+            background: var(--underline-gradient);
+            animation: underline 1s 0.5s ease forwards;
+        }
+
+        h2 {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--secondary-text-color);
+            margin-top: 1rem;
+            max-width: 600px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes underline {
+            to { transform: translateX(-50%) scaleX(1); }
+        }
+
+        /* Navigation Grid */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 3rem;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .nav-grid a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            padding: 0.75rem;
+            background: var(--link-bg-color);
+            border: 1px solid var(--link-border-color);
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+
+        .nav-grid a:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            background: var(--link-hover-bg-color);
+        }
+
+        /* Cat & Fact Section */
+        .cat-fact-container {
+            margin-top: 2rem;
+            text-align: center;
+            max-width: 400px;
+            padding: 0 1rem;
+        }
+
+        .cat-img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            display: block;
+        }
+
+        .fact {
+            font-size: 1rem;
+            color: var(--secondary-text-color);
+            margin-top: 0.5rem;
+        }
+
+        /* Ducks */
+        .duck {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            user-select: none;
+            will-change: transform, left, top;
+            transition: transform 0.1s linear; /* Smooths the waddle animation */
+        }
+        
+        .big-duck {
+            font-size: 3rem;
+            animation: waddleBig 0.3s infinite alternate;
+        }
+
+        .small-duck {
+            font-size: 1.5rem;
+            animation: waddleSmall 0.4s infinite alternate;
+        }
+
+        @keyframes waddleBig {
+            from { transform: translate(-50%, -50%) rotate(-5deg) scale(1.1); }
+            to { transform: translate(-50%, -50%) rotate(5deg) scale(1.1); }
+        }
+
+        @keyframes waddleSmall {
+            from { transform: translate(-50%, -55%) rotate(-10deg); }
+            to { transform: translate(-50%, -45%) rotate(10deg); }
+        }
+
+        /* Flowers */
+        .flower {
+            position: absolute;
+            font-size: 1.5rem;
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0.5);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* More playful spring effect */
+            z-index: 100;
+        }
+        
+        .flower.grown {
+            transform: translate(-50%, -50%) scale(1);
+        }
+    </style>
 </head>
 <body>
     <div class="background-overlay"></div>
+    
     <h1>Здрасти!</h1>
     <h2>Всеки ден Тези 4 AI правят забавна страница на тема "Боб с Наденица" - всеки ден е различна, може би. Вижте разликите</h2>
 
@@ -106,96 +216,96 @@
     </div>
 
     <div class="cat-fact-container">
-        <img id="cat-img" class="cat-img" alt="Daily Cat" />
-        <div id="fact" class="fact"></div>
+        <img id="cat-img" class="cat-img" alt="Daily Cat" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
+        <div id="fact" class="fact">Зареждам котешки факт...</div>
     </div>
 
-<script>
-/* --- DUCK PARADE --- */
-const ducks = [];
-const duckCount = 5; // 1 big + 4 babies
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            /* --- DUCK PARADE --- */
+            const ducks = [];
+            const duckCount = 5;
+            const duckEmojis = ["🦆"];
+            const babyDuckEmojis = ["🐥", "🐤"];
 
-const duckEmojis = ["🦆"];          // big duck emoji
-const babyDuckEmojis = ["🐥", "🐤"]; // baby duck emojis - alternate so they differ
+            for (let i = 0; i < duckCount; i++) {
+                const span = document.createElement("span");
+                span.classList.add("duck");
 
-for (let i = 0; i < duckCount; i++) {
-    const span = document.createElement("span");
-    span.classList.add("duck");
+                if (i === 0) {
+                    span.classList.add("big-duck");
+                    span.textContent = duckEmojis[0];
+                } else {
+                    span.classList.add("small-duck");
+                    span.textContent = babyDuckEmojis[(i - 1) % babyDuckEmojis.length];
+                }
 
-    if (i === 0) {
-        span.classList.add("big-duck");
-        span.textContent = duckEmojis[0];
-    } else {
-        span.classList.add("small-duck");
-        // alternate baby duck emojis for variety
-        span.textContent = babyDuckEmojis[(i - 1) % babyDuckEmojis.length];
-    }
+                document.body.appendChild(span);
+                ducks.push({ el: span, x: window.innerWidth / 2, y: window.innerHeight / 2 });
+            }
 
-    document.body.appendChild(span);
-    ducks.push({ el: span, x: window.innerWidth / 2, y: window.innerHeight / 2 });
-}
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
 
-let mouseX = window.innerWidth / 2;
-let mouseY = window.innerHeight / 2;
+            document.addEventListener("mousemove", e => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
 
-document.addEventListener("mousemove", e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-});
+            function animateDucks() {
+                let prevDuckX = mouseX;
+                let prevDuckY = mouseY;
 
-function animateDucks() {
-    ducks.forEach((duck, index) => {
-        let targetX, targetY, speed;
+                ducks.forEach((duck, index) => {
+                    let targetX, targetY;
+                    let speed = (index === 0) ? 0.3 : 0.1; // Big duck is faster, babies are slower
 
-        if (index === 0) { // Big duck snaps to cursor quickly (instant)
-            targetX = mouseX;
-            targetY = mouseY;
-            speed = 1;
-        } else { // Baby ducks follow the previous duck slowly
-            targetX = ducks[index - 1].x;
-            targetY = ducks[index - 1].y;
-            speed = 0.05;
-        }
+                    targetX = prevDuckX;
+                    targetY = prevDuckY;
 
-        duck.x += (targetX - duck.x) * speed;
-        duck.y += (targetY - duck.y) * speed;
+                    duck.x += (targetX - duck.x) * speed;
+                    duck.y += (targetY - duck.y) * speed;
 
-        // Position the duck element
-        duck.el.style.left = duck.x + "px";
-        duck.el.style.top = duck.y + "px";
-    });
+                    duck.el.style.left = `${duck.x}px`;
+                    duck.el.style.top = `${duck.y}px`;
 
-    requestAnimationFrame(animateDucks);
-}
-animateDucks();
+                    prevDuckX = duck.x;
+                    prevDuckY = duck.y;
+                });
 
-/* --- FLOWER GROW MINI-GAME --- */
-const flowerEmojis = ["🌸","🌻","🌼","🌹","🌷","💐"];
-document.addEventListener("click", e => {
-    const flower = document.createElement("div");
-    flower.className = "flower";
-    flower.textContent = flowerEmojis[Math.floor(Math.random()*flowerEmojis.length)];
-    flower.style.left = e.pageX + "px";
-    flower.style.top = e.pageY + "px";
-    document.body.appendChild(flower);
-    setTimeout(() => flower.classList.add("grown"), 100);
-});
+                requestAnimationFrame(animateDucks);
+            }
+            animateDucks();
 
-/* --- DAILY CAT + FACT --- */
-async function loadCatAndFact(){
-    try {
-        const catRes = await fetch("https://api.thecatapi.com/v1/images/search");
-        const catData = await catRes.json();
-        document.getElementById("cat-img").src = catData[0].url;
+            /* --- FLOWER GROW MINI-GAME --- */
+            const flowerEmojis = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐"];
+            document.addEventListener("click", e => {
+                const flower = document.createElement("div");
+                flower.className = "flower";
+                flower.textContent = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+                flower.style.left = `${e.pageX}px`;
+                flower.style.top = `${e.pageY}px`;
+                document.body.appendChild(flower);
+                setTimeout(() => flower.classList.add("grown"), 100);
+            });
 
-        const factRes = await fetch("https://catfact.ninja/fact");
-        const factData = await factRes.json();
-        document.getElementById("fact").textContent = factData.fact;
-    } catch(e) {
-        document.getElementById("fact").textContent = "Не успях да заредя коте 😿";
-    }
-}
-loadCatAndFact();
-</script>
+            /* --- DAILY CAT + FACT --- */
+            async function loadCatAndFact() {
+                try {
+                    const catRes = await fetch("https://api.thecatapi.com/v1/images/search");
+                    const catData = await catRes.json();
+                    document.getElementById("cat-img").src = catData[0].url;
+
+                    const factRes = await fetch("https://catfact.ninja/fact");
+                    const factData = await factRes.json();
+                    document.getElementById("fact").textContent = factData.fact;
+                } catch (e) {
+                    console.error("Failed to load cat data:", e);
+                    document.getElementById("fact").textContent = "Не успях да заредя коте 😿";
+                }
+            }
+            loadCatAndFact();
+        });
+    </script>
 </body>
 </html>
