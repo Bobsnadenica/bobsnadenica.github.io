@@ -3,589 +3,758 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conspiracy Theory Wonderland</title>
-    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+    <title>Beyond the Veil: The Wildest Conspiracy Theories</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Special+Elite&family=Press+Start+2P&display=swap">
     <style>
         :root {
-            --main-color: #8b0000;
-            --secondary-color: #333;
-            --accent-color: #ffcc00;
-            --text-color: #f0f0f0;
-            --panel-bg: rgba(20, 20, 20, 0.85);
+            --main-bg: #0a0a12;
+            --text-color: #e0e0e0;
+            --accent-color: #4aff4a;
+            --secondary-accent: #ff45ff;
+            --highlight: #ffff00;
+            --card-bg: rgba(20, 20, 40, 0.8);
+            --glow: 0 0 10px var(--accent-color);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
-            font-family: 'Special Elite', 'Courier New', monospace;
-            background-color: #121212;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-attachment: fixed;
+            background-color: var(--main-bg);
             color: var(--text-color);
-            margin: 0;
-            padding: 0;
+            font-family: 'Special Elite', cursive;
             line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(74, 255, 74, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 69, 255, 0.05) 0%, transparent 20%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%23222" stroke-width="0.5"/></svg>');
             overflow-x: hidden;
         }
         
         header {
-            background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
-            color: var(--accent-color);
+            background: linear-gradient(135deg, rgba(10, 10, 30, 0.9) 0%, rgba(30, 10, 50, 0.9) 100%);
             padding: 2rem;
             text-align: center;
-            position: relative;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
             border-bottom: 3px solid var(--accent-color);
+            box-shadow: var(--glow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%234aff4a" stroke-width="0.5" stroke-dasharray="5,5"/></svg>') center/cover no-repeat;
+            opacity: 0.1;
+            z-index: -1;
         }
         
         h1 {
-            font-size: 3.5rem;
-            margin: 0;
-            text-shadow: 3px 3px 5px #000;
-            animation: flicker 8s infinite alternate;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            letter-spacing: 3px;
+            animation: pulse 4s infinite alternate;
         }
         
-        @keyframes flicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-                text-shadow: 0 0 10px var(--accent-color), 
-                             0 0 20px var(--accent-color), 
-                             0 0 30px var(--accent-color), 
-                             0 0 40px var(--main-color),
-                             0 0 70px var(--main-color),
-                             0 0 80px var(--main-color),
-                             0 0 100px var(--main-color),
-                             0 0 150px var(--main-color);
-            }
-            20%, 24%, 55% {        
-                text-shadow: none;
-            }
+        @keyframes pulse {
+            0% { text-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color); }
+            50% { text-shadow: 0 0 15px var(--accent-color), 0 0 30px var(--accent-color), 0 0 45px var(--secondary-accent); }
+            100% { text-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color); }
         }
         
-        .tagline {
-            font-style: italic;
-            font-size: 1.2rem;
-            opacity: 0.9;
+        .subtitle {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--secondary-accent);
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 5px var(--secondary-accent);
         }
         
-        .red-string {
+        .intro {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--card-bg);
+            border: 1px solid var(--accent-color);
+            border-radius: 5px;
+            box-shadow: var(--glow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .intro::after {
+            content: "CLASSIFIED";
             position: absolute;
-            width: 100%;
-            height: 2px;
-            background: repeating-linear-gradient(
-                to right,
-                var(--main-color),
-                var(--main-color) 10px,
-                var(--accent-color) 10px,
-                var(--accent-color) 20px
-            );
-            z-index: 100;
             top: 50%;
-            transform: rotate(-2deg);
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 5rem;
+            color: rgba(255, 0, 0, 0.1);
+            font-weight: bold;
+            z-index: -1;
         }
         
         .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
         }
         
         .theory-card {
-            background: var(--panel-bg);
-            border-radius: 8px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--accent-color);
+            border-radius: 5px;
             padding: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-left: 5px solid var(--accent-color);
+            box-shadow: var(--glow);
+            transition: transform 0.3s, box-shadow 0.3s;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
         
         .theory-card:hover {
             transform: translateY(-10px) rotate(1deg);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 10px 20px rgba(74, 255, 74, 0.3), 0 0 30px var(--accent-color);
         }
         
         .theory-card::before {
-            content: "CLASSIFIED";
+            content: "";
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 0.8rem;
-            color: var(--accent-color);
-            opacity: 0.3;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-accent));
         }
         
         .theory-card h2 {
+            font-family: 'Orbitron', sans-serif;
             color: var(--accent-color);
-            margin-top: 0;
+            margin-bottom: 1rem;
             border-bottom: 1px dashed var(--accent-color);
             padding-bottom: 0.5rem;
         }
         
-        .credibility-meter {
-            height: 8px;
-            background: #333;
-            margin: 1rem 0;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .credibility-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00ff00, #ff0000);
-        }
-        
-        .credibility-label {
+        .theory-card .theory-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
             font-size: 0.8rem;
-            text-align: right;
-            margin-top: -1.2rem;
-            opacity: 0.7;
+            color: var(--secondary-accent);
+        }
+        
+        .theory-card .credibility {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            background-color: rgba(255, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+        
+        .theory-card .credibility.high {
+            background-color: rgba(255, 0, 0, 0.6);
+        }
+        
+        .theory-card .credibility.medium {
+            background-color: rgba(255, 165, 0, 0.6);
+        }
+        
+        .theory-card .credibility.low {
+            background-color: rgba(74, 255, 74, 0.2);
+        }
+        
+        .theory-card .content {
+            margin-bottom: 1rem;
+        }
+        
+        .theory-card .evidence {
+            font-size: 0.9rem;
+            color: var(--secondary-accent);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--secondary-accent);
+        }
+        
+        .theory-card .evidence::before {
+            content: "Alleged Evidence:";
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--highlight);
         }
         
         .interactive-section {
-            grid-column: 1 / -1;
-            background: var(--panel-bg);
+            max-width: 800px;
+            margin: 3rem auto;
             padding: 2rem;
-            border-radius: 8px;
-            margin: 2rem 0;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        }
-        
-        .timeline {
-            position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .timeline::after {
-            content: '';
-            position: absolute;
-            width: 6px;
-            background: var(--accent-color);
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            margin-left: -3px;
-        }
-        
-        .timeline-item {
-            padding: 10px 40px;
-            position: relative;
-            width: 50%;
-            box-sizing: border-box;
-        }
-        
-        .timeline-item::after {
-            content: '';
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            right: -12px;
-            background: var(--main-color);
-            border: 4px solid var(--accent-color);
-            top: 15px;
-            border-radius: 50%;
-            z-index: 1;
-        }
-        
-        .left {
-            left: 0;
-        }
-        
-        .right {
-            left: 50%;
-        }
-        
-        .right::after {
-            left: -12px;
-        }
-        
-        .timeline-content {
-            padding: 20px 30px;
-            background: var(--panel-bg);
-            position: relative;
-            border-radius: 6px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        footer {
-            background: var(--secondary-color);
+            background-color: var(--card-bg);
+            border: 1px solid var(--accent-color);
+            border-radius: 5px;
+            box-shadow: var(--glow);
             text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
-            border-top: 3px solid var(--accent-color);
         }
         
-        .alien-eye {
-            position: fixed;
-            width: 50px;
-            height: 50px;
-            background: radial-gradient(circle, #00ff00 0%, #003300 70%);
-            border-radius: 50%;
-            box-shadow: 0 0 20px #00ff00;
-            cursor: pointer;
-            z-index: 1000;
-            display: none;
+        .interactive-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
         }
         
-        .pulse {
-            animation: pulse 2s infinite;
+        .conspiracy-meter {
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-accent));
+            margin: 1rem 0;
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
         }
         
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 15px rgba(0, 255, 0, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
-            }
+        .conspiracy-meter::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                rgba(0,0,0,0) 0%, 
+                rgba(255,255,255,0.2) 50%, 
+                rgba(0,0,0,0) 100%);
+            animation: shine 2s infinite;
         }
         
-        .hidden-message {
-            color: transparent;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            font-size: 0.8rem;
-            transition: all 0.5s;
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
         
-        .hidden-message:hover {
+        .slider-container {
+            margin: 2rem 0;
+        }
+        
+        .slider-container label {
+            display: block;
+            margin-bottom: 0.5rem;
             color: var(--accent-color);
         }
         
-        /* 3D Flip Card */
-        .flip-card {
-            background-color: transparent;
-            perspective: 1000px;
-            height: 300px;
-            grid-column: span 2;
-        }
-        
-        .flip-card-inner {
-            position: relative;
+        input[type="range"] {
             width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
+            height: 10px;
+            -webkit-appearance: none;
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-accent));
+            border-radius: 5px;
+            outline: none;
         }
         
-        .flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg);
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--highlight);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 5px var(--highlight);
         }
         
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 8px;
-            padding: 20px;
-            box-sizing: border-box;
+        .result {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            color: var(--highlight);
+            min-height: 2rem;
+        }
+        
+        .hidden-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
         }
         
-        .flip-card-front {
-            background: linear-gradient(45deg, var(--main-color), var(--secondary-color));
-            color: var(--text-color);
-            border: 3px solid var(--accent-color);
+        .hidden-message.active {
+            opacity: 1;
+            pointer-events: all;
         }
         
-        .flip-card-back {
-            background: linear-gradient(45deg, var(--secondary-color), var(--main-color));
-            color: var(--text-color);
-            transform: rotateY(180deg);
-            border: 3px dashed var(--accent-color);
+        .hidden-message h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--highlight);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
         }
         
-        /* Glitch effect */
-        .glitch {
-            position: relative;
+        .hidden-message p {
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 2rem;
+            line-height: 1.6;
         }
         
-        .glitch::before, .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .hidden-message button {
+            background-color: var(--accent-color);
+            color: var(--main-bg);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
         }
         
-        .glitch::before {
-            left: 2px;
-            text-shadow: -2px 0 #ff00ff;
-            animation: glitch-anim 5s infinite linear alternate-reverse;
+        .hidden-message button:hover {
+            background-color: var(--highlight);
+            transform: scale(1.05);
         }
         
-        .glitch::after {
-            left: -2px;
-            text-shadow: -2px 0 #00ffff;
-            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--accent-color);
+            font-size: 0.8rem;
+            color: var(--secondary-accent);
         }
         
-        @keyframes glitch-anim {
-            0% { clip-path: polygon(0 0, 100% 0, 100% 5%, 0 5%); }
-            10% { clip-path: polygon(0 15%, 100% 15%, 100% 20%, 0 20%); }
-            20% { clip-path: polygon(0 30%, 100% 30%, 100% 35%, 0 35%); }
-            30% { clip-path: polygon(0 45%, 100% 45%, 100% 50%, 0 50%); }
-            40% { clip-path: polygon(0 60%, 100% 60%, 100% 65%, 0 65%); }
-            50% { clip-path: polygon(0 75%, 100% 75%, 100% 80%, 0 80%); }
-            60% { clip-path: polygon(0 90%, 100% 90%, 100% 95%, 0 95%); }
-            70% { clip-path: polygon(0 10%, 100% 10%, 100% 15%, 0 15%); }
-            80% { clip-path: polygon(0 25%, 100% 25%, 100% 30%, 0 30%); }
-            90% { clip-path: polygon(0 40%, 100% 40%, 100% 45%, 0 45%); }
-            100% { clip-path: polygon(0 55%, 100% 55%, 100% 60%, 0 60%); }
+        .secret-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-color);
+            transition: all 0.3s;
+            z-index: 100;
         }
         
-        @keyframes glitch-anim2 {
-            0% { clip-path: polygon(0 65%, 100% 65%, 100% 70%, 0 70%); }
-            10% { clip-path: polygon(0 80%, 100% 80%, 100% 85%, 0 85%); }
-            20% { clip-path: polygon(0 95%, 100% 95%, 100% 100%, 0 100%); }
-            30% { clip-path: polygon(0 15%, 100% 15%, 100% 20%, 0 20%); }
-            40% { clip-path: polygon(0 30%, 100% 30%, 100% 35%, 0 35%); }
-            50% { clip-path: polygon(0 45%, 100% 45%, 100% 50%, 0 50%); }
-            60% { clip-path: polygon(0 60%, 100% 60%, 100% 65%, 0 65%); }
-            70% { clip-path: polygon(0 75%, 100% 75%, 100% 80%, 0 80%); }
-            80% { clip-path: polygon(0 90%, 100% 90%, 100% 95%, 0 95%); }
-            90% { clip-path: polygon(0 10%, 100% 10%, 100% 15%, 0 15%); }
-            100% { clip-path: polygon(0 25%, 100% 25%, 100% 30%, 0 30%); }
+        .secret-button:hover {
+            transform: scale(1.1);
+            background-color: var(--highlight);
+            box-shadow: 0 0 15px var(--highlight);
         }
         
-        @media screen and (max-width: 768px) {
+        .secret-button::before {
+            content: "?";
+            color: var(--main-bg);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
             .container {
                 grid-template-columns: 1fr;
             }
             
-            .timeline::after {
-                left: 31px;
+            .intro {
+                padding: 1rem;
             }
-            
-            .timeline-item {
-                width: 100%;
-                padding-left: 70px;
-                padding-right: 25px;
-            }
-            
-            .timeline-item::after {
-                left: 18px;
-            }
-            
-            .left::after, .right::after {
-                left: 18px;
-            }
-            
-            .right {
-                left: 0%;
-            }
-            
-            .flip-card {
-                grid-column: span 1;
-            }
-            
-            h1 {
-                font-size: 2.5rem;
-            }
+        }
+        
+        /* 3D Card effect */
+        .theory-card {
+            perspective: 1000px;
+        }
+        
+        .theory-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .theory-card:hover .theory-card-inner {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+        
+        /* Particle background for special cards */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float linear infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20px) translateX(10px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+        
+        /* Typewriter effect */
+        .typewriter {
+            overflow: hidden;
+            border-right: 3px solid var(--accent-color);
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: 2px;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--accent-color); }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="red-string"></div>
-        <h1 class="glitch" data-text="CONSPIRACY THEORY WONDERLAND">CONSPIRACY THEORY WONDERLAND</h1>
-        <p class="tagline">"The truth is out there... but they don't want you to see it"</p>
+        <h1>BEYOND THE VEIL</h1>
+        <div class="subtitle">THE WILDEST CONSPIRACY THEORIES UNCOVERED</div>
+        <div class="typewriter">Question everything you know...</div>
     </header>
     
+    <div class="intro">
+        <p>Welcome to the shadow realm of alternative facts and hidden truths. This collection represents some of the most bizarre, intriguing, and downright unbelievable conspiracy theories that have captured imaginations worldwide. From secret societies controlling world events to extraterrestrial cover-ups, we've gathered theories that range from the plausible to the utterly fantastical.</p>
+        <p>Remember: Just because you're paranoid doesn't mean they're not after you.</p>
+    </div>
+    
     <div class="container">
+        <!-- Theory Card 1 -->
         <div class="theory-card">
-            <h2>Flat Earth Theory</h2>
-            <p>The Earth is actually flat, and all space agencies are part of a global conspiracy to hide this fact. NASA's budget goes to CGI artists who fake space footage.</p>
-            <div class="credibility-meter">
-                <div class="credibility-fill" style="width: 5%"></div>
-            </div>
-            <div class="credibility-label">Credibility: 5%</div>
-        </div>
-        
-        <div class="theory-card">
-            <h2>Reptilian Elite</h2>
-            <p>Shape-shifting reptilian aliens control the world by taking human form and gaining political power. Key figures like Queen Elizabeth II and many US presidents are allegedly reptilians.</p>
-            <div class="credibility-meter">
-                <div class="credibility-fill" style="width: 2%"></div>
-            </div>
-            <div class="credibility-label">Credibility: 2%</div>
-        </div>
-        
-        <div class="theory-card">
-            <h2>Moon Landing Hoax</h2>
-            <p>The Apollo moon landings were faked by NASA and possibly Stanley Kubrick to win the Space Race against the Soviets. The "moon" footage was shot in a studio.</p>
-            <div class="credibility-meter">
-                <div class="credibility-fill" style="width: 1%"></div>
-            </div>
-            <div class="credibility-label">Credibility: 1%</div>
-        </div>
-        
-        <div class="theory-card">
-            <h2>Birds Aren't Real</h2>
-            <p>All birds were replaced by government surveillance drones in the 1970s. The "extinct" birds were actually decommissioned older drone models.</p>
-            <div class="credibility-meter">
-                <div class="credibility-fill" style="width: 0.5%"></div>
-            </div>
-            <div class="credibility-label">Credibility: 0.5%</div>
-        </div>
-        
-        <div class="theory-card">
-            <h2>Denver Airport</h2>
-            <p>Denver International Airport is actually a massive underground bunker for the global elite, with murals depicting the New World Order and a secret subway to a hidden city.</p>
-            <div class="credibility-meter">
-                <div class="credibility-fill" style="width: 3%"></div>
-            </div>
-            <div class="credibility-label">Credibility: 3%</div>
-        </div>
-        
-        <div class="theory-card">
-            <h2>Chemtrails</h2>
-            <p>The white trails behind planes are actually chemicals sprayed by governments to control weather, manipulate human DNA, or pacify populations.</p>
-            <div class="credibility-meter">
-                <div class="credibility-fill" style="width: 0.1%"></div>
-            </div>
-            <div class="credibility-label">Credibility: 0.1%</div>
-        </div>
-        
-        <div class="flip-card">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">
-                    <h2>SECRET THEORY</h2>
-                    <p>Hover to reveal the truth they don't want you to know</p>
-                    <p style="font-size: 3rem;">👁️</p>
+            <div class="particles" id="particles-1"></div>
+            <div class="theory-card-inner">
+                <h2>The Moon Landing Hoax</h2>
+                <div class="theory-meta">
+                    <span>Origin: 1969</span>
+                    <span class="credibility medium">Medium Credibility</span>
                 </div>
-                <div class="flip-card-back">
-                    <h2>Simulation Theory</h2>
-                    <p>Our entire reality is an advanced computer simulation created by a more intelligent civilization. "Glitches in the Matrix" are evidence of this, including déjà vu and Mandela Effects.</p>
-                    <div class="credibility-meter">
-                        <div class="credibility-fill" style="width: 15%"></div>
-                    </div>
-                    <div class="credibility-label">Credibility: 15% (but how would we know?)</div>
+                <div class="content">
+                    <p>The theory claims that the Apollo moon landings were faked by NASA and possibly other organizations. Proponents argue that the U.S. government staged the landings to win the Space Race against the Soviet Union at the height of the Cold War.</p>
+                </div>
+                <div class="evidence">
+                    <ul>
+                        <li>Alleged anomalies in photographs (crosshairs behind objects, inconsistent shadows)</li>
+                        <li>Absence of stars in lunar sky photos</li>
+                        <li>Waving flag in vacuum of space</li>
+                        <li>No blast crater under lunar module</li>
+                    </ul>
                 </div>
             </div>
         </div>
         
-        <div class="interactive-section">
-            <h2>Conspiracy Timeline</h2>
-            <div class="timeline">
-                <div class="timeline-item left">
-                    <div class="timeline-content">
-                        <h3>1969: Moon Landing</h3>
-                        <p>Alleged moon landing occurs. Conspiracy theorists claim it was filmed in a studio.</p>
-                    </div>
+        <!-- Theory Card 2 -->
+        <div class="theory-card">
+            <div class="particles" id="particles-2"></div>
+            <div class="theory-card-inner">
+                <h2>Flat Earth Theory</h2>
+                <div class="theory-meta">
+                    <span>Origin: Ancient/Revived 19th century</span>
+                    <span class="credibility low">Low Credibility</span>
                 </div>
-                <div class="timeline-item right">
-                    <div class="timeline-content">
-                        <h3>1980: Project Blue Beam</h3>
-                        <p>Rumored NASA project to fake a second coming of Christ or alien invasion using holograms.</p>
-                    </div>
+                <div class="content">
+                    <p>The belief that Earth is a flat disk rather than a globe. Modern flat Earth theories often include the idea of a conspiracy by governments and space agencies to hide this "truth," with NASA being a primary target of suspicion.</p>
                 </div>
-                <div class="timeline-item left">
-                    <div class="timeline-content">
-                        <h3>1995: Denver Airport Opens</h3>
-                        <p>Construction includes bizarre murals and underground facilities fueling conspiracy theories.</p>
-                    </div>
+                <div class="evidence">
+                    <ul>
+                        <li>Horizon appears flat to human eye</li>
+                        <li>Antarctica is actually an ice wall surrounding the disk</li>
+                        <li>Gravity is an illusion - the disk is accelerating upward</li>
+                        <li>All space agencies are part of the conspiracy</li>
+                    </ul>
                 </div>
-                <div class="timeline-item right">
-                    <div class="timeline-content">
-                        <h3>2001: 9/11</h3>
-                        <p>Theories emerge about controlled demolitions and government foreknowledge of attacks.</p>
-                    </div>
+            </div>
+        </div>
+        
+        <!-- Theory Card 3 -->
+        <div class="theory-card">
+            <div class="particles" id="particles-3"></div>
+            <div class="theory-card-inner">
+                <h2>Reptilian Elite</h2>
+                <div class="theory-meta">
+                    <span>Origin: 1990s (David Icke)</span>
+                    <span class="credibility low">Low Credibility</span>
                 </div>
-                <div class="timeline-item left">
-                    <div class="timeline-content">
-                        <h3>2020: COVID-19</h3>
-                        <p>Pandemic spawns theories about 5G, microchips in vaccines, and planned depopulation.</p>
-                    </div>
+                <div class="content">
+                    <p>The theory that shape-shifting reptilian aliens control Earth by taking on human form and gaining political power. Key figures like world leaders and celebrities are allegedly part of this reptilian race that feeds on human energy or blood.</p>
+                </div>
+                <div class="evidence">
+                    <ul>
+                        <li>Alleged "slips" where figures' eyes appear reptilian</li>
+                        <li>Ancient Sumerian texts describing Anunnaki</li>
+                        <li>Common symbolism of reptiles in secret societies</li>
+                        <li>Unnatural longevity of certain powerful figures</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Theory Card 4 -->
+        <div class="theory-card">
+            <div class="particles" id="particles-4"></div>
+            <div class="theory-card-inner">
+                <h2>Chemtrails</h2>
+                <div class="theory-meta">
+                    <span>Origin: 1990s</span>
+                    <span class="credibility medium">Medium Credibility</span>
+                </div>
+                <div class="content">
+                    <p>The belief that long-lasting trails left by aircraft are chemical or biological agents deliberately sprayed for purposes undisclosed to the general public. Purposes range from weather modification to population control or mind control.</p>
+                </div>
+                <div class="evidence">
+                    <ul>
+                        <li>Unusual persistence of contrails compared to historical patterns</li>
+                        <li>Alleged finding of barium, strontium in soil samples</li>
+                        <li>Patent records for atmospheric delivery systems</li>
+                        <li>Increased respiratory illnesses in "spray" areas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Theory Card 5 -->
+        <div class="theory-card">
+            <div class="particles" id="particles-5"></div>
+            <div class="theory-card-inner">
+                <h2>Denver International Airport</h2>
+                <div class="theory-meta">
+                    <span>Origin: 1990s</span>
+                    <span class="credibility medium">Medium Credibility</span>
+                </div>
+                <div class="content">
+                    <p>The theory that Denver International Airport is the headquarters of the New World Order, with secret underground bunkers and tunnels. The airport's unusual art, murals depicting apocalyptic scenes, and construction delays have fueled speculation.</p>
+                </div>
+                <div class="evidence">
+                    <ul>
+                        <li>Apocalyptic murals showing mass death and Nazi imagery</li>
+                        <li>Time capsule with "New World Airport Commission" plaque</li>
+                        <li>Massive underground facilities beyond normal airport needs</li>
+                        <li>Strange dedication capstone with Masonic symbols</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Theory Card 6 -->
+        <div class="theory-card">
+            <div class="particles" id="particles-6"></div>
+            <div class="theory-card-inner">
+                <h2>Hollow Earth</h2>
+                <div class="theory-meta">
+                    <span>Origin: 17th century/Modern variations</span>
+                    <span class="credibility low">Low Credibility</span>
+                </div>
+                <div class="content">
+                    <p>The concept that Earth is entirely hollow or contains a substantial interior space. Some versions propose inner suns, advanced civilizations, or entrances at the poles. Nazis allegedly searched for these entrances during WWII.</p>
+                </div>
+                <div class="evidence">
+                    <ul>
+                        <li>Alleged Admiral Byrd diaries describing inner Earth</li>
+                        <li>Unexplained compass readings near poles</li>
+                        <li>Ancient myths of underworld civilizations</li>
+                        <li>Satellite images showing possible polar openings</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
     
+    <div class="interactive-section">
+        <h2>YOUR PERSONAL CONSPIRACY METER</h2>
+        <p>How much do you believe in conspiracy theories? Slide to find out!</p>
+        
+        <div class="slider-container">
+            <label for="belief-meter">Level of Belief:</label>
+            <input type="range" id="belief-meter" min="0" max="100" value="50">
+        </div>
+        
+        <div class="conspiracy-meter" id="meter-display"></div>
+        
+        <div class="result" id="result">
+            You're a healthy skeptic... or are you?
+        </div>
+    </div>
+    
+    <div class="secret-button" id="secret-btn"></div>
+    
+    <div class="hidden-message" id="hidden-msg">
+        <h2>YOU'VE FOUND THE TRUTH</h2>
+        <p>Congratulations, seeker. By uncovering this hidden message, you've proven your ability to look beyond the surface. The real conspiracies are deeper than you imagine. They don't want you to know about the Philadelphia Experiment, the Montauk Project, or the true nature of CERN. Keep questioning. Keep searching.</p>
+        <p>But remember - they're watching now.</p>
+        <button id="close-msg">RETURN TO SAFETY</button>
+    </div>
+    
     <footer>
-        <p>Disclaimer: This site is for entertainment purposes only. Please don't base your worldview on these theories.</p>
-        <p>But then again... that's exactly what THEY would want you to think.</p>
-        <p class="hidden-message">Meet at the usual place. The owl is not what it seems.</p>
+        <p>DISCLAIMER: This website is for entertainment purposes only. The theories presented here are not endorsed as factual.</p>
+        <p>© 2023 Beyond the Veil | All "truths" reserved</p>
+        <p id="visitor-counter">Visitor Number: <span id="counter">REDACTED</span></p>
     </footer>
     
-    <div class="alien-eye pulse" id="alienEye"></div>
-    
     <script>
-        // Wait for DOM to load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Alien eye follower
-            document.addEventListener('mousemove', function(e) {
-                const eye = document.getElementById('alienEye');
-                eye.style.display = 'block';
-                eye.style.left = (e.pageX - 25) + 'px';
-                eye.style.top = (e.pageY - 25) + 'px';
+        // Create particles for each card
+        document.querySelectorAll('.particles').forEach((container, index) => {
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
                 
-                // Random chance to make the eye blink
-                if (Math.random() < 0.01) {
-                    eye.style.height = '5px';
-                    setTimeout(() => {
-                        eye.style.height = '50px';
-                    }, 200);
+                // Random properties
+                const size = Math.random() * 5 + 2;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const duration = Math.random() * 10 + 10;
+                const delay = Math.random() * 5;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                
+                // Alternate colors for odd cards
+                if (index % 2 === 0) {
+                    particle.style.backgroundColor = 'var(--secondary-accent)';
                 }
-            });
+                
+                container.appendChild(particle);
+            }
+        });
+        
+        // Interactive meter
+        const meter = document.getElementById('belief-meter');
+        const meterDisplay = document.getElementById('meter-display');
+        const resultDisplay = document.getElementById('result');
+        
+        meter.addEventListener('input', function() {
+            const value = this.value;
+            meterDisplay.style.width = `${value}%`;
             
-            // Easter egg - click the eye 5 times
-            let clickCount = 0;
-            document.getElementById('alienEye').addEventListener('click', function() {
-                clickCount++;
-                if (clickCount === 5) {
-                    alert("You've been initiated into the Illuminati. Expect your membership card by owl post.");
-                    clickCount = 0;
-                }
-            });
-            
-            // Typewriter effect for hidden message
-            const hiddenMessage = document.querySelector('.hidden-message');
-            let messageRevealed = false;
-            
-            hiddenMessage.addEventListener('mouseover', function() {
-                if (!messageRevealed) {
-                    messageRevealed = true;
-                    const text = this.textContent;
-                    this.textContent = '';
+            if (value < 20) {
+                resultDisplay.textContent = "You trust the official narratives... too much.";
+            } else if (value < 40) {
+                resultDisplay.textContent = "A healthy skeptic, but still in the dark.";
+            } else if (value < 60) {
+                resultDisplay.textContent = "You know something's not right, but what?";
+            } else if (value < 80) {
+                resultDisplay.textContent = "You've connected some dots. Be careful who you tell.";
+            } else {
+                resultDisplay.textContent = "THEY KNOW YOU KNOW. TRUST NO ONE.";
+            }
+        });
+        
+        // Secret message
+        const secretBtn = document.getElementById('secret-btn');
+        const hiddenMsg = document.getElementById('hidden-msg');
+        const closeBtn = document.getElementById('close-msg');
+        
+        secretBtn.addEventListener('click', function() {
+            hiddenMsg.classList.add('active');
+        });
+        
+        closeBtn.addEventListener('click', function() {
+            hiddenMsg.classList.remove('active');
+        });
+        
+        // Visitor counter (fake)
+        const counter = document.getElementById('counter');
+        let count = Math.floor(Math.random() * 9000) + 1000;
+        counter.textContent = count;
+        
+        setInterval(() => {
+            count += Math.floor(Math.random() * 3);
+            counter.textContent = count;
+        }, 3000);
+        
+        // Easter egg - Konami code
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    // Konami code entered!
+                    document.body.style.background = 'linear-gradient(45deg, #ff0000, #ff7700, #ffdd00, #00ff00, #0000ff, #8a2be2)';
+                    document.body.style.backgroundSize = '600% 600%';
+                    document.body.style.animation = 'rainbow 5s ease infinite';
                     
-                    let i = 0;
-                    const typing = setInterval(() => {
-                        if (i < text.length) {
-                            this.textContent += text.charAt(i);
-                            i++;
-                        } else {
-                            clearInterval(typing);
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes rainbow {
+                            0% { background-position: 0% 50% }
+                            50% { background-position: 100% 50% }
+                            100% { background-position: 0% 50% }
                         }
-                    }, 50);
+                    `;
+                    document.head.appendChild(style);
+                    
+                    konamiIndex = 0;
                 }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+        
+        // 3D tilt effect for cards
+        document.querySelectorAll('.theory-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const x = e.clientX - card.getBoundingClientRect().left;
+                const y = e.clientY - card.getBoundingClientRect().top;
+                
+                const centerX = card.offsetWidth / 2;
+                const centerY = card.offsetHeight / 2;
+                
+                const angleX = (y - centerY) / 20;
+                const angleY = (centerX - x) / 20;
+                
+                card.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg)`;
             });
             
-            // Random glitch effect on theory cards
-            setInterval(() => {
-                const cards = document.querySelectorAll('.theory-card');
-                const randomCard = cards[Math.floor(Math.random() * cards.length)];
-                
-                randomCard.style.transform = 'translateY(-10px) rotate(1deg)';
-                randomCard.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.7)';
-                
-                setTimeout(() => {
-                    randomCard.style.transform = '';
-                    randomCard.style.boxShadow = '';
-                }, 1000);
-            }, 5000);
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            });
         });
     </script>
 </body>
