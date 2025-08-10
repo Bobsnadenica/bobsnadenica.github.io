@@ -1,210 +1,243 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Rabbit Hole: A Guide to Wild Conspiracy Theories</title>
-    <!-- Use a fun font like Inter -->
+    <title>The Conspiracy Compendium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
         }
-        /* Custom scrollbar to add a bit of flair */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #111827; /* dark bg */
-        }
-        ::-webkit-scrollbar-thumb {
-            background-color: #6366f1; /* purple */
-            border-radius: 4px;
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+        .dark body {
+            background-color: #1a202c;
+            color: #e2e8f0;
         }
         .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .card:hover {
-            transform: translateY(-8px) rotate(1deg);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        .dark .card {
+            background-color: rgba(0, 0, 0, 0.1);
         }
-        .card-header-icon {
+        .modal-overlay {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-content {
+            transform: translateY(-20px);
             transition: transform 0.3s ease;
         }
-        .card-header[aria-expanded="true"] .card-header-icon {
-            transform: rotate(180deg);
-        }
-        .collapsible-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-in-out;
-        }
-        .collapsible-content.expanded {
-            max-height: 1000px; /* A large value to allow for smooth transition */
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
         }
     </style>
 </head>
-<body class="gradient-bg text-gray-100 min-h-screen">
+<body class="bg-gray-900 text-gray-100">
 
     <!-- Header Section -->
-    <header class="py-12 md:py-24 text-center">
-        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 mb-4">
-            The Rabbit Hole
-        </h1>
-        <p class="text-xl md:text-2xl font-light text-gray-300 max-w-3xl mx-auto px-4">
-            A deep dive into the world's most unbelievable and widespread conspiracy theories. Are they true? You decide.
-        </p>
+    <header class="bg-gray-800 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto p-4 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-blue-400 tracking-wide">The Conspiracy Compendium</h1>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
     </header>
 
-    <!-- Main Content Grid -->
-    <main class="container mx-auto px-4 py-8 md:py-16">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <!-- Main Content Area -->
+    <main class="container mx-auto p-8">
+        <section class="text-center my-16">
+            <h2 class="text-5xl md:text-6xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                Are We Being Watched?
+            </h2>
+            <p class="text-lg text-gray-400 max-w-3xl mx-auto">
+                Dive deep into the shadows and uncover the truths (or untruths) behind the world's most enduring and fascinating conspiracy theories.
+            </p>
+        </section>
 
-            <!-- Card 1: Flat Earth Theory -->
-            <div class="card bg-gray-900 p-6 rounded-3xl shadow-2xl border border-gray-700">
-                <h2 class="text-2xl font-bold text-pink-400 mb-2">The Flat Earth</h2>
-                <p class="text-gray-400 mb-4">The idea that our planet is not a sphere, but a flat disc surrounded by an ice wall (Antarctica).</p>
-                <div class="bg-gray-800 rounded-xl p-4">
-                    <button class="card-header w-full flex justify-between items-center text-left text-lg font-semibold text-gray-200"
-                            onclick="toggleCollapse(this.nextElementSibling)"
-                            aria-expanded="false"
-                            aria-controls="flat-earth-content">
-                        <span>Details of the Theory</span>
-                        <svg class="card-header-icon w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div id="flat-earth-content" class="collapsible-content pt-4">
-                        <p class="text-gray-300 leading-relaxed">
-                            Proponents of the Flat Earth model believe that all evidence of a spherical Earth—including satellite images, global navigation, and the existence of time zones—is part of a massive, coordinated deception by governments like NASA. According to some versions of the theory, the "ice wall" of Antarctica holds the oceans in, and beyond it lies a vast, unknown territory. They often cite a "celestial dome" over the Earth and use personal, pseudo-scientific experiments to "prove" their claims. The origins of this modern resurgence can be traced back to the 19th century, but it has gained significant traction in the internet age through social media and online communities.
-                        </p>
-                    </div>
+        <!-- Cards Section -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 my-12">
+            <!-- Card 1: Flat Earth -->
+            <div class="card p-6 rounded-2xl shadow-xl flex flex-col justify-between hover:scale-105 transition-transform duration-300 cursor-pointer" data-theory="flat-earth">
+                <div>
+                    <h3 class="text-2xl font-bold mb-2">The Flat Earth Society</h3>
+                    <p class="text-gray-400">Is our planet a sphere or a stationary disc with an ice wall?</p>
                 </div>
             </div>
 
-            <!-- Card 2: QAnon -->
-            <div class="card bg-gray-900 p-6 rounded-3xl shadow-2xl border border-gray-700">
-                <h2 class="text-2xl font-bold text-pink-400 mb-2">The QAnon "Storm"</h2>
-                <p class="text-gray-400 mb-4">A sprawling conspiracy theory alleging a secret cabal of Satan-worshipping pedophiles controls the world.</p>
-                <div class="bg-gray-800 rounded-xl p-4">
-                    <button class="card-header w-full flex justify-between items-center text-left text-lg font-semibold text-gray-200"
-                            onclick="toggleCollapse(this.nextElementSibling)"
-                            aria-expanded="false"
-                            aria-controls="qanon-content">
-                        <span>The "Deep State" Explained</span>
-                        <svg class="card-header-icon w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div id="qanon-content" class="collapsible-content pt-4">
-                        <p class="text-gray-300 leading-relaxed">
-                            Originating on a fringe internet message board in 2017, QAnon centers on a supposed government insider named "Q" who posted cryptic messages, or "Q drops." These posts claimed that a "Deep State" composed of Democratic politicians, Hollywood celebrities, and business leaders was running a global child sex-trafficking ring. They believed that Donald Trump was secretly fighting this cabal and that a future event called "The Storm" would see the mass arrest and execution of these figures. The theory has absorbed other pre-existing conspiracies, like "Pizzagate," and has been linked to real-world acts of violence and political extremism.
-                        </p>
-                    </div>
+            <!-- Card 2: Moon Landing Hoax -->
+            <div class="card p-6 rounded-2xl shadow-xl flex flex-col justify-between hover:scale-105 transition-transform duration-300 cursor-pointer" data-theory="moon-hoax">
+                <div>
+                    <h3 class="text-2xl font-bold mb-2">The Moon Landing Hoax</h3>
+                    <p class="text-gray-400">Was it one giant leap for mankind or a giant leap for Hollywood?</p>
                 </div>
             </div>
 
-            <!-- Card 3: Chemtrails -->
-            <div class="card bg-gray-900 p-6 rounded-3xl shadow-2xl border border-gray-700">
-                <h2 class="text-2xl font-bold text-pink-400 mb-2">Chemtrails</h2>
-                <p class="text-gray-400 mb-4">The belief that contrails from aircraft are actually chemical or biological agents being sprayed on the population.</p>
-                <div class="bg-gray-800 rounded-xl p-4">
-                    <button class="card-header w-full flex justify-between items-center text-left text-lg font-semibold text-gray-200"
-                            onclick="toggleCollapse(this.nextElementSibling)"
-                            aria-expanded="false"
-                            aria-controls="chemtrails-content">
-                        <span>The "Spraying" De-mystified</span>
-                        <svg class="card-header-icon w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div id="chemtrails-content" class="collapsible-content pt-4">
-                        <p class="text-gray-300 leading-relaxed">
-                            The "chemtrails" theory posits that the condensation trails (contrails) left by jet engines are not simple ice crystals, but are toxic substances being dispersed for nefarious reasons. These reasons vary from population control and mind control to weather modification and biological warfare. Proponents distinguish "chemtrails" from "contrails" by their persistence in the sky, often noting that some trails linger and spread out into cirrus-like clouds, while others dissipate quickly. The scientific consensus is that all these phenomena are normal contrails, and their appearance is entirely dependent on atmospheric conditions like temperature and humidity.
-                        </p>
-                    </div>
+            <!-- Card 3: Area 51 -->
+            <div class="card p-6 rounded-2xl shadow-xl flex flex-col justify-between hover:scale-105 transition-transform duration-300 cursor-pointer" data-theory="area-51">
+                <div>
+                    <h3 class="text-2xl font-bold mb-2">Area 51 & Aliens</h3>
+                    <p class="text-gray-400">What secrets are truly hidden behind the barbed wire in Nevada?</p>
                 </div>
             </div>
 
-            <!-- Card 4: Area 51 -->
-            <div class="card bg-gray-900 p-6 rounded-3xl shadow-2xl border border-gray-700">
-                <h2 class="text-2xl font-bold text-pink-400 mb-2">Area 51 & Aliens</h2>
-                <p class="text-gray-400 mb-4">The secret military base in Nevada is said to house and reverse-engineer crashed alien spacecraft.</p>
-                <div class="bg-gray-800 rounded-xl p-4">
-                    <button class="card-header w-full flex justify-between items-center text-left text-lg font-semibold text-gray-200"
-                            onclick="toggleCollapse(this.nextElementSibling)"
-                            aria-expanded="false"
-                            aria-controls="area51-content">
-                        <span>The Truth Is Out There... Or Is It?</span>
-                        <svg class="card-header-icon w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div id="area51-content" class="collapsible-content pt-4">
-                        <p class="text-gray-300 leading-relaxed">
-                            Located deep in the Nevada desert, Area 51 was a highly classified U.S. military installation for decades, its existence only officially acknowledged in 2013. The secrecy fueled decades of speculation, most famously that the base was home to alien technology and even extraterrestrial bodies from the 1947 Roswell UFO incident. Claims by individuals like Bob Lazar, who said he worked on an alien spacecraft at the base, further cemented this myth in popular culture. While the base's true purpose was the testing of advanced aircraft like the U-2 spy plane, the conspiracy theory remains deeply ingrained in the public imagination.
-                        </p>
-                    </div>
+            <!-- Card 4: Denver Airport -->
+            <div class="card p-6 rounded-2xl shadow-xl flex flex-col justify-between hover:scale-105 transition-transform duration-300 cursor-pointer" data-theory="denver-airport">
+                <div>
+                    <h3 class="text-2xl font-bold mb-2">Denver Airport Murals</h3>
+                    <p class="text-gray-400">Why are there apocalyptic murals and a giant blue horse at DIA?</p>
                 </div>
             </div>
 
-            <!-- Card 5: The Moon Landing Hoax -->
-            <div class="card bg-gray-900 p-6 rounded-3xl shadow-2xl border border-gray-700">
-                <h2 class="text-2xl font-bold text-pink-400 mb-2">Faking the Moon Landing</h2>
-                <p class="text-gray-400 mb-4">The theory that the Apollo moon landings were faked by NASA to win the Space Race.</p>
-                <div class="bg-gray-800 rounded-xl p-4">
-                    <button class="card-header w-full flex justify-between items-center text-left text-lg font-semibold text-gray-200"
-                            onclick="toggleCollapse(this.nextElementSibling)"
-                            aria-expanded="false"
-                            aria-controls="moon-landing-content">
-                        <span>Analyzing the "Evidence"</span>
-                        <svg class="card-header-icon w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div id="moon-landing-content" class="collapsible-content pt-4">
-                        <p class="text-gray-300 leading-relaxed">
-                            This theory claims that the iconic 1969 moon landing, and subsequent missions, were elaborate hoaxes filmed on a soundstage, possibly directed by Stanley Kubrick. Proponents point to supposed inconsistencies in the photos and videos as "proof," such as the American flag appearing to wave in a vacuum, the absence of stars in the sky, and shadows that seem to point in different directions. All of these claims have been debunked by the scientific community with explanations tied to the physics of space and photography, but the theory has persisted for decades, fueled by a general distrust of government and media.
-                        </p>
-                    </div>
+            <!-- Card 5: Chemtrails -->
+            <div class="card p-6 rounded-2xl shadow-xl flex flex-col justify-between hover:scale-105 transition-transform duration-300 cursor-pointer" data-theory="chemtrails">
+                <div>
+                    <h3 class="text-2xl font-bold mb-2">Chemtrails</h3>
+                    <p class="text-gray-400">Are those persistent white lines in the sky just water vapor?</p>
                 </div>
             </div>
 
-            <!-- Card 6: Reptilian Shapeshifters -->
-            <div class="card bg-gray-900 p-6 rounded-3xl shadow-2xl border border-gray-700">
-                <h2 class="text-2xl font-bold text-pink-400 mb-2">Reptilian Shapeshifters</h2>
-                <p class="text-gray-400 mb-4">The idea that a race of reptilian humanoids secretly controls the world by infiltrating positions of power.</p>
-                <div class="bg-gray-800 rounded-xl p-4">
-                    <button class="card-header w-full flex justify-between items-center text-left text-lg font-semibold text-gray-200"
-                            onclick="toggleCollapse(this.nextElementSibling)"
-                            aria-expanded="false"
-                            aria-controls="reptilians-content">
-                        <span>Are They in Charge?</span>
-                        <svg class="card-header-icon w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div id="reptilians-content" class="collapsible-content pt-4">
-                        <p class="text-gray-300 leading-relaxed">
-                            Popularized by conspiracy theorist David Icke, this theory asserts that a race of alien reptoids from the Alpha Draconis star system, known as the "Anunnaki," have been secretly interbreeding with humans for centuries. These reptilian shapeshifters, Icke claims, have infiltrated governments, royal families (most notably the British Royal family), and financial institutions to manipulate global events and establish a totalitarian control over humanity. The theory draws on ancient myths and is a prime example of a modern conspiracy that incorporates elements from science fiction and ufology.
-                        </p>
-                    </div>
+            <!-- Card 6: The Mandela Effect -->
+            <div class="card p-6 rounded-2xl shadow-xl flex flex-col justify-between hover:scale-105 transition-transform duration-300 cursor-pointer" data-theory="mandela-effect">
+                <div>
+                    <h3 class="text-2xl font-bold mb-2">The Mandela Effect</h3>
+                    <p class="text-gray-400">Do you remember it differently? A glitch in the Matrix?</p>
                 </div>
             </div>
-
-        </div>
+        </section>
     </main>
 
-    <!-- Footer Section -->
-    <footer class="text-center py-8 md:py-12 bg-gray-900 mt-16">
-        <p class="text-gray-500 text-sm">
-            Disclaimer: This page is for entertainment and educational purposes only. All information presented here is based on popular conspiracy theories, which are generally not supported by scientific evidence or mainstream consensus.
-        </p>
+    <!-- Footer -->
+    <footer class="bg-gray-800 p-8 text-center text-gray-400">
+        <p>&copy; 2025 The Conspiracy Compendium. All rights reserved.</p>
     </footer>
 
-    <!-- JavaScript for collapsible sections -->
-    <script>
-        function toggleCollapse(element) {
-            const isExpanded = element.classList.toggle('expanded');
-            const button = element.previousElementSibling;
-            button.setAttribute('aria-expanded', isExpanded);
-        }
-    </script>
+    <!-- Modal for Detailed Content -->
+    <div id="modal-overlay" class="modal-overlay fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-[999]">
+        <div id="modal-content" class="modal-content relative bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-2xl w-full mx-auto text-gray-200">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h3 id="modal-title" class="text-3xl font-bold mb-4 text-blue-400"></h3>
+            <p id="modal-body" class="text-gray-300"></p>
+        </div>
+    </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            const htmlTag = document.documentElement;
+
+            // Theme toggle functionality
+            themeToggleBtn.addEventListener('click', () => {
+                if (htmlTag.classList.contains('dark')) {
+                    htmlTag.classList.remove('dark');
+                    sunIcon.style.display = 'block';
+                    moonIcon.style.display = 'none';
+                } else {
+                    htmlTag.classList.add('dark');
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.display = 'block';
+                }
+            });
+
+            // Set initial theme based on system preference
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                htmlTag.classList.add('dark');
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                htmlTag.classList.remove('dark');
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+
+            // Modal functionality
+            const cardElements = document.querySelectorAll('.card');
+            const modalOverlay = document.getElementById('modal-overlay');
+            const closeModalBtn = document.getElementById('close-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+
+            const theories = {
+                'flat-earth': {
+                    title: 'The Flat Earth Society',
+                    content: 'Proponents of this theory believe the Earth is a stationary disc with the Arctic at the center and Antarctica acting as an ice wall around the edge. They dismiss photos of a spherical Earth as hoaxes and believe gravity is an illusion caused by the disc constantly accelerating upwards.',
+                },
+                'moon-hoax': {
+                    title: 'The Moon Landing Hoax',
+                    content: 'This theory claims that the six Apollo moon landings were faked by NASA, possibly in a studio set, to win the space race against the Soviet Union. "Evidence" often cited includes a flag appearing to wave in a vacuum, the absence of stars in photographs, and a lack of a blast crater under the lunar module.',
+                },
+                'area-51': {
+                    title: 'Area 51 & Aliens',
+                    content: 'Area 51 is a highly secretive US military base in Nevada. The conspiracy theory suggests that the base is used for the storage and reverse-engineering of crashed alien spacecraft, including the one from the 1947 Roswell incident. It\'s believed that the government studies extraterrestrial life and technology there.',
+                },
+                'denver-airport': {
+                    title: 'Denver Airport Murals',
+                    content: 'Denver International Airport is a hotbed of bizarre theories due to its unusual artwork. Murals depicting apocalyptic scenes of war, death, and environmental destruction, as well as a giant blue horse statue with glowing red eyes, have led some to believe the airport is a secret New World Order headquarters or a bunker for the global elite.',
+                },
+                'chemtrails': {
+                    title: 'Chemtrails',
+                    content: 'The "chemtrail" theory posits that the persistent white lines left by aircraft are not simply contrails (condensation trails), but rather chemical or biological agents deliberately sprayed into the atmosphere. The supposed reasons range from population control and weather modification to psychological manipulation.',
+                },
+                'mandela-effect': {
+                    title: 'The Mandela Effect',
+                    content: 'This is a phenomenon where a large group of people share a false memory of past events. The term originated from people who vividly remember Nelson Mandela dying in prison in the 1980s. Other examples include the Berenstain Bears being remembered as "Berenstein Bears," and the Monopoly man having a monocle (he doesn\'t).',
+                }
+            };
+
+            cardElements.forEach(card => {
+                card.addEventListener('click', () => {
+                    const theoryId = card.dataset.theory;
+                    const theory = theories[theoryId];
+                    if (theory) {
+                        modalTitle.textContent = theory.title;
+                        modalBody.textContent = theory.content;
+                        modalOverlay.classList.add('active');
+                    }
+                });
+            });
+
+            closeModalBtn.addEventListener('click', () => {
+                modalOverlay.classList.remove('active');
+            });
+
+            modalOverlay.addEventListener('click', (event) => {
+                if (event.target === modalOverlay) {
+                    modalOverlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
