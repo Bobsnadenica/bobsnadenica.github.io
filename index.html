@@ -59,10 +59,14 @@ h2 {font-size: clamp(1rem, 3vw, 1.5rem); color: var(--secondary-text-color); mar
 </style>
 </head>
 <body>
+    
 <div class="garden"></div>
+    
 <div class="flower-container"></div>
+    
 <h1>Здрасти!</h1>
 <h2>Всеки ден Тези 5 AI правят забавна страница на тема "Конспирации" - всеки ден е различна, може би (Ако съм платил за API кредити). Вижте разликите.</h2>
+    
 <div class="nav-grid">
     <a href="Grok.html">Grok</a>
     <a href="Chatgpt.html">ChatGPT</a>
@@ -70,24 +74,29 @@ h2 {font-size: clamp(1rem, 3vw, 1.5rem); color: var(--secondary-text-color); mar
     <a href="Gemini.html">Gemini</a>
     <a href="Meta.html">Meta</a>
 </div>
+    
 <div class="cat-game-wrapper">
+    
     <div class="todo-container">
         <h3>🐾 Котешки задачи</h3>
         <input type="text" class="todo-input" placeholder="Добави задача..." />
         <ul class="todo-list"></ul>
     </div>
+    
     <div class="cat-fact-container">
         <img id="cat-img" class="cat-img" alt="Daily Cat" loading="lazy" />
         <div id="fact" class="fact">Зареждам котешки факт...</div>
     </div>
+    
     <div class="cat-game-container">
         <canvas id="snake" width="200" height="200"></canvas>
-        <div style="font-size:0.9rem; margin-top:0.3rem; color:var(--secondary-text-color);">🎮 Мини змия - използвай стрелките</div>
+        <div style="font-size:0.9rem; margin-top:0.3rem; color:var(--secondary-text-color);">🎮 Използвай стрелките</div>
     </div>
+    
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    /* DUCK CURSOR */
+                                                                                                                                                                    /* Пате мишка */
     const ducks = [], duckCount = 5, duckEmojis = ["🦆"], babyDuck = ["🐥", "🐤"];
     for (let i = 0; i < duckCount; i++) {
         const span = document.createElement("span");
@@ -114,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(animate);
     })();
 
-    /* GARDEN FLOWERS */
+                                                                                                                                                /* Цветя Градинка */
     const flowers = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🍄", "🌲", "🌳", "🌵", "🍀"],
           container = document.querySelector('.flower-container');
     const createPlant = (x, y) => {
@@ -154,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /* CAT + FACT */
+                                                                                                                                                    /* Котки и факти */
     (async () => {
         try {
             const cat = await fetch("https://api.thecatapi.com/v1/images/search").then(r => r.json());
@@ -166,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })();
 
-    /* TODO LIST WITH LOCALSTORAGE */
+                                                                                                                                                            /* TODO лист */
     const todoInput = document.querySelector('.todo-input');
     const todoList = document.querySelector('.todo-list');
 
@@ -206,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load existing tasks on page load
     loadTasks();
 
-    /* MINI SNAKE GAME */
+                                                                                                                                                        /* Змия */
     const canvas = document.getElementById("snake");
     const ctx = canvas.getContext("2d");
     const box = 10;
