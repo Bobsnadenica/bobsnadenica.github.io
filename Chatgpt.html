@@ -1,388 +1,228 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Wildest Conspiracy Theories — A Single-File Showcase</title>
-  <meta name="description" content="An interactive, single-page guide to some of the wildest conspiracy theories — summaries, claims, rebuttals, and cultural impact. Built as a skill showcase: animations, SVG, canvas, accessibility, and microinteractions." />
-
-  <!-- Google Font (optional) -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wildest Conspiracy Theories</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#ff6b6b; --accent2:#6b9bff;
-      --glass: rgba(255,255,255,0.03);
-      --radius:16px; --glass-2: rgba(255,255,255,0.02);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;padding:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#e6eef7;background:linear-gradient(180deg,#081024 0%, #071021 50%, #051021 100%);
-      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-      display:flex;flex-direction:column;align-items:stretch;
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    header{
-      position:sticky;top:0;z-index:40;padding:18px 28px;backdrop-filter: blur(6px) saturate(120%);
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-bottom:1px solid rgba(255,255,255,0.03);display:flex;gap:16px;align-items:center;justify-content:space-between;
+    body {
+      font-family: 'Share Tech Mono', monospace;
+      background: #0d0d0d;
+      color: #ccc;
+      line-height: 1.6;
+      overflow-x: hidden;
     }
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 6px 20px rgba(107,155,255,0.08);font-weight:800;color:#06132a}
-    h1{font-size:18px;margin:0}
-    .controls{display:flex;gap:8px;align-items:center}
-    button{background:var(--glass);border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600}
-    button:hover{transform:translateY(-2px);box-shadow:0 6px 30px rgba(0,0,0,0.5)}
 
-    main{padding:32px;max-width:1200px;margin:0 auto;width:100%}
+    header {
+      padding: 100px 20px 40px;
+      text-align: center;
+      background: linear-gradient(145deg, #000, #111);
+      position: relative;
+    }
 
-    .intro{display:grid;grid-template-columns:1fr 360px;gap:22px;margin-bottom:26px}
-    .hero{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:22px;border-radius:18px;border:1px solid rgba(255,255,255,0.03)}
-    .hero p{color:var(--muted);line-height:1.5}
+    .glitch {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3em;
+      color: white;
+      position: relative;
+      animation: glitch 2s infinite;
+    }
 
-    .stats{padding:18px;border-radius:14px;background:linear-gradient(180deg,var(--glass),var(--glass-2));border:1px solid rgba(255,255,255,0.02)}
-    .stat{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-    .stat strong{color:#fff}
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 red, -2px 0 blue; }
+      20% { text-shadow: -2px 0 green, 2px 0 pink; }
+      40% { text-shadow: 2px 2px #f0f, -2px -2px #0ff; }
+      60% { text-shadow: -2px 2px #ff0, 2px -2px #00f; }
+      80% { text-shadow: 0 0 2px white; }
+      100% { text-shadow: 2px 0 red, -2px 0 blue; }
+    }
 
-    /* grid of cards */
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:18px}
+    .parallax {
+      background-image: url('https://images.unsplash.com/photo-1583511655826-05700d52f4f3?auto=format&fit=crop&w=1950&q=80');
+      min-height: 400px;
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: relative;
+    }
 
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);position:relative;overflow:hidden;cursor:pointer;transition:transform .28s ease, box-shadow .2s}
-    .card:hover{transform:translateY(-8px);box-shadow:0 18px 30px rgba(0,0,0,0.6)}
-    .card h3{margin:0 0 8px 0}
-    .tags{display:flex;gap:8px;flex-wrap:wrap}
-    .tag{font-size:12px;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03);color:var(--muted)}
+    .content {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
 
-    /* flip effect content */
-    .flip{perspective:1200px}
-    .flip-inner{transition:transform .6s;transform-style:preserve-3d}
-    .flip:hover .flip-inner{transform:rotateY(180deg)}
-    .flip-face{backface-visibility:hidden;position:relative}
-    .flip-back{position:absolute;inset:0;transform:rotateY(180deg);padding:18px}
+    .theory {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 5px solid #6c63ff;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
 
-    /* modal */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.85));z-index:80}
-    .modal.open{display:flex}
-    .modal .panel{width:min(900px,95%);max-height:86vh;overflow:auto;padding:22px;border-radius:14px;background:linear-gradient(180deg,#051021, #07112a);border:1px solid rgba(255,255,255,0.04)}
+    .theory:hover {
+      transform: scale(1.02);
+    }
 
-    /* search & filter */
-    .searchbar{display:flex;gap:8px;padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);align-items:center}
-    .searchbar input{flex:1;background:transparent;border:0;color:#dfefff;outline:none}
+    .collapsible {
+      background: none;
+      border: none;
+      color: #6c63ff;
+      font-size: 1.1em;
+      text-align: left;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 10px;
+    }
 
-    footer{padding:18px;border-top:1px solid rgba(255,255,255,0.02);text-align:center;color:var(--muted);font-size:13px}
+    .content-hidden {
+      display: none;
+      margin-top: 10px;
+    }
 
-    /* responsive */
-    @media (max-width:880px){ .intro{grid-template-columns:1fr} .hero{order:2} .stats{order:1} }
+    iframe {
+      width: 100%;
+      height: 315px;
+      border: none;
+      margin-top: 20px;
+    }
 
-    /* accessibility focus */
-    [tabindex]:focus{outline:3px solid rgba(107,155,255,0.18);outline-offset:2px}
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #111;
+      font-size: 0.9em;
+      color: #666;
+    }
 
-    /* print friendly */
-    @media print{body{background:white;color:black} header,footer{display:none}}  
+    /* Easter Egg Style */
+    #easter-egg {
+      display: none;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #111;
+      padding: 20px;
+      border: 1px solid #6c63ff;
+      z-index: 1000;
+      box-shadow: 0 0 10px #6c63ff;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .glitch {
+        font-size: 2em;
+      }
+
+      .parallax {
+        background-attachment: scroll;
+      }
+    }
   </style>
 </head>
-
 <body>
+
   <header>
-    <div class="brand">
-      <div class="logo" aria-hidden>CT</div>
-      <div>
-        <h1>Wildest Conspiracy Theories</h1>
-        <div style="color:var(--muted);font-size:12px">Interactive guide • playful • informative • debunk-aware</div>
-      </div>
-    </div>
-    <div class="controls">
-      <div class="searchbar" role="search" aria-label="Search theories">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:0.8"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></circle></svg>
-        <input id="search" placeholder="Search (e.g., Moon, QAnon, HAARP)" aria-label="Search theories">
-      </div>
-      <button id="toggleDark" title="Toggle contrast">Toggle Contrast</button>
-      <button id="openTimeline" title="Open timeline">Timeline</button>
-    </div>
+    <h1 class="glitch">Wildest Conspiracy Theories</h1>
+    <p>Prepare to dive into the weirdest rabbit holes the internet has to offer.</p>
   </header>
 
-  <main>
-    <section class="intro">
-      <article class="hero" aria-labelledby="hero-title">
-        <h2 id="hero-title">A wild tour through cultural myths</h2>
-        <p>This single-page site is both a playful technical showcase and a careful exploration of conspiracy theories: what the claims are, why they spread, and how critics or scientists respond. The goal here is not to promote misinformation — it's to document, explain, and show how conspiracy narratives work.</p>
-        <p style="color:var(--muted);font-size:13px">Tip: click any card for a deep dive. Use the search box to filter. Empty your cache, press <kbd>R</kbd> for a surprise animation.</p>
-      </article>
+  <div class="parallax"></div>
 
-      <aside class="stats" aria-labelledby="stats-title">
-        <h3 id="stats-title" style="margin-top:0">Quick facts</h3>
-        <div class="stat"><span>Number of entries</span><strong id="count">12</strong></div>
-        <div class="stat"><span>Interactive widgets</span><strong>modules: 6</strong></div>
-        <div class="stat"><span>Built with</span><strong>HTML • CSS • JS • SVG • Canvas</strong></div>
-      </aside>
-    </section>
+  <div class="content">
 
-    <!-- Grid of theories -->
-    <section id="theories" class="grid" aria-live="polite">
-
-      <!-- Card template: fill with JS for maintainability. We provide a few explicitly for fallback -->
-
-      <article class="card flip" data-theory="Moon landing" tabindex="0" role="button" aria-pressed="false" data-category="space">
-        <div class="flip-inner">
-          <div class="flip-face">
-            <h3>Moon Landing Hoax</h3>
-            <div class="tags"><span class="tag">1969</span><span class="tag">NASA</span><span class="tag">Photos</span></div>
-            <p style="color:var(--muted);margin-top:10px">Claim: The Apollo missions were staged on a soundstage. Evidence cited: anomalies in photos, waving flag, shadows.</p>
-          </div>
-          <div class="flip-face flip-back">
-            <h3>Why skeptics disagree</h3>
-            <p style="color:var(--muted)">Extensive engineering records, telemetry, lunar samples, and independent tracking by other nations make the hoax claim extremely unlikely.</p>
-            <div style="position:absolute;right:12px;bottom:12px;font-size:12px;color:var(--muted)">Click for deep-dive</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" data-theory="Area 51 and Aliens" tabindex="0" role="button" aria-pressed="false" data-category="military">
-        <h3>Area 51 & Extraterrestrials</h3>
-        <div class="tags"><span class="tag">Cold War</span><span class="tag">UFOs</span></div>
-        <p style="color:var(--muted);margin-top:10px">Claim: Government hides crashed aliens and reverse-engineers technology. Evidence: witness testimony, leaked documents, declassified UFO programs.</p>
-      </article>
-
-      <article class="card" data-theory="Flat Earth" tabindex="0" role="button" aria-pressed="false" data-category="science">
-        <h3>Flat Earth</h3>
-        <div class="tags"><span class="tag">Modern Revival</span><span class="tag">Internet</span></div>
-        <p style="color:var(--muted);margin-top:10px">Claim: Earth is flat, NASA fakes curvature. Evidence cited: perceived lack of curvature, mistrust of institutions.</p>
-      </article>
-
-      <article class="card" data-theory="Chemtrails" tabindex="0" role="button" aria-pressed="false" data-category="environment">
-        <h3>Chemtrails</h3>
-        <div class="tags"><span class="tag">Aerial</span><span class="tag">Weather</span></div>
-        <p style="color:var(--muted);margin-top:10px">Claim: Contrails are chemical agents for population control or weather modification. Evidence: long-lasting trails, patterns in skies.</p>
-      </article>
-
-      <article class="card" data-theory="QAnon" tabindex="0" role="button" aria-pressed="false" data-category="politics">
-        <h3>QAnon</h3>
-        <div class="tags"><span class="tag">Politics</span><span class="tag">2020s</span></div>
-        <p style="color:var(--muted);margin-top:10px">Claim: A secretive "Q" posts cryptic intel about a global cabal and imminent justice. Evidence cited: social media 'drops', pattern-seeking.</p>
-      </article>
-
-      <article class="card" data-theory="9/11" tabindex="0" role="button" aria-pressed="false" data-category="events">
-        <h3>9/11 Controlled Demolition Theories</h3>
-        <div class="tags"><span class="tag">2001</span><span class="tag">Buildings</span></div>
-        <p style="color:var(--muted);margin-top:10px">Claim: The towers were brought down intentionally by planted explosives. Evidence cited: collapse symmetry, thermite traces.</p>
-      </article>
-
-      <article class="card" data-theory="HAARP" tabindex="0" role="button" aria-pressed="false" data-category="science">
-        <h3>HAARP Weather Control</h3>
-        <div class="tags"><span class="tag">Ionosphere</span><span class="tag">Military</span></div>
-        <p style="color:var(--muted);margin-top:10px">Claim: HAARP manipulates weather and causes earthquakes. Evidence cited: research papers, military funding.</p>
-      </article>
-
-      <article class="card" data-theory="Reptilian" tabindex="0" role="button" aria-pressed="false" data-category="politics">
-        <h3>Reptilian Elites</h3>
-        <div class="tags"><span class="tag">Myth</span><span class="tag">Shape-shifters</span></div>
-        <p style="color:var(--muted);margin-top:10px">Claim: Powerful public figures are actually reptilian shapeshifters. Evidence: symbolic readings, selective photos.</p>
-      </article>
-
-      <article class="card" data-theory="Mandela Effect" tabindex="0" role="button" aria-pressed="false" data-category="psychology">
-        <h3>Mandela Effect</h3>
-        <div class="tags"><span class="tag">Memory</span><span class="tag">Collective</span></div>
-        <p style="color:var(--muted);margin-top:10px">Claim: Small communities remember alternative histories — evidence for altered timelines or shared false memory.</p>
-      </article>
-
-      <article class="card" data-theory="Simulation" tabindex="0" role="button" aria-pressed="false" data-category="philosophy">
-        <h3>Simulation Hypothesis</h3>
-        <div class="tags"><span class="tag">Philosophy</span><span class="tag">Tech</span></div>
-        <p style="color:var(--muted);margin-top:10px">Claim: Our reality is a simulation run by advanced beings. Evidence cited: computational limits in physics, philosophical arguments.</p>
-      </article>
-
-      <article class="card" data-theory="Ancient Aliens" tabindex="0" role="button" aria-pressed="false" data-category="history">
-        <h3>Ancient Astronauts</h3>
-        <div class="tags"><span class="tag">Archaeology</span><span class="tag">Pyramids</span></div>
-        <p style="color:var(--muted);margin-top:10px">Claim: Ancient civilizations received help from extraterrestrials. Evidence cited: megalithic engineering, iconography.</p>
-      </article>
-
-      <article class="card" data-theory="New World Order" tabindex="0" role="button" aria-pressed="false" data-category="politics">
-        <h3>New World Order</h3>
-        <div class="tags"><span class="tag">Globalism</span><span class="tag">Secret Societies</span></div>
-        <p style="color:var(--muted);margin-top:10px">Claim: A shadowy elite plots a global authoritarian government. Evidence cited: elite meetings, policy coordination.</p>
-      </article>
-
-    </section>
-
-    <!-- Canvas Chart: sentiment or just a playful visual -->
-    <section style="margin-top:32px;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));border:1px solid rgba(255,255,255,0.02)">
-      <h3 style="margin-top:0">Interactive: "Believability" Spectrum</h3>
-      <p style="color:var(--muted)">Drag the markers to rate how plausible each theory seems — the canvas visual updates in real time. (This is playful, not scientific.)</p>
-      <canvas id="spectrum" width="900" height="180" style="width:100%;max-width:900px;border-radius:10px;background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));display:block"></canvas>
-    </section>
-
-  </main>
-
-  <!-- Modal for deep dive -->
-  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="panel" role="document">
-      <button id="closeModal" style="float:right;background:transparent;border:0;color:var(--muted);font-weight:700">✕</button>
-      <div id="modalContent"></div>
+    <div class="theory">
+      <h2>🌍 Flat Earth Theory</h2>
+      <p>Yes, there are still people who believe the Earth is flat. Despite centuries of evidence, the idea thrives in online communities.</p>
+      <button class="collapsible">More Info</button>
+      <div class="content-hidden">
+        <p>Flat Earthers believe NASA fakes images, pilots are in on the lie, and Antarctica is an ice wall guarding the edge of the planet.</p>
+      </div>
     </div>
+
+    <div class="theory">
+      <h2>🛸 Area 51 and Alien Tech</h2>
+      <p>Area 51 is long suspected of housing crashed alien spacecraft and extraterrestrial bodies.</p>
+      <button class="collapsible">More Info</button>
+      <div class="content-hidden">
+        <p>Bob Lazar claims to have worked on reverse-engineering alien propulsion at a secret base near Area 51. Mainstream scientists dispute this, but believers persist.</p>
+        <iframe src="https://www.youtube.com/embed/BEWz4GXkF2k" title="Bob Lazar Interview"></iframe>
+      </div>
+    </div>
+
+    <div class="theory">
+      <h2>🧬 Reptilian Elite</h2>
+      <p>A theory by David Icke claims that world leaders are actually shape-shifting reptilian aliens controlling humanity.</p>
+      <button class="collapsible">More Info</button>
+      <div class="content-hidden">
+        <p>From Queen Elizabeth to Mark Zuckerberg, no one is safe from suspicion. These reptiles allegedly feed off negative energy and manipulate global events.</p>
+      </div>
+    </div>
+
+    <div class="theory">
+      <h2>🌕 Moon Landing Was Faked</h2>
+      <p>The 1969 moon landing is claimed by some to be a Hollywood production directed by Stanley Kubrick.</p>
+      <button class="collapsible">More Info</button>
+      <div class="content-hidden">
+        <p>Pointing to shadows, flag movement, and suspicious footage, skeptics argue it was staged to win the space race against the USSR.</p>
+      </div>
+    </div>
+
+    <div class="theory">
+      <h2>🧠 Simulation Theory</h2>
+      <p>Elon Musk popularized the idea that we might be living in a simulated universe created by a more advanced civilization.</p>
+      <button class="collapsible">More Info</button>
+      <div class="content-hidden">
+        <p>Based on philosophical and technological reasoning, this theory is surprisingly taken seriously by some physicists.</p>
+      </div>
+    </div>
+
+    <div class="theory">
+      <h2>🐦 Birds Aren't Real</h2>
+      <p>This satirical (or is it?) movement claims that birds were replaced by government surveillance drones.</p>
+      <button class="collapsible">More Info</button>
+      <div class="content-hidden">
+        <p>They say birds "charging" on power lines is proof and that pigeons are spy machines in disguise. It started as a joke, but now has a cult following.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="easter-egg">
+    🕵️‍♂️ You found the secret! The Illuminati is watching...
   </div>
 
   <footer>
-    Built for fun — informational summaries only. If you'd like a printable PDF version or an exportable JSON of all entries, say the word.
+    &copy; 2025 Secret Society of Wild Theories | This site is purely for entertainment (we hope).
   </footer>
 
   <script>
-    // Data model (can be extended)
-    const THEORIES = [
-      {id:1, title:'Moon Landing Hoax', tags:['1969','NASA','Photos'], category:'space', summary:'Claim: The Apollo missions were staged. Evidence cited: photo anomalies, flag behaviour.', details: `\n<p><strong>Claim overview</strong>: Advocates point to visual oddities and skeptical readings of footage.</p>\n<p><strong>Counterpoints</strong>: Moon rocks, independent tracking, and the enormous scale of engineering make a staged forgery inconceivable for many experts.</p>`},
-      {id:2, title:'Area 51 & Extraterrestrials', tags:['Cold War','UFOs'], category:'military', summary:'Claim: Government hides alien craft and bodies. Evidence: testimony and secrecy around testing ranges.', details:`<p>Area 51 was a secretive testing site — secrecy breeds speculation. Declassified programs like Project Blue Book and more recent UAP reports add complexity.</p>`},
-      {id:3, title:'Flat Earth', tags:['Internet','Modern Revival'], category:'science', summary:'Claim: Earth is flat and curvature is faked.', details:`<p>Flat Earth combines distrust with selective observations. Modern advocates often use social platforms to spread experiments that ignore known optics and scales.</p>`},
-      {id:4, title:'Chemtrails', tags:['Aerial','Weather'], category:'environment', summary:'Claim: Contrails are chemicals sprayed for control.', details:`<p>Contrails form from water vapor in exhaust. Scientific measurements show expected chemical composition; large-scale covert spraying would be logistically visible.</p>`},
-      {id:5, title:'QAnon', tags:['Politics','2020s'], category:'politics', summary:'Claim: "Q" reveals cryptic intel about a cabal. Evidence: message boards and pattern-seeking.', details:`<p>QAnon mixed political grievances, gossip, and pattern recognition. Platforms, algorithms, and social reinforcement accelerated its reach.</p>`},
-      {id:6, title:'9/11 Demolition Theories', tags:['2001','Buildings'], category:'events', summary:'Claim: Towers were demolished intentionally.', details:`<p>Engineers have debated collapse mechanics, but mainstream investigations attribute collapses to aircraft impact + fire. Some independent researchers continue to dispute specifics.</p>`},
-      {id:7, title:'HAARP Weather Control', tags:['Ionosphere','Military'], category:'science', summary:'Claim: HAARP can control weather and earthquakes.', details:`<p>HAARP transmits radio waves into the ionosphere for study; its energy levels are orders of magnitude below what's needed for large-scale weather modification.</p>`},
-      {id:8, title:'Reptilian Elites', tags:['Myth','Shape-shifters'], category:'politics', summary:'Claim: Some leaders are reptilian shapeshifters.', details:`<p>A symbolic and mythic narrative amplified online. No empirical evidence supports a biological basis; often it's used metaphorically.</p>`},
-      {id:9, title:'Mandela Effect', tags:['Memory','Collective'], category:'psychology', summary:'Claim: Groups recall alternate histories.', details:`<p>Memory is constructive and error-prone; the Mandela Effect likely arises from confabulation, misinformation, and collective reinforcement.</p>`},
-      {id:10, title:'Simulation Hypothesis', tags:['Philosophy','Tech'], category:'philosophy', summary:'Claim: Reality is a simulation.', details:`<p>Philosophically intriguing; arguments range from probabilistic reasoning to metaphysical speculation. It's hard to adjudicate scientifically.</p>`},
-      {id:11, title:'Ancient Astronauts', tags:['Archaeology','Pyramids'], category:'history', summary:'Claim: Humans received ancient extraterrestrial help.', details:`<p>Archaeology shows local ingenuity; proponents point to technological gaps, critics emphasize incomplete understanding and occasional misinterpretation.</p>`},
-      {id:12, title:'New World Order', tags:['Globalism','Secret Societies'], category:'politics', summary:'Claim: A global authoritarian plan is underway.', details:`<p>Coordination between countries exists, but evidence of a single conspiratorial cabal controlling everything is lacking. The phrase often doubles as a rhetorical trope.</p>`}
-    ];
-
-    // Build cards dynamically to ensure ease of extension
-    const container = document.getElementById('theories');
-    container.innerHTML = '';
-    THEORIES.forEach(t => {
-      const art = document.createElement('article');
-      art.className = 'card';
-      art.tabIndex = 0;
-      art.setAttribute('data-theory', t.title);
-      art.setAttribute('data-category', t.category);
-      art.innerHTML = `
-        <h3>${t.title}</h3>
-        <div class="tags">${t.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>
-        <p style="color:var(--muted);margin-top:10px">${t.summary}</p>
-      `;
-      art.addEventListener('click', () => openModal(t));
-      art.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') openModal(t); });
-      container.appendChild(art);
-    });
-
-    // Modal
-    const modal = document.getElementById('modal');
-    const modalContent = document.getElementById('modalContent');
-    document.getElementById('closeModal').addEventListener('click', closeModal);
-    modal.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
-
-    function openModal(t){
-      modalContent.innerHTML = `<h2 style="margin-top:0">${t.title}</h2>` +
-        `<div style="color:var(--muted)">${t.details}</div>` +
-        `<hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:12px 0">` +
-        `<h4>Why it spreads</h4><p style="color:var(--muted)">Social networks, cognitive biases (confirmation, pattern-seeking), institutional distrust, and occasionally disinformation campaigns all help propagate conspiracies.</p>` +
-        `<h4>Further reading / critical thinking</h4><ul style="color:var(--muted)"><li>Check primary sources</li><li>Look for independent confirmation</li><li>Beware motivated reasoning and echo chambers</li></ul>`;
-      modal.classList.add('open');
-      modal.setAttribute('aria-hidden','false');
-      document.body.style.overflow='hidden';
-      // focus trap minimal
-      document.getElementById('closeModal').focus();
-    }
-    function closeModal(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); document.body.style.overflow='auto'; }
-
-    // Search filter
-    const search = document.getElementById('search');
-    search.addEventListener('input', (e)=>{
-      const q = e.target.value.trim().toLowerCase();
-      const cards = container.querySelectorAll('.card');
-      let visible = 0;
-      cards.forEach(c=>{
-        const title = c.querySelector('h3').textContent.toLowerCase();
-        const tags = Array.from(c.querySelectorAll('.tag')).map(t=>t.textContent.toLowerCase()).join(' ');
-        if(!q || title.includes(q) || tags.includes(q)) { c.style.display='block'; visible++; } else c.style.display='none';
+    // Collapsible logic
+    const buttons = document.querySelectorAll('.collapsible');
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const content = button.nextElementSibling;
+        content.classList.toggle('content-hidden');
       });
-      document.getElementById('count').textContent = visible || 0;
     });
 
-    // Toggle contrast (funny 'dark' swap)
-    document.getElementById('toggleDark').addEventListener('click', ()=>{
-      document.documentElement.style.setProperty('--bg', '#fff');
-      // quick fun: invert accent colors
-      const a = getComputedStyle(document.documentElement).getPropertyValue('--accent');
-      const b = getComputedStyle(document.documentElement).getPropertyValue('--accent2');
-      document.documentElement.style.setProperty('--accent', b);
-      document.documentElement.style.setProperty('--accent2', a);
-      alert('Contrast toggled (this demo swaps accents).');
+    // Easter egg: press "Ctrl + Alt + U" to reveal
+    document.addEventListener('keydown', function (e) {
+      if (e.ctrlKey && e.altKey && e.key === 'u') {
+        const egg = document.getElementById('easter-egg');
+        egg.style.display = egg.style.display === 'block' ? 'none' : 'block';
+      }
     });
-
-    // Timeline open (simple generated timeline modal)
-    document.getElementById('openTimeline').addEventListener('click', ()=>{
-      const events = [
-        {year:1969, text:'Apollo 11 — Moon landing (source of moon-hoax theory)'} ,
-        {year:1947, text:'Roswell incident — UFO lore grows'},
-        {year:2001, text:'9/11 — spawned multiple conspiracy narratives'},
-        {year:2017, text:'QAnon begins — modern online political conspiracy'},
-      ];
-      let html = '<h2 style="margin-top:0">Timeline</h2><ol style="color:var(--muted)">';
-      events.forEach(e=> html += `<li><strong>${e.year}</strong> — ${e.text}</li>`);
-      html += '</ol>';
-      modalContent.innerHTML = html;
-      modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
-      document.getElementById('closeModal').focus();
-    });
-
-    // Canvas interactive: draggable markers
-    const canvas = document.getElementById('spectrum');
-    const ctx = canvas.getContext('2d');
-    const markers = THEORIES.slice(0,6).map((t,i)=>({id:t.id,label:t.title,x:40 + i*140,y:90,value:50}));
-    function drawSpectrum(){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      // background grid
-      ctx.save(); ctx.globalAlpha=0.06; for(let x=0;x<canvas.width;x+=20){ctx.fillRect(x,0,1,canvas.height);} ctx.restore();
-      // axis
-      ctx.fillStyle='rgba(255,255,255,0.06)'; ctx.fillRect(20,80,canvas.width-40,2);
-      markers.forEach(m=>{
-        // line
-        ctx.beginPath(); ctx.moveTo(m.x,80); ctx.lineTo(m.x,120); ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.stroke();
-        // knob
-        ctx.beginPath(); ctx.arc(m.x, m.y, 10,0,Math.PI*2); ctx.fillStyle = 'rgba(107,155,255,0.9)'; ctx.fill();
-        // label
-        ctx.fillStyle='rgba(230,238,247,0.9)'; ctx.font='12px Inter, sans-serif'; ctx.fillText(m.label, m.x-40,40);
-      });
-    }
-    drawSpectrum();
-    // simple pointer drag
-    let drag = null;
-    canvas.addEventListener('pointerdown', (e)=>{
-      const r = canvas.getBoundingClientRect(); const x = e.clientX - r.left, y = e.clientY - r.top;
-      for(const m of markers){ if(Math.hypot(m.x-x,m.y-y) < 14){ drag=m; break; } }
-    });
-    window.addEventListener('pointermove', (e)=>{
-      if(!drag) return; const r = canvas.getBoundingClientRect(); const y = e.clientY - r.top;
-      drag.y = Math.min(140, Math.max(40, y)); drawSpectrum();
-    });
-    window.addEventListener('pointerup', ()=>drag=null);
-
-    // keyboard shortcut R for randomize
-    window.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase()==='r'){ markers.forEach(m=>m.y = 50 + Math.random()*80); drawSpectrum(); } });
-
-    // small easter egg: konami-ish (UUDDLRLR)
-    const KONAMI = [38,38,40,40,37,39,37,39]; let kpos=0;
-    window.addEventListener('keydown', (e)=>{
-      if(e.keyCode === KONAMI[kpos]){ kpos++; if(kpos===KONAMI.length){ alert('🛸 You found the easter egg: believe everything, question everything.'); kpos=0;} } else kpos=0;
-    });
-
-    // Small accessibility improvement: announce when search filters
-    const live = document.createElement('div'); live.setAttribute('aria-live','polite'); live.style.position='absolute'; live.style.left='-9999px'; document.body.appendChild(live);
-    search.addEventListener('input', ()=>{ const q = search.value.trim() || 'all'; live.textContent = `Filtered: ${q}`; });
-
-    // Print/export: Ctrl+E to export JSON of theories
-    window.addEventListener('keydown', (e)=>{
-      if(e.ctrlKey && e.key.toLowerCase()==='e'){ e.preventDefault(); const data = JSON.stringify(THEORIES, null, 2); const blob = new Blob([data],{type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'conspiracy-theories.json'; a.click(); URL.revokeObjectURL(url); }
-    });
-
-    // small performance: lazy load - not many assets here but demonstrate pattern
-    if('requestIdleCallback' in window){ requestIdleCallback(()=>{ console.log('idle: prefetching resources...'); }); }
-
-    // reduce motion preference respect
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if(mq.matches){ document.querySelectorAll('.card').forEach(c=> c.style.transition='none'); }
-
-    // finish
-    document.getElementById('count').textContent = THEORIES.length;
   </script>
 </body>
 </html>
