@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 # Set up API keys
 openai.api_key = os.getenv("OPENAI_API_KEY")
 grok_api_key = os.getenv("GROK_API_KEY")
-github_token = os.getenv("GITHUB_TOKEN")  # Add your GitHub Personal Access Token as environment variable
+github_token = os.getenv("TOKEN_GITHUB")  # Add your GitHub Personal Access Token as environment variable
 grok_api_url = "https://api.x.ai/v1/chat/completions"
 
 # GitHub repository details
