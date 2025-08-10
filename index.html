@@ -18,34 +18,44 @@
     --primary-gradient: linear-gradient(45deg, #2e7d32, #4caf50);
     --underline-gradient: linear-gradient(90deg, #388e3c, #66bb6a);
 }
-*, *::before, *::after {margin:0; padding:0; box-sizing:border-box;}
-html, body {height:100%; overflow:hidden; font-family:'Inter', sans-serif; color:var(--text-color); cursor:none; user-select:none;}
-body {display:flex; flex-direction:column; justify-content:center; align-items:center; position:relative; padding:1rem; text-align:center;}
-.garden {position:absolute; inset:0; background: var(--bg-color) url('https://images.unsplash.com/photo-1549400263-888995a9735a?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1920&h=1080') no-repeat center/cover; z-index:-1; filter:brightness(0.9) saturate(1.2);}
-.flower-container {position:absolute; inset:0; pointer-events:none; z-index:0;}
-h1, h2, .nav-grid, .cat-fact-container, .cat-game-container {z-index:1;}
-h1 {font-size:clamp(2rem, 8vw, 5rem); font-weight:900; text-transform:uppercase; background:var(--primary-gradient); -webkit-background-clip:text; color:transparent; position:relative; animation:slideIn 1s ease forwards; padding-bottom:20px; text-shadow:0 2px 4px rgba(0,0,0,0.2);}
-h1::after {content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%) scaleX(0); width:100%; max-width:300px; height:4px; background:var(--underline-gradient); animation:underline 1s 0.5s ease forwards;}
-h2 {font-size:clamp(1rem, 3vw, 1.5rem); color:var(--secondary-text-color); margin-top:1rem; max-width:600px; text-shadow:0 1px 2px rgba(0,0,0,0.1);}
-@keyframes slideIn {from {transform:translateY(50px); opacity:0;} to {transform:translateY(0); opacity:1;}}
-@keyframes underline {to {transform:translateX(-50%) scaleX(1);}}
-.nav-grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:1rem; margin-top:3rem; width:100%; max-width:800px;}
-.nav-grid a {text-decoration:none; color:var(--text-color); font-size:1.1rem; padding:0.75rem; background:var(--link-bg-color); border:1px solid var(--link-border-color); border-radius:8px; text-align:center; transition:transform 0.3s, box-shadow 0.3s, background 0.3s;}
-.nav-grid a:hover {transform:translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,0.3); background:var(--link-hover-bg-color);}
-.cat-game-wrapper {display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap; justify-content:center;}
-.cat-fact-container, .cat-game-container {max-width:400px; background:rgba(255,255,255,0.7); border-radius:10px; padding:1rem;}
-.cat-img {width:100%; height:auto; border-radius:10px; border:2px solid var(--link-border-color);}
-.fact {font-size:1rem; color:var(--secondary-text-color); margin-top:0.5rem;}
-.cat-game-container canvas {border:2px solid var(--link-border-color); border-radius:10px; background:#fff;}
-.duck {position:fixed; pointer-events:none; z-index:9999; user-select:none;}
-.cursor-duck {font-size:2.5rem; animation:waddleCursor 0.3s infinite alternate;}
-.follower-duck {font-size:1.2rem; animation:waddleFollower 0.4s infinite alternate;}
-@keyframes waddleCursor {from {transform:translate(-50%, -50%) rotate(-5deg) scale(1.1);} to {transform:translate(-50%, -50%) rotate(5deg) scale(1.1);}}
-@keyframes waddleFollower {from {transform:translate(-50%, -50%) rotate(-10deg);} to {transform:translate(-50%, -50%) rotate(10deg);}}
-.flower {position:absolute; font-size:1rem; pointer-events:none; transform:translate(-50%, -50%) scale(0.1); opacity:0; transition:transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 1s;}
-.flower.grown {transform:translate(-50%, -50%) scale(1); opacity:1;}
-.animated-plant {position:absolute; font-size:2rem; pointer-events:none; transform:translate(-50%, -50%); animation:gently 5s ease-in-out infinite alternate; opacity:0.9;}
-@keyframes gently {from {transform:translate(-50%, -50%) rotate(-2deg);} to {transform:translate(-50%, -50%) rotate(2deg);}}
+*, *::before, *::after {margin: 0; padding: 0; box-sizing: border-box;}
+html, body {height: 100%; font-family: 'Inter', sans-serif; color: var(--text-color); cursor: none; user-select: none;}
+body {display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 1rem; text-align: center; min-height: 100vh;}
+.garden {position: absolute; inset: 0; background: var(--bg-color) url('https://images.unsplash.com/photo-1549400263-888995a9735a?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1920&h=1080') no-repeat center/cover; z-index: -1; filter: brightness(0.9) saturate(1.2); background-attachment: fixed;}
+.flower-container {position: absolute; inset: 0; pointer-events: none; z-index: 0;}
+h1, h2, .nav-grid, .cat-game-wrapper {z-index: 1;}
+h1 {font-size: clamp(2rem, 8vw, 5rem); font-weight: 900; text-transform: uppercase; background: var(--primary-gradient); -webkit-background-clip: text; color: transparent; position: relative; animation: slideIn 1s ease forwards; padding-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);}
+h1::after {content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%) scaleX(0); width: 100%; max-width: 300px; height: 4px; background: var(--underline-gradient); animation: underline 1s 0.5s ease forwards;}
+h2 {font-size: clamp(1rem, 3vw, 1.5rem); color: var(--secondary-text-color); margin-top: 1rem; max-width: 600px; text-shadow: 0 1px 2px rgba(0,0,0,0.1);}
+@keyframes slideIn {from {transform: translateY(50px); opacity: 0;} to {transform: translateY(0); opacity: 1;}}
+@keyframes underline {to {transform: translateX(-50%) scaleX(1);}}
+.nav-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin-top: 3rem; width: 100%; max-width: 800px;}
+.nav-grid a {text-decoration: none; color: var(--text-color); font-size: 1.1rem; padding: 0.75rem; background: var(--link-bg-color); border: 1px solid var(--link-border-color); border-radius: 8px; text-align: center; transition: transform 0.3s, box-shadow 0.3s, background 0.3s;}
+.nav-grid a:hover {transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); background: var(--link-hover-bg-color);}
+.cat-game-wrapper {display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; justify-content: center; max-width: 1200px;}
+.cat-fact-container, .cat-game-container, .todo-container {max-width: 400px; background: rgba(255,255,255,0.7); border-radius: 10px; padding: 1rem;}
+.cat-img {width: 100%; height: auto; border-radius: 10px; border: 2px solid var(--link-border-color); aspect-ratio: 4/3; object-fit: cover;}
+.fact {font-size: 1rem; color: var(--secondary-text-color); margin-top: 0.5rem;}
+.cat-game-container canvas {border: 2px solid var(--link-border-color); border-radius: 10px; background: #fff;}
+.todo-container {display: flex; flex-direction: column; gap: 0.5rem;}
+.todo-input {padding: 0.5rem; border: 1px solid var(--link-border-color); border-radius: 5px; font-size: 1rem; font-family: 'Inter', sans-serif;}
+.todo-list {list-style: none; max-height: 200px; overflow-y: auto;}
+.todo-item {display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border-bottom: 1px solid var(--link-border-color);}
+.todo-item button {background: none; border: none; color: #e57373; cursor: pointer; font-size: 1rem;}
+.todo-item button:hover {color: #d32f2f;}
+.duck {position: fixed; pointer-events: none; z-index: 9999;}
+.cursor-duck {font-size: 2.5rem; animation: waddleCursor 0.3s infinite alternate;}
+.follower-duck {font-size: 1.2rem; animation: waddleFollower 0.4s infinite alternate;}
+@keyframes waddleCursor {from {transform: translate(-50%, -50%) rotate(-5deg) scale(1.1);} to {transform: translate(-50%, -50%) rotate(5deg) scale(1.1);}}
+@keyframes waddleFollower {from {transform: translate(-50%, -50%) rotate(-10deg);} to {transform: translate(-50%, -50%) rotate(10deg);}}
+.flower {position: absolute; font-size: 1rem; pointer-events: none; transform: translate(-50%, -50%) scale(0.1); opacity: 0; transition: transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 1s;}
+.flower.grown {transform: translate(-50%, -50%) scale(1); opacity: 1;}
+.animated-plant {position: absolute; font-size: 2rem; pointer-events: none; transform: translate(-50%, -50%); animation: gently 5s ease-in-out infinite alternate; opacity: 0.9;}
+@keyframes gently {from {transform: translate(-50%, -50%) rotate(-2deg);} to {transform: translate(-50%, -50%) rotate(2deg);}}
+@media (max-width: 900px) {
+    .cat-game-wrapper {flex-direction: column; align-items: center;}
+    .todo-container, .cat-fact-container, .cat-game-container {width: 100%; max-width: 350px;}
+}
 </style>
 </head>
 <body>
@@ -60,8 +70,13 @@ h2 {font-size:clamp(1rem, 3vw, 1.5rem); color:var(--secondary-text-color); margi
     <a href="Gemini.html">Gemini</a>
 </div>
 <div class="cat-game-wrapper">
+    <div class="todo-container">
+        <h3>🐾 Котешки задачи</h3>
+        <input type="text" class="todo-input" placeholder="Добави задача..." />
+        <ul class="todo-list"></ul>
+    </div>
     <div class="cat-fact-container">
-        <img id="cat-img" class="cat-img" alt="Daily Cat" />
+        <img id="cat-img" class="cat-img" alt="Daily Cat" loading="lazy" />
         <div id="fact" class="fact">Зареждам котешки факт...</div>
     </div>
     <div class="cat-game-container">
@@ -72,193 +87,214 @@ h2 {font-size:clamp(1rem, 3vw, 1.5rem); color:var(--secondary-text-color); margi
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     /* DUCK CURSOR */
-    const ducks=[], duckCount=5, duckEmojis=["🦆"], babyDuck=["🐥","🐤"];
-    for(let i=0;i<duckCount;i++){
-        const span=document.createElement("span");
-        span.classList.add("duck", i===0?"cursor-duck":"follower-duck");
-        span.textContent=i===0?duckEmojis[0]:babyDuck[(i-1)%babyDuck.length];
+    const ducks = [], duckCount = 5, duckEmojis = ["🦆"], babyDuck = ["🐥", "🐤"];
+    for (let i = 0; i < duckCount; i++) {
+        const span = document.createElement("span");
+        span.classList.add("duck", i === 0 ? "cursor-duck" : "follower-duck");
+        span.textContent = i === 0 ? duckEmojis[0] : babyDuck[(i - 1) % babyDuck.length];
         document.body.appendChild(span);
-        ducks.push({el:span,x:innerWidth/2,y:innerHeight/2,targetX:innerWidth/2,targetY:innerHeight/2});
+        ducks.push({ el: span, x: innerWidth / 2, y: innerHeight / 2, targetX: innerWidth / 2, targetY: innerHeight / 2 });
     }
-    let mouseX=innerWidth/2, mouseY=innerHeight/2;
-    document.addEventListener("mousemove", e=>{mouseX=e.clientX; mouseY=e.clientY;});
-    (function animate(){
-        ducks[0].x=mouseX; ducks[0].y=mouseY;
-        ducks[0].el.style.left=ducks[0].x+"px"; ducks[0].el.style.top=ducks[0].y+"px";
-        for(let i=1;i<ducks.length;i++){
-            const p=ducks[i-1], d=ducks[i], dist=Math.hypot(d.x-p.x,d.y-p.y), maxDist=30;
-            if(dist>maxDist){
-                const a=Math.atan2(p.y-d.y,p.x-d.x);
-                d.targetX=p.x-Math.cos(a)*maxDist;
-                d.targetY=p.y-Math.sin(a)*maxDist;
+    let mouseX = innerWidth / 2, mouseY = innerHeight / 2;
+    document.addEventListener("mousemove", e => { mouseX = e.clientX; mouseY = e.clientY; });
+    (function animate() {
+        ducks[0].x = mouseX; ducks[0].y = mouseY;
+        ducks[0].el.style.left = ducks[0].x + "px"; ducks[0].el.style.top = ducks[0].y + "px";
+        for (let i = 1; i < ducks.length; i++) {
+            const p = ducks[i - 1], d = ducks[i], dist = Math.hypot(d.x - p.x, d.y - p.y), maxDist = 30;
+            if (dist > maxDist) {
+                const a = Math.atan2(p.y - d.y, p.x - d.x);
+                d.targetX = p.x - Math.cos(a) * maxDist;
+                d.targetY = p.y - Math.sin(a) * maxDist;
             }
-            d.x+=(d.targetX-d.x)*0.1; d.y+=(d.targetY-d.y)*0.1;
-            d.el.style.left=d.x+"px"; d.el.style.top=d.y+"px";
+            d.x += (d.targetX - d.x) * 0.1; d.y += (d.targetY - d.y) * 0.1;
+            d.el.style.left = d.x + "px"; d.el.style.top = d.y + "px";
         }
         requestAnimationFrame(animate);
     })();
 
     /* GARDEN FLOWERS */
-    const flowers=["🌸","🌻","🌼","🌹","🌷","💐","🌺","🌾","🌿","🍄","🌲","🌳","🌵","🍀"], 
-          container=document.querySelector('.flower-container');
-    const createPlant=(x,y)=>{const p=document.createElement("div"); p.className="flower"; p.textContent=flowers[Math.floor(Math.random()*flowers.length)]; p.style.left=x+"px"; p.style.top=y+"px"; container.appendChild(p); setTimeout(()=>p.classList.add("grown"),10);};
+    const flowers = ["🌸", "🌻", "🌼", "🌹", "🌷", "💐", "🌺", "🌾", "🌿", "🍄", "🌲", "🌳", "🌵", "🍀"],
+          container = document.querySelector('.flower-container');
+    const createPlant = (x, y) => {
+        const p = document.createElement("div");
+        p.className = "flower";
+        p.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+        p.style.left = x + "px";
+        p.style.top = y + "px";
+        container.appendChild(p);
+        setTimeout(() => p.classList.add("grown"), 10);
+    };
     let flowerInterval, mouseTimeout;
-    document.addEventListener("mousedown", e=>{
-        if(!e.target.closest('.nav-grid,.cat-fact-container,.cat-game-container')){
-            mouseTimeout=setTimeout(()=>{createPlant(Math.random()*innerWidth,Math.random()*innerHeight); flowerInterval=setInterval(()=>createPlant(Math.random()*innerWidth,Math.random()*innerHeight),100);},200);
+    document.addEventListener("mousedown", e => {
+        if (!e.target.closest('.nav-grid,.cat-fact-container,.cat-game-container,.todo-container')) {
+            mouseTimeout = setTimeout(() => {
+                createPlant(Math.random() * innerWidth, Math.random() * innerHeight);
+                flowerInterval = setInterval(() => createPlant(Math.random() * innerWidth, Math.random() * innerHeight), 100);
+            }, 200);
         }
     });
-    document.addEventListener("mouseup", e=>{
+    document.addEventListener("mouseup", e => {
         clearTimeout(mouseTimeout); clearInterval(flowerInterval);
-        if(!flowerInterval && !e.target.closest('.nav-grid,.cat-fact-container,.cat-game-container')) createPlant(e.pageX,e.pageY);
-        mouseTimeout=flowerInterval=null;
+        if (!flowerInterval && !e.target.closest('.nav-grid,.cat-fact-container,.cat-game-container,.todo-container'))
+            createPlant(e.pageX, e.pageY);
+        mouseTimeout = flowerInterval = null;
     });
-    /* Animated plants */
-    ["🌱","🌿","🌷","🍄","🌳","🌾"].forEach((emoji)=>{for(let i=0;i<3;i++){const p=document.createElement("div"); p.className="animated-plant"; p.textContent=emoji; p.style.left=Math.random()*100+"vw"; p.style.top=Math.random()*100+"vh"; p.style.fontSize=(Math.random()*1.5+1)+"rem"; p.style.animationDelay=Math.random()*5+"s"; container.appendChild(p);}});
+    ["🌱", "🌿", "🌷", "🍄", "🌳", "🌾"].forEach((emoji) => {
+        for (let i = 0; i < 3; i++) {
+            const p = document.createElement("div");
+            p.className = "animated-plant";
+            p.textContent = emoji;
+            p.style.left = Math.random() * 100 + "vw";
+            p.style.top = Math.random() * 100 + "vh";
+            p.style.fontSize = (Math.random() * 1.5 + 1) + "rem";
+            p.style.animationDelay = Math.random() * 5 + "s";
+            container.appendChild(p);
+        }
+    });
 
     /* CAT + FACT */
-    (async()=>{
-        try{
-            const cat=await fetch("https://api.thecatapi.com/v1/images/search").then(r=>r.json());
-            document.getElementById("cat-img").src=cat[0].url;
-            const fact=await fetch("https://catfact.ninja/fact").then(r=>r.json());
-            document.getElementById("fact").textContent=fact.fact;
-        }catch(e){document.getElementById("fact").textContent="Не успях да заредя коте 😿";}
+    (async () => {
+        try {
+            const cat = await fetch("https://api.thecatapi.com/v1/images/search").then(r => r.json());
+            document.getElementById("cat-img").src = cat[0].url;
+            const fact = await fetch("https://catfact.ninja/fact").then(r => r.json());
+            document.getElementById("fact").textContent = fact.fact;
+        } catch (e) {
+            document.getElementById("fact").textContent = "Не успях да заредя коте 😿";
+        }
     })();
 
-/* MINI SNAKE GAME — REWRITTEN (drop-in replacement) */
-const canvas = document.getElementById("snake");
-const ctx = canvas.getContext("2d");
+    /* TODO LIST WITH LOCALSTORAGE */
+    const todoInput = document.querySelector('.todo-input');
+    const todoList = document.querySelector('.todo-list');
 
-// grid cell size in pixels
-const box = 10;
-
-// number of columns/rows in the grid
-const cols = Math.floor(canvas.width / box);
-const rows = Math.floor(canvas.height / box);
-
-let snake = [{ x: 10, y: 10 }]; // grid coords (col, row)
-let dir = { x: 1, y: 0 };       // current direction (right)
-let pendingDir = null;          // queued direction between ticks
-let food = spawnFood();
-let score = 0;
-let gameOver = false;
-const tickRate = 100; // ms per game tick
-
-function spawnFood() {
-  // Always spawn on a cell that is NOT occupied by the snake
-  let f;
-  do {
-    f = {
-      x: Math.floor(Math.random() * cols),
-      y: Math.floor(Math.random() * rows)
+    // Load tasks from localStorage
+    const loadTasks = () => {
+        const tasks = JSON.parse(localStorage.getItem('catTasks') || '[]');
+        tasks.forEach(task => addTaskToDOM(task));
     };
-  } while (snake.some(s => s.x === f.x && s.y === f.y));
-  return f;
-}
 
-document.addEventListener("keydown", (e) => {
-  // Restart if game over
-  if (gameOver && e.key === "Enter") {
-    restart();
-    return;
-  }
+    // Save tasks to localStorage
+    const saveTasks = () => {
+        const tasks = Array.from(todoList.children).map(li => li.querySelector('span').textContent.replace('🐱 ', ''));
+        localStorage.setItem('catTasks', JSON.stringify(tasks));
+    };
 
-  // Queue direction change but prevent 180° reversal
-  if (e.key === "ArrowLeft" && dir.x !== 1) pendingDir = { x: -1, y: 0 };
-  if (e.key === "ArrowRight" && dir.x !== -1) pendingDir = { x: 1, y: 0 };
-  if (e.key === "ArrowUp" && dir.y !== 1) pendingDir = { x: 0, y: -1 };
-  if (e.key === "ArrowDown" && dir.y !== -1) pendingDir = { x: 0, y: 1 };
-});
+    // Add task to DOM
+    const addTaskToDOM = (task) => {
+        const li = document.createElement('li');
+        li.className = 'todo-item';
+        li.innerHTML = `<span>🐱 ${task}</span><button>🗑️</button>`;
+        todoList.appendChild(li);
+        li.querySelector('button').addEventListener('click', () => {
+            li.remove();
+            saveTasks();
+        });
+    };
 
-function update() {
-  if (gameOver) return;
+    // Handle new task input
+    todoInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && todoInput.value.trim()) {
+            addTaskToDOM(todoInput.value.trim());
+            saveTasks();
+            todoInput.value = '';
+        }
+    });
 
-  // Apply queued direction (prevents multiple changes within one tick)
-  if (pendingDir) {
-    dir = pendingDir;
-    pendingDir = null;
-  }
+    // Load existing tasks on page load
+    loadTasks();
 
-  // compute new head position (grid coords)
-  const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+    /* MINI SNAKE GAME */
+    const canvas = document.getElementById("snake");
+    const ctx = canvas.getContext("2d");
+    const box = 10;
+    const cols = Math.floor(canvas.width / box);
+    const rows = Math.floor(canvas.height / box);
+    let snake = [{ x: 10, y: 10 }];
+    let dir = { x: 1, y: 0 };
+    let pendingDir = null;
+    let food = spawnFood();
+    let score = 0;
+    let gameOver = false;
+    const tickRate = 100;
 
-  // collisions: walls
-  if (head.x < 0 || head.x >= cols || head.y < 0 || head.y >= rows) {
-    gameOver = true;
+    function spawnFood() {
+        let f;
+        do {
+            f = { x: Math.floor(Math.random() * cols), y: Math.floor(Math.random() * rows) };
+        } while (snake.some(s => s.x === f.x && s.y === f.y));
+        return f;
+    }
+
+    document.addEventListener("keydown", (e) => {
+        if (gameOver && e.key === "Enter") {
+            restart();
+            return;
+        }
+        if (e.key === "ArrowLeft" && dir.x !== 1) pendingDir = { x: -1, y: 0 };
+        if (e.key === "ArrowRight" && dir.x !== -1) pendingDir = { x: 1, y: 0 };
+        if (e.key === "ArrowUp" && dir.y !== 1) pendingDir = { x: 0, y: -1 };
+        if (e.key === "ArrowDown" && dir.y !== -1) pendingDir = { x: 0, y: 1 };
+    });
+
+    function update() {
+        if (gameOver) return;
+        if (pendingDir) {
+            dir = pendingDir;
+            pendingDir = null;
+        }
+        const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+        if (head.x < 0 || head.x >= cols || head.y < 0 || head.y >= rows || snake.some(seg => seg.x === head.x && seg.y === head.y)) {
+            gameOver = true;
+            draw();
+            return;
+        }
+        snake.unshift(head);
+        if (head.x === food.x && head.y === food.y) {
+            score++;
+            food = spawnFood();
+        } else {
+            snake.pop();
+        }
+        draw();
+    }
+
+    function draw() {
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "red";
+        ctx.fillRect(food.x * box, food.y * box, box, box);
+        snake.forEach((s, i) => {
+            ctx.fillStyle = i === 0 ? "green" : "lightgreen";
+            ctx.fillRect(s.x * box, s.y * box, box, box);
+        });
+        ctx.fillStyle = "#555";
+        ctx.font = "12px Inter, Arial";
+        ctx.fillText("Score: " + score, 5, canvas.height - 5);
+        if (gameOver) {
+            ctx.fillStyle = "rgba(0,0,0,0.5)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#fff";
+            ctx.textAlign = "center";
+            ctx.font = "14px Inter, Arial";
+            ctx.fillText("Game Over — Press Enter to restart", canvas.width / 2, canvas.height / 2);
+            ctx.textAlign = "start";
+        }
+    }
+
+    function restart() {
+        snake = [{ x: 10, y: 10 }];
+        dir = { x: 1, y: 0 };
+        pendingDir = null;
+        food = spawnFood();
+        score = 0;
+        gameOver = false;
+        draw();
+    }
+
     draw();
-    return;
-  }
-
-  // collisions: self
-  if (snake.some(seg => seg.x === head.x && seg.y === head.y)) {
-    gameOver = true;
-    draw();
-    return;
-  }
-
-  // move snake
-  snake.unshift(head);
-
-  // eating food?
-  if (head.x === food.x && head.y === food.y) {
-    score++;
-    food = spawnFood();
-  } else {
-    // normal move -> remove tail
-    snake.pop();
-  }
-
-  draw();
-}
-
-function draw() {
-  // clear
-  ctx.fillStyle = "#fff";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // food
-  ctx.fillStyle = "red";
-  ctx.fillRect(food.x * box, food.y * box, box, box);
-
-  // snake
-  snake.forEach((s, i) => {
-    ctx.fillStyle = i === 0 ? "green" : "lightgreen";
-    ctx.fillRect(s.x * box, s.y * box, box, box);
-  });
-
-  // score
-  ctx.fillStyle = "#555";
-  ctx.font = "12px Inter, Arial";
-  ctx.fillText("Score: " + score, 5, canvas.height - 5);
-
-  // game over overlay
-  if (gameOver) {
-    ctx.fillStyle = "rgba(0,0,0,0.5)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#fff";
-    ctx.textAlign = "center";
-    ctx.font = "14px Inter, Arial";
-    ctx.fillText("Game Over — Press Enter to restart", canvas.width / 2, canvas.height / 2);
-    ctx.textAlign = "start";
-  }
-}
-
-function restart() {
-  snake = [{ x: 10, y: 10 }];
-  dir = { x: 1, y: 0 };
-  pendingDir = null;
-  food = spawnFood();
-  score = 0;
-  gameOver = false;
-  draw();
-}
-
-// initial draw + start loop
-draw();
-setInterval(update, tickRate);
-
-
+    setInterval(update, tickRate);
 });
 </script>
 </body>
