@@ -2,30 +2,10 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Random Redirect</title>
-  <script>
-    (function() {
-      var pages = [
-        'index1.html',
-        'index2.html',
-        'candybox.html',
-        'Chatgpt.html',
-        'DeepSeek.html',
-        'Gemini.html',
-        'Grok.html',
-        'Meta.html'
-      ];
-      
-      var choice = pages[Math.floor(Math.random() * pages.length)];
-      
-      // Add timestamp to prevent caching
-      var url = choice + '?nocache=' + Date.now();
-      
-      // Replace so no back button loop
-      window.location.replace(url);
-    })();
-  </script>
+  <title>Random Redirect Loader</title>
 </head>
 <body>
+  <!-- Load the random script with a timestamp to avoid CDN cache -->
+  <script src="random.js?nocache=" + Date.now()></script>
 </body>
 </html>
