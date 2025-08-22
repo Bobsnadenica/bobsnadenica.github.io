@@ -1,11 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <title>Random Redirect Loader</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" id="theme-color-meta" />
+  <title>Random Tools</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .icon-sun, .icon-moon { transition: opacity .3s ease; }
+  </style>
+
+  <script>
+    // Prevent flash of wrong theme
+    (() => {
+      const stored = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const htmlEl = document.documentElement;
+      if (stored === 'dark' || (!stored && prefersDark)) {
+        htmlEl.classList.add('dark');
+      } else {
+        htmlEl.classList.remove('dark');
+      }
+    })();
+  </script>
 </head>
-<body>
-  <!-- Load the random script with a timestamp to avoid CDN cache -->
-  <script src="random.js?nocache=" + Date.now()></script>
+<body class="bg-white dark:bg-slate-950 min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
+
+  <div class="bg-slate-100 dark:bg-slate-800 backdrop-blur-md p-8 rounded-2xl shadow-xl w-full max-w-sm border border-slate-200 dark:border-slate-700 transition-colors duration-300 relative">
+
+    <!-- Toggle -->
+    <button id="theme-toggle" aria-label="Toggle Dark Mode" aria-pressed="true"
+      class="absolute top-4 right-4 p-3 rounded-full bg-slate-300 dark:bg-slate-700 text-gray-800 dark:text-gray-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all">
+      <svg id="sun-icon" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+      </svg>
+      <svg id="moon-icon" class="h-6 w-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+      </svg>
+    </button>
+
+    <!-- Title -->
+    <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-gray-50 mb-6">
+      Random Tools
+    </h1>
+
+    <!-- Buttons -->
+    <div class="space-y-4">
+      <a href="test1/index.html" class="block">
+        <button class="w-full py-3 px-4 rounded-xl bg-slate-300 dark:bg-slate-700 text-gray-900 dark:text-gray-100 font-semibold hover:scale-[1.02] transition-all">
+          Test 1
+        </button>
+      </a>
+      <a href="test2/index.html" class="block">
+        <button class="w-full py-3 px-4 rounded-xl bg-slate-300 dark:bg-slate-700 text-gray-900 dark:text-gray-100 font-semibold hover:scale-[1.02] transition-all">
+          Test 2
+        </button>
+      </a>
+      <a href="test3/index.html" class="block">
+        <button class="w-full py-3 px-4 rounded-xl bg-slate-300 dark:bg-slate-700 text-gray-900 dark:text-gray-100 font-semibold hover:scale-[1.02] transition-all">
+          Test 3
+        </button>
+      </a>
+      <a href="test4/index.html" class="block">
+        <button class="w-full py-3 px-4 rounded-xl bg-slate-300 dark:bg-slate-700 text-gray-900 dark:text-gray-100 font-semibold hover:scale-[1.02] transition-all">
+          Test 4
+        </button>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('theme-toggle');
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
+    const htmlEl = document.documentElement;
+    const themeMeta = document.getElementById('theme-color-meta');
+
+    const updateIcons = (dark) => {
+      sunIcon.classList.toggle('hidden', dark);
+      moonIcon.classList.toggle('hidden', !dark);
+      toggleBtn.setAttribute('aria-pressed', dark);
+      themeMeta.setAttribute('content', dark ? '#0f172a' : '#ffffff');
+    };
+
+    const applyTheme = () => {
+      const isDark = htmlEl.classList.contains('dark');
+      updateIcons(isDark);
+    };
+
+    applyTheme();
+
+    toggleBtn.addEventListener('click', () => {
+      htmlEl.classList.toggle('dark');
+      const isDark = htmlEl.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateIcons(isDark);
+    });
+  </script>
 </body>
 </html>
