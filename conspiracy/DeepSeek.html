@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Wildest Conspiracy Theories</title>
+    <style>
+        :root {
+            --primary: #8b0000;
+            --secondary: #333;
+            --accent: #ffcc00;
+            --bg: #121212;
+            --text: #e0e0e0;
+        }
+        
+        @font-face {
+            font-family: 'Conspiracy';
+            src: url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+        }
+        
+        body {
+            font-family: 'Conspiracy', 'Courier New', monospace;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(139, 0, 0, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(139, 0, 0, 0.1) 0%, transparent 20%);
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--accent);
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="%23ffcc00" stroke-width="1" fill="none" opacity="0.2"/><line x1="10" y1="10" x2="90" y2="90" stroke="%23ffcc00" stroke-width="1" opacity="0.2"/><line x1="10" y1="90" x2="90" y2="10" stroke="%23ffcc00" stroke-width="1" opacity="0.2"/></svg>');
+            opacity: 0.1;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+            position: relative;
+            animation: glitch 3s infinite alternate;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        .subtitle {
+            font-style: italic;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .theory-card {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .theory-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(139, 0, 0, 0.3);
+        }
+        
+        .theory-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+        
+        .theory-card h2 {
+            color: var(--accent);
+            margin-top: 0;
+            border-bottom: 1px dashed var(--primary);
+            padding-bottom: 0.5rem;
+        }
+        
+        .theory-card .meta {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .theory-card .credibility {
+            color: var(--accent);
+        }
+        
+        .theory-card .content {
+            margin-bottom: 1rem;
+        }
+        
+        .theory-card .evidence {
+            background: rgba(139, 0, 0, 0.1);
+            padding: 0.8rem;
+            border-left: 3px solid var(--primary);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+        
+        .theory-card .evidence h4 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        
+        .floating-eyes {
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 50"><circle cx="25" cy="25" r="15" fill="%23fff"/><circle cx="25" cy="25" r="7" fill="%23000"/><circle cx="75" cy="25" r="15" fill="%23fff"/><circle cx="75" cy="25" r="7" fill="%23000"/></svg>');
+            background-size: contain;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0.7;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(100vw, 25vh) rotate(90deg); }
+            50% { transform: translate(50vw, 75vh) rotate(180deg); }
+            75% { transform: translate(0, 50vh) rotate(270deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+        
+        .parallax-section {
+            height: 300px;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            margin: 3rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .parallax-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .parallax-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+        }
+        
+        .parallax-content h2 {
+            color: var(--accent);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        footer {
+            background: var(--secondary);
+            color: #aaa;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            position: relative;
+        }
+        
+        footer::before {
+            content: "THE TRUTH IS OUT THERE";
+            position: absolute;
+            top: -20px;
+            left: 0;
+            right: 0;
+            color: var(--accent);
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        
+        .hidden-message {
+            color: transparent;
+            user-select: none;
+            position: relative;
+        }
+        
+        .hidden-message::after {
+            content: "They're watching";
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .hidden-message:hover::after {
+            opacity: 1;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 3rem auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--primary);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -12px;
+            background-color: var(--accent);
+            border: 4px solid var(--primary);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .left::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid var(--primary);
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent var(--primary);
+        }
+        
+        .right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid var(--primary);
+            border-width: 10px 10px 10px 0;
+            border-color: transparent var(--primary) transparent transparent;
+        }
+        
+        .right::after {
+            left: -12px;
+        }
+        
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: rgba(30, 30, 30, 0.8);
+            position: relative;
+            border-radius: 6px;
+            border: 1px solid var(--primary);
+        }
+        
+        @media screen and (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item::before {
+                left: 60px;
+                border: medium solid var(--primary);
+                border-width: 10px 10px 10px 0;
+                border-color: transparent var(--primary) transparent transparent;
+            }
+            
+            .left::after, .right::after {
+                left: 18px;
+            }
+            
+            .right {
+                left: 0%;
+            }
+        }
+        
+        /* Interactive elements */
+        .interactive-section {
+            margin: 3rem auto;
+            max-width: 800px;
+            text-align: center;
+        }
+        
+        .truth-meter {
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(90deg, #8b0000, #ffcc00, #008b00);
+            margin: 1rem 0;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        .truth-meter::after {
+            content: "TRUTH METER";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: black;
+            font-weight: bold;
+            text-shadow: 0 0 2px white;
+        }
+        
+        .slider-container {
+            margin: 2rem 0;
+        }
+        
+        .slider-container input[type="range"] {
+            width: 100%;
+            height: 10px;
+            -webkit-appearance: none;
+            background: var(--secondary);
+            outline: none;
+            border-radius: 5px;
+        }
+        
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            border: 2px solid var(--primary);
+        }
+        
+        .slider-value {
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-top: 0.5rem;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        
+        .modal-content {
+            background-color: var(--bg);
+            margin: 10% auto;
+            padding: 2rem;
+            border: 1px solid var(--primary);
+            width: 80%;
+            max-width: 700px;
+            position: relative;
+            animation: modalopen 0.5s;
+        }
+        
+        @keyframes modalopen {
+            from {opacity: 0; transform: translateY(-50px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: var(--accent);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .theory-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>THE WILDEST CONSPIRACY THEORIES</h1>
+        <p class="subtitle">The truth they don't want you to know</p>
+    </header>
+    
+    <div class="container">
+        <div class="theory-card">
+            <h2>Flat Earth Theory</h2>
+            <div class="meta">
+                <span>Origin: Ancient times, revived in modern era</span>
+                <span class="credibility">Credibility: ★☆☆☆☆</span>
+            </div>
+            <div class="content">
+                <p>The belief that the Earth is flat rather than a sphere, and that governments and space agencies are involved in a massive cover-up. Proponents claim photos of a spherical Earth are CGI, space travel is faked, and gravity is an illusion.</p>
+                <p>Modern flat earth theory gained traction in the 19th century through the work of Samuel Rowbotham and later the Flat Earth Society. Despite overwhelming scientific evidence to the contrary, the movement has seen a resurgence in the internet age.</p>
+            </div>
+            <div class="evidence">
+                <h4>Alleged Evidence:</h4>
+                <ul>
+                    <li>Horizon always appears flat to human eye</li>
+                    <li>Antarctica is actually an ice wall surrounding the disk</li>
+                    <li>NASA's budget is allegedly used to maintain the deception</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="theory-card">
+            <h2>Moon Landing Hoax</h2>
+            <div class="meta">
+                <span>Origin: 1970s, Bill Kaysing's book</span>
+                <span class="credibility">Credibility: ★☆☆☆☆</span>
+            </div>
+            <div class="content">
+                <p>The claim that the Apollo moon landings between 1969-1972 were faked by NASA and possibly other organizations. Theorists suggest the footage was filmed on Earth, possibly at Area 51 or a TV studio.</p>
+                <p>This theory gained popularity due to perceived anomalies in photographs and videos, the political context of the Space Race, and the technical limitations of the era. Despite being thoroughly debunked, it remains one of the most enduring conspiracy theories.</p>
+            </div>
+            <div class="evidence">
+                <h4>Alleged Evidence:</h4>
+                <ul>
+                    <li>Waving flag in vacuum (actually due to inertia)</li>
+                    <li>Inconsistent shadows (explained by rough terrain)</li>
+                    <li>No stars in photos (camera exposure settings)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="theory-card">
+            <h2>Reptilian Elite</h2>
+            <div class="meta">
+                <span>Origin: David Icke's theories in 1990s</span>
+                <span class="credibility">Credibility: ★☆☆☆☆</span>
+            </div>
+            <div class="content">
+                <p>The belief that shape-shifting reptilian aliens control Earth by taking human form and gaining political power. Prominent figures like the British Royal Family, US Presidents, and celebrities are allegedly reptilians.</p>
+                <p>David Icke popularized this theory, claiming these beings originate from the constellation Draco and feed on negative human energy. The theory incorporates elements of ancient astronaut theories, New Age beliefs, and anti-establishment sentiment.</p>
+            </div>
+            <div class="evidence">
+                <h4>Alleged Evidence:</h4>
+                <ul>
+                    <li>Strange eye flashes in videos (video compression artifacts)</li>
+                    <li>Ancient myths of serpent beings</li>
+                    <li>Alleged "slips" where skin appears scaly (pareidolia)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="theory-card">
+            <h2>Chemtrails</h2>
+            <div class="meta">
+                <span>Origin: 1990s, US Air Force research paper</span>
+                <span class="credibility">Credibility: ★☆☆☆☆</span>
+            </div>
+            <div class="content">
+                <p>The theory that the white trails left by aircraft (contrails) are actually chemical or biological agents deliberately sprayed for undisclosed purposes. Suggested motives include weather modification, population control, or mind control.</p>
+                <p>This theory ignores the well-documented science of contrail formation but has gained traction due to increased air traffic and unusual weather patterns. Government geoengineering research projects like HAARP fuel suspicions despite being unrelated.</p>
+            </div>
+            <div class="evidence">
+                <h4>Alleged Evidence:</h4>
+                <ul>
+                    <li>Unusual persistence of some contrails (atmospheric conditions)</li>
+                    <li>Alleged finding of barium and aluminum in soil samples</li>
+                    <li>Patent records for atmospheric delivery systems</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="theory-card">
+            <h2>Denver International Airport</h2>
+            <div class="meta">
+                <span>Origin: 1990s, airport construction</span>
+                <span class="credibility">Credibility: ★★☆☆☆</span>
+            </div>
+            <div class="content">
+                <p>The theory that Denver International Airport (DIA) is much more than an airport - possibly a headquarters for the New World Order, a massive underground bunker, or even a concentration camp. The airport's unusual art, architecture, and construction delays fuel these theories.</p>
+                <p>With its apocalyptic murals, mysterious dedication capstone, and alleged underground tunnels, DIA has become a focal point for conspiracy theorists. The airport's size (larger than Manhattan) and remote location add to the mystery.</p>
+            </div>
+            <div class="evidence">
+                <h4>Alleged Evidence:</h4>
+                <ul>
+                    <li>Disturbing apocalyptic murals</li>
+                    <li>Dedication capstone mentioning "New World Airport Commission"</li>
+                    <li>Alleged underground facilities and delayed construction</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="theory-card">
+            <h2>Paul is Dead</h2>
+            <div class="meta">
+                <span>Origin: 1969, Beatles fans</span>
+                <span class="credibility">Credibility: ★☆☆☆☆</span>
+            </div>
+            <div class="content">
+                <p>The theory that Paul McCartney died in 1966 and was replaced by a look-alike named William Campbell. Fans claimed to find clues in album covers, lyrics, and songs played backward.</p>
+                <p>This theory emerged from the Beatles' experimental phase and their playful inclusion of ambiguous imagery. Despite being thoroughly debunked, it remains a classic example of how fans can find patterns where none exist.</p>
+            </div>
+            <div class="evidence">
+                <h4>Alleged Evidence:</h4>
+                <ul>
+                    <li>"Turn me on, dead man" when "Revolution 9" is played backward</li>
+                    <li>Abbey Road cover showing a funeral procession</li>
+                    <li>Lyrical references to death in later albums</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="parallax-section" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" fill=\"%23333\"/><path d=\"M20,20 L80,20 L80,80 L20,80 Z\" stroke=\"%238b0000\" stroke-width=\"2\" fill=\"none\"/><circle cx=\"50\" cy=\"50\" r=\"30\" stroke=\"%23ffcc00\" stroke-width=\"2\" fill=\"none\"/><line x1=\"20\" y1=\"50\" x2=\"80\" y2=\"50\" stroke=\"%23ffcc00\" stroke-width=\"2\"/><line x1=\"50\" y1=\"20\" x2=\"50\" y2=\"80\" stroke=\"%23ffcc00\" stroke-width=\"2\"/></svg>');">
+        <div class="parallax-content">
+            <h2>THEY DON'T WANT YOU TO KNOW</h2>
+            <p>Every conspiracy theory begins with a simple question: "What if?" What if the official story isn't the whole truth? What if powerful forces are manipulating our perception of reality?</p>
+            <button id="revealBtn" style="background: var(--primary); color: white; border: none; padding: 10px 20px; cursor: pointer; margin-top: 1rem;">Reveal Hidden Truth</button>
+        </div>
+    </div>
+    
+    <div class="timeline">
+        <div class="timeline-item left">
+            <div class="timeline-content">
+                <h3>1963: JFK Assassination</h3>
+                <p>The theory that Lee Harvey Oswald did not act alone in assassinating President Kennedy, implicating the CIA, mafia, or even Vice President Johnson. The Zapruder film and Warren Report inconsistencies fuel these theories.</p>
+            </div>
+        </div>
+        <div class="timeline-item right">
+            <div class="timeline-content">
+                <h3>1980: Philadelphia Experiment</h3>
+                <p>Alleged military experiment where the USS Eldridge was rendered invisible and teleported. Said to involve Einstein's unified field theory and resulted in crew members being fused with the ship's structure.</p>
+            </div>
+        </div>
+        <div class="timeline-item left">
+            <div class="timeline-content">
+                <h3>1996: TWA Flight 800</h3>
+                <p>The theory that the passenger jet was actually shot down by a missile, with a government cover-up to hide this fact. Eyewitness accounts of a streak of light fuel these claims despite official findings of a fuel tank explosion.</p>
+            </div>
+        </div>
+        <div class="timeline-item right">
+            <div class="timeline-content">
+                <h3>2001: 9/11 Inside Job</h3>
+                <p>The theory that the US government had advance knowledge of or was complicit in the 9/11 attacks. Claims focus on Building 7's collapse, alleged thermite in the dust, and inconsistencies in the official timeline.</p>
+            </div>
+        </div>
+        <div class="timeline-item left">
+            <div class="timeline-content">
+                <h3>2020: COVID-19 Origins</h3>
+                <p>Theories range from the virus being engineered in a lab (possibly as a bioweapon) to being spread through 5G networks. These theories gained traction due to the pandemic's rapid spread and conflicting early information.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="interactive-section">
+        <h2>YOUR TRUTH METER</h2>
+        <p>How much do you believe in conspiracy theories? Slide to adjust your belief level.</p>
+        <div class="truth-meter"></div>
+        <div class="slider-container">
+            <input type="range" min="0" max="100" value="50" class="slider" id="truthSlider">
+            <div class="slider-value">Belief Level: 50%</div>
+        </div>
+        <p id="beliefResponse">You're moderately skeptical but open to alternative explanations.</p>
+    </div>
+    
+    <footer>
+        <p>© 2023 Conspiracy Research Institute | <span class="hidden-message">Hover here</span></p>
+        <p>Disclaimer: This site is for entertainment purposes only. Please apply critical thinking to all information presented.</p>
+    </footer>
+    
+    <div id="truthModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>THE ULTIMATE TRUTH</h2>
+            <p>After careful analysis of all available evidence (and some not available), we've determined the ultimate conspiracy:</p>
+            <p style="font-size: 1.5rem; color: var(--accent); text-align: center; margin: 2rem 0;">THEY WANT YOU TO BELIEVE IN CONSPIRACIES TO DISTRACT YOU FROM THE REAL ISSUES</p>
+            <p>Or is that what they want us to think? The rabbit hole goes deeper than you imagine...</p>
+        </div>
+    </div>
+    
+    <script>
+        // Create floating eyes that follow cursor
+        document.addEventListener('DOMContentLoaded', function() {
+            const eyes = document.createElement('div');
+            eyes.className = 'floating-eyes';
+            document.body.appendChild(eyes);
+            
+            // Make eyes follow cursor with delay
+            document.addEventListener('mousemove', function(e) {
+                setTimeout(() => {
+                    eyes.style.left = (e.pageX - 25) + 'px';
+                    eyes.style.top = (e.pageY - 25) + 'px';
+                }, 100);
+            });
+            
+            // Modal functionality
+            const modal = document.getElementById('truthModal');
+            const btn = document.getElementById('revealBtn');
+            const span = document.getElementsByClassName('close')[0];
+            
+            btn.onclick = function() {
+                modal.style.display = 'block';
+            }
+            
+            span.onclick = function() {
+                modal.style.display = 'none';
+            }
+            
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+            
+            // Slider functionality
+            const slider = document.getElementById('truthSlider');
+            const sliderValue = document.querySelector('.slider-value');
+            const beliefResponse = document.getElementById('beliefResponse');
+            
+            slider.oninput = function() {
+                sliderValue.textContent = 'Belief Level: ' + this.value + '%';
+                
+                if (this.value < 20) {
+                    beliefResponse.textContent = "You're highly skeptical and trust official narratives.";
+                } else if (this.value < 40) {
+                    beliefResponse.textContent = "You're somewhat skeptical but mostly trust official sources.";
+                } else if (this.value < 60) {
+                    beliefResponse.textContent = "You're moderately skeptical but open to alternative explanations.";
+                } else if (this.value < 80) {
+                    beliefResponse.textContent = "You suspect many official stories might be cover-ups.";
+                } else {
+                    beliefResponse.textContent = "You believe we're being systematically deceived about nearly everything.";
+                }
+            }
+            
+            // Easter egg - type "truth" to show modal
+            let typed = '';
+            document.addEventListener('keydown', function(e) {
+                typed += e.key.toLowerCase();
+                if (typed.slice(-5) === 'truth') {
+                    modal.style.display = 'block';
+                    typed = '';
+                }
+            });
+            
+            // Animate theory cards on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = `fadeIn 1s forwards`;
+                    }
+                });
+            }, {threshold: 0.1});
+            
+            document.querySelectorAll('.theory-card').forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

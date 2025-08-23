@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wildest Conspiracy Theories</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Share Tech Mono', monospace;
+      background: #0d0d0d;
+      color: #ccc;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 100px 20px 40px;
+      text-align: center;
+      background: linear-gradient(145deg, #000, #111);
+      position: relative;
+    }
+
+    .glitch {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3em;
+      color: white;
+      position: relative;
+      animation: glitch 2s infinite;
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 red, -2px 0 blue; }
+      20% { text-shadow: -2px 0 green, 2px 0 pink; }
+      40% { text-shadow: 2px 2px #f0f, -2px -2px #0ff; }
+      60% { text-shadow: -2px 2px #ff0, 2px -2px #00f; }
+      80% { text-shadow: 0 0 2px white; }
+      100% { text-shadow: 2px 0 red, -2px 0 blue; }
+    }
+
+    .parallax {
+      background-image: url('https://images.unsplash.com/photo-1583511655826-05700d52f4f3?auto=format&fit=crop&w=1950&q=80');
+      min-height: 400px;
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: relative;
+    }
+
+    .content {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .theory {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 5px solid #6c63ff;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .theory:hover {
+      transform: scale(1.02);
+    }
+
+    .collapsible {
+      background: none;
+      border: none;
+      color: #6c63ff;
+      font-size: 1.1em;
+      text-align: left;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .content-hidden {
+      display: none;
+      margin-top: 10px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 315px;
+      border: none;
+      margin-top: 20px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #111;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    /* Easter Egg Style */
+    #easter-egg {
+      display: none;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #111;
+      padding: 20px;
+      border: 1px solid #6c63ff;
+      z-index: 1000;
+      box-shadow: 0 0 10px #6c63ff;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .glitch {
+        font-size: 2em;
+      }
+
+      .parallax {
+        background-attachment: scroll;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="glitch">Wildest Conspiracy Theories</h1>
+    <p>Prepare to dive into the weirdest rabbit holes the internet has to offer.</p>
+  </header>
+
+  <div class="parallax"></div>
+
+  <div class="content">
+
+    <div class="theory">
+      <h2>🌍 Flat Earth Theory</h2>
+      <p>Yes, there are still people who believe the Earth is flat. Despite centuries of evidence, the idea thrives in online communities.</p>
+      <button class="collapsible">More Info</button>
+      <div class="content-hidden">
+        <p>Flat Earthers believe NASA fakes images, pilots are in on the lie, and Antarctica is an ice wall guarding the edge of the planet.</p>
+      </div>
+    </div>
+
+    <div class="theory">
+      <h2>🛸 Area 51 and Alien Tech</h2>
+      <p>Area 51 is long suspected of housing crashed alien spacecraft and extraterrestrial bodies.</p>
+      <button class="collapsible">More Info</button>
+      <div class="content-hidden">
+        <p>Bob Lazar claims to have worked on reverse-engineering alien propulsion at a secret base near Area 51. Mainstream scientists dispute this, but believers persist.</p>
+        <iframe src="https://www.youtube.com/embed/BEWz4GXkF2k" title="Bob Lazar Interview"></iframe>
+      </div>
+    </div>
+
+    <div class="theory">
+      <h2>🧬 Reptilian Elite</h2>
+      <p>A theory by David Icke claims that world leaders are actually shape-shifting reptilian aliens controlling humanity.</p>
+      <button class="collapsible">More Info</button>
+      <div class="content-hidden">
+        <p>From Queen Elizabeth to Mark Zuckerberg, no one is safe from suspicion. These reptiles allegedly feed off negative energy and manipulate global events.</p>
+      </div>
+    </div>
+
+    <div class="theory">
+      <h2>🌕 Moon Landing Was Faked</h2>
+      <p>The 1969 moon landing is claimed by some to be a Hollywood production directed by Stanley Kubrick.</p>
+      <button class="collapsible">More Info</button>
+      <div class="content-hidden">
+        <p>Pointing to shadows, flag movement, and suspicious footage, skeptics argue it was staged to win the space race against the USSR.</p>
+      </div>
+    </div>
+
+    <div class="theory">
+      <h2>🧠 Simulation Theory</h2>
+      <p>Elon Musk popularized the idea that we might be living in a simulated universe created by a more advanced civilization.</p>
+      <button class="collapsible">More Info</button>
+      <div class="content-hidden">
+        <p>Based on philosophical and technological reasoning, this theory is surprisingly taken seriously by some physicists.</p>
+      </div>
+    </div>
+
+    <div class="theory">
+      <h2>🐦 Birds Aren't Real</h2>
+      <p>This satirical (or is it?) movement claims that birds were replaced by government surveillance drones.</p>
+      <button class="collapsible">More Info</button>
+      <div class="content-hidden">
+        <p>They say birds "charging" on power lines is proof and that pigeons are spy machines in disguise. It started as a joke, but now has a cult following.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="easter-egg">
+    🕵️‍♂️ You found the secret! The Illuminati is watching...
+  </div>
+
+  <footer>
+    &copy; 2025 Secret Society of Wild Theories | This site is purely for entertainment (we hope).
+  </footer>
+
+  <script>
+    // Collapsible logic
+    const buttons = document.querySelectorAll('.collapsible');
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const content = button.nextElementSibling;
+        content.classList.toggle('content-hidden');
+      });
+    });
+
+    // Easter egg: press "Ctrl + Alt + U" to reveal
+    document.addEventListener('keydown', function (e) {
+      if (e.ctrlKey && e.altKey && e.key === 'u') {
+        const egg = document.getElementById('easter-egg');
+        egg.style.display = egg.style.display === 'block' ? 'none' : 'block';
+      }
+    });
+  </script>
+</body>
+</html>

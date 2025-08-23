@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wildest Conspiracy Theories</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        .parallax {
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+        .glow {
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+        .conspiracy-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .conspiracy-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <!-- Header with Parallax Background -->
+    <header class="parallax h-screen flex items-center justify-center" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80')">
+        <div class="text-center">
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 glow">Wildest Conspiracy Theories</h1>
+            <p class="text-xl md:text-2xl">Unravel the mysteries that defy reality</p>
+            <button onclick="scrollToContent()" class="mt-6 px-6 py-3 bg-cyan-500 text-gray-900 rounded-full hover:bg-cyan-400 transition">Explore Now</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-6">
+        <!-- Introduction -->
+        <section class="my-12 text-center">
+            <h2 class="text-4xl font-semibold mb-4">What Are Conspiracy Theories?</h2>
+            <p class="text-lg max-w-3xl mx-auto">Conspiracy theories are explanations that attribute events to secret plots by powerful groups. While some are rooted in skepticism, others stretch the boundaries of belief. Dive into the wildest ones below!</p>
+        </section>
+
+        <!-- Conspiracy Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Flat Earth -->
+            <div class="conspiracy-card bg-gray-800 p-6 rounded-lg">
+                <h3 class="text-2xl font-bold mb-2">Flat Earth</h3>
+                <p class="mb-4">The Flat Earth theory claims our planet is a flat plane, not a globe. Proponents argue NASA and governments hide the truth, citing "evidence" like the horizon's flat appearance.</p>
+                <details class="mt-4">
+                    <summary class="cursor-pointer text-cyan-400">Learn More</summary>
+                    <p class="mt-2">Despite overwhelming scientific evidence, including satellite imagery and GPS, Flat Earthers believe in a vast cover-up. They often point to ancient texts and distrust modern science.</p>
+                </details>
+            </div>
+
+            <!-- Moon Landing Hoax -->
+            <div class="conspiracy-card bg-gray-800 p-6 rounded-lg">
+                <h3 class="text-2xl font-bold mb-2">Moon Landing Hoax</h3>
+                <p class="mb-4">This theory suggests the 1969 Apollo 11 moon landing was staged by NASA in a studio to win the space race.</p>
+                <details class="mt-4">
+                    <summary class="cursor-pointer text-cyan-400">Learn More</summary>
+                    <p class="mt-2">Skeptics cite "anomalies" like waving flags and missing stars in photos. However, these are explained by the moon's lack of atmosphere and lighting conditions.</p>
+                </details>
+            </div>
+
+            <!-- Reptilian Elite -->
+            <div class="conspiracy-card bg-gray-800 p-6 rounded-lg">
+                <h3 class="text-2xl font-bold mb-2">Reptilian Elite</h3>
+                <p class="mb-4">Popularized by David Icke, this theory claims shape-shifting reptilian aliens control humanity by posing as world leaders.</p>
+                <details class="mt-4">
+                    <summary class="cursor-pointer text-cyan-400">Learn More</summary>
+                    <p class="mt-2">Believers point to "glitches" in videos of politicians as evidence. No credible proof supports this, but it fuels distrust in global elites.</p>
+                </details>
+            </div>
+
+            <!-- Chemtrails -->
+            <div class="conspiracy-card bg-gray-800 p-6 rounded-lg">
+                <h3 class="text-2xl font-bold mb-2">Chemtrails</h3>
+                <p class="mb-4">This theory posits that airplane contrails are chemicals sprayed to control populations or weather.</p>
+                <details class="mt-4">
+                    <summary class="cursor-pointer text-cyan-400">Learn More</summary>
+                    <p class="mt-2">Scientists explain contrails as water vapor, but believers see patterns in the sky as evidence of secret programs.</p>
+                </details>
+            </div>
+
+            <!-- Area 51 Aliens -->
+            <div class="conspiracy-card bg-gray-800 p-6 rounded-lg">
+                <h3 class="text-2xl font-bold mb-2">Area 51 Aliens</h3>
+                <p class="mb-4">Area 51, a secretive U.S. military base, is believed to house alien technology from the 1947 Roswell crash.</p>
+                <details class="mt-4">
+                    <summary class="cursor-pointer text-cyan-400">Learn More</summary>
+                    <p class="mt-2">Declassified documents show Area 51 tested spy planes, but UFO enthusiasts believe extraterrestrial secrets remain hidden.</p>
+                </details>
+            </div>
+
+            <!-- Time Travel Cover-Up -->
+            <div class="conspiracy-card bg-gray-800 p-6 rounded-lg">
+                <h3 class="text-2xl font-bold mb-2">Time Travel Cover-Up</h3>
+                <p class="mb-4">Some claim governments have mastered time travel but keep it secret to control history.</p>
+                <details class="mt-4">
+                    <summary class="cursor-pointer text-cyan-400">Learn More</summary>
+                    <p class="mt-2">Alleged "time travelers" like John Titor have shared predictions online, but no verifiable evidence exists.</p>
+                </details>
+            </div>
+        </section>
+
+        <!-- Interactive Timeline -->
+        <section class="my-12">
+            <h2 class="text-4xl font-semibold text-center mb-6">Conspiracy Theories Through Time</h2>
+            <div class="relative">
+                <div class="border-l-4 border-cyan-500 pl-6">
+                    <div class="mb-10">
+                        <h3 class="text-2xl font-bold">1947 - Roswell Incident</h3>
+                        <p>The alleged crash of a UFO in New Mexico sparked Area 51 theories.</p>
+                    </div>
+                    <div class="mb-10">
+                        <h3 class="text-2xl font-bold">1969 - Moon Landing Hoax</h3>
+                        <p>Doubts about Apollo 11 fueled studio-staging claims.</p>
+                    </div>
+                    <div class="mb-10">
+                        <h3 class="text-2xl font-bold">1990s - Chemtrails</h3>
+                        <p>Contrail suspicions grew with increased air travel.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Canvas Animation -->
+        <section class="my-12 text-center">
+            <h2 class="text-4xl font-semibold mb-6">The Cosmic Web</h2>
+            <canvas id="cosmicCanvas" class="mx-auto" width="800" height="400"></canvas>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 py-6 text-center">
+        <p>&copy; 2025 Wildest Conspiracy Theories. All rights reserved.</p>
+        <div class="mt-4">
+            <a href="#" class="text-cyan-400 mx-2">Twitter</a>
+            <a href="#" class="text-cyan-400 mx-2">Facebook</a>
+            <a href="#" class="text-cyan-400 mx-2">Instagram</a>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script>
+        // Smooth Scroll to Content
+        function scrollToContent() {
+            window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+        }
+
+        // GSAP Animations
+        gsap.from('.conspiracy-card', {
+            opacity: 0,
+            y: 50,
+            stagger: 0.2,
+            duration: 1,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: '.conspiracy-card',
+                start: 'top 80%',
+            }
+        });
+
+        // Canvas Animation
+        const canvas = document.getElementById('cosmicCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 800;
+        canvas.height = 400;
+
+        const stars = [];
+        for (let i = 0; i < 100; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2,
+                speed: Math.random() * 0.5
+            });
+        }
+
+        function animateStars() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fill();
+                star.y += star.speed;
+                if (star.y > canvas.height) star.y = 0;
+            });
+            requestAnimationFrame(animateStars);
+        }
+        animateStars();
+    </script>
+</body>
+</html>
