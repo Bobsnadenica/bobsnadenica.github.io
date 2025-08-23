@@ -93,23 +93,26 @@
       }
 
       try {
-        // Free plan: fetch latest rates (EUR as base)
-        const res = await fetch(`https://api.exchangeratesapi.io/v1/latest?access_key=${API_KEY}`);
+        // Fetch EUR-based rates (free plan)
+        const res = await fetch(`https://api.exchangeratesapi.io/v1/latest?access_key=${API_KEY}&symbols=BGN,USD,EUR`);
         const data = await res.json();
 
         if (data && data.rates) {
           const rates = data.rates;
-          rates["EUR"] = 1; // EUR is the base
+          rates["EUR"] = 1; // base currency
 
-          if (!rates[from] || !rates[to]) {
-            document.getElementById("result").innerText = "Conversion failed. Currency not supported.";
-            return;
+          // Conversion logic
+          let converted;
+          if (from === "EUR") {
+            converted = amount * rates[to];
+          } else if (to === "EUR") {
+            converted = amount / rates[from];
+          } else {
+            converted = amount / rates[from] * rates[to];
           }
 
-          // Convert via EUR
-          const converted = (amount / rates[from] * rates[to]).toFixed(2);
           document.getElementById("result").innerText =
-            `${amount} ${from} = ${converted} ${to}`;
+            `${amount} ${from} = ${converted.toFixed(2)} ${to}`;
         } else {
           document.getElementById("result").innerText = "Conversion failed. Try again.";
           console.error("API response:", data);
