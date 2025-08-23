@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .converter {
+      width: 100%;
+      max-width: 350px;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    button {
+      background: #0078d7;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005a9e;
+    }
+    .result {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .back-btn {
+      margin-top: 20px;
+      background: #444;
+    }
+  </style>
+</head>
+<body>
+  <h1>Currency Converter</h1>
+  <div class="converter">
+    <input type="number" id="amount" placeholder="Enter amount" />
+
+    <select id="from">
+      <option value="BGN">BGN - Bulgarian Lev</option>
+      <option value="EUR">EUR - Euro</option>
+      <option value="USD">USD - US Dollar</option>
+    </select>
+
+    <select id="to">
+      <option value="EUR">EUR - Euro</option>
+      <option value="BGN">BGN - Bulgarian Lev</option>
+      <option value="USD">USD - US Dollar</option>
+    </select>
+
+    <button onclick="convert()">Convert</button>
+    <div class="result" id="result">Converted amount will appear here</div>
+
+    <button class="back-btn" onclick="location.href='../index.html'">⬅ Back to Menu</button>
+  </div>
+
+  <script>
+    // Placeholder for API key, workflow will replace it
+    const API_KEY = "${EXCHANGE_API}";
+
+    async function convert() {
+      const amount = parseFloat(document.getElementById("amount").value);
+      const from = document.getElementById("from").value;
+      const to = document.getElementById("to").value;
+
+      if (isNaN(amount)) {
+        document.getElementById("result").innerText = "Please enter a valid amount.";
+        return;
+      }
+
+      try {
+        const res = await fetch(`https://api.exchangeratesapi.io/v1/convert?access_key=${API_KEY}&from=${from}&to=${to}&amount=${amount}`);
+        const data = await res.json();
+
+        if (data && data.result) {
+          document.getElementById("result").innerText =
+            `${amount} ${from} = ${data.result.toFixed(2)} ${to}`;
+        } else {
+          document.getElementById("result").innerText = "Conversion failed. Try again.";
+          console.error("API response:", data);
+        }
+      } catch (err) {
+        document.getElementById("result").innerText = "Error fetching live rates.";
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
