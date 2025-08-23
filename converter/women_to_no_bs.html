@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The "No Bullshit" Translator</title>
+    <!-- Tailwind CSS CDN for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Apply a consistent, clean font and background */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f3f3;
+            color: #333;
+        }
+
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #a8a8a8;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #888;
+        }
+
+        /* Container for the main content to center everything */
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Custom styling for the input and suggestion box */
+        #phrase-input {
+            transition: all 0.3s ease-in-out;
+        }
+
+        #phrase-input:focus {
+            box-shadow: 0 0 0 4px rgba(255, 105, 135, 0.5); /* A custom pink focus ring */
+        }
+
+        /* Animation for results */
+        .result-animation {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .suggestion-item {
+            transition: background-color 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex items-center justify-center p-4">
+
+    <!-- Main application container -->
+    <div class="main-container max-w-2xl w-full p-8 bg-white shadow-xl rounded-2xl">
+        
+        <!-- Header Section -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-pink-600 mb-2 leading-tight">The "No Bullshit" Translator</h1>
+            <p class="text-lg sm:text-xl text-gray-700 mt-4">Type a phrase and find out what it *really* means.</p>
+        </header>
+
+        <!-- Input and suggestions section -->
+        <div class="w-full relative">
+            <input 
+                type="text" 
+                id="phrase-input" 
+                placeholder="Start typing a phrase..." 
+                class="w-full p-4 text-xl sm:text-2xl border-2 border-gray-300 rounded-xl focus:outline-none focus:border-pink-500 font-medium"
+            >
+            <!-- Suggestions dropdown -->
+            <div id="suggestions" class="absolute z-10 w-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 max-h-48 overflow-y-auto hidden"></div>
+        </div>
+
+        <!-- Result section -->
+        <div id="result-box" class="mt-10 w-full text-center p-8 bg-pink-100 rounded-2xl shadow-inner hidden">
+            <h3 class="text-2xl sm:text-3xl font-bold text-pink-700 mb-4">The Translation:</h3>
+            <p id="result-text" class="text-xl sm:text-2xl text-gray-800 italic leading-relaxed"></p>
+        </div>
+
+    </div>
+
+    <!-- JavaScript logic -->
+    <script>
+        // Data for phrases and their satirical translations
+        const phrases = [
+            { text: "I'm fine.", meaning: "I am not fine, and I expect you to figure out why." },
+            { text: "We need to talk.", meaning: "You are in trouble and I'm about to list your transgressions." },
+            { text: "It's up to you.", meaning: "Don't you dare choose that option." },
+            { text: "No, it's nothing.", meaning: "I am upset, but I'm not going to tell you why until you ask at least three more times." },
+            { text: "Just a little something.", meaning: "I want to see if you remember what I like." },
+            { text: "That's an interesting point.", meaning: "I completely disagree and am trying to find a polite way to say so." },
+            { text: "Don't worry about it.", meaning: "I've decided to handle this myself because I don't trust you to do it right." },
+            { text: "I'm not mad, I'm just disappointed.", meaning: "You have disappointed me and I am most definitely mad." },
+            { text: "I'll be ready in five minutes.", meaning: "I'm not ready. I'm just acknowledging your presence. I will be ready whenever I am ready." },
+            { text: "What's wrong?", meaning: "What's wrong is that you're not telling me everything. I know there is something you're not telling me and I want you to tell me." },
+            { text: "It's not me, it's you.", meaning: "I'm breaking up with you and I'm blaming you for it." },
+            { text: "Are you sure?", meaning: "I am pretty sure you're wrong and I want you to reconsider your decision." },
+            { text: "I'm good.", meaning: "I do not want your help." },
+            { text: "I don't care.", meaning: "I care a great deal, and I want you to care too." },
+            { text: "Do whatever you want.", meaning: "I will be quietly judging your choice and will hold it against you later." },
+            { text: "You know what you did.", meaning: "I'm not going to explain it. You should know by now." },
+            { text: "I'm not hungry.", meaning: "I'm not hungry for a full meal, but I will eat half of whatever you order." },
+            { text: "It's fine, I'll do it.", meaning: "This is now a chore, and you've made me do it." },
+            { text: "We'll see.", meaning: "Absolutely not." },
+            { text: "I'm just tired.", meaning: "I'm not just tired, I'm exhausted from all of the things I do that you don't even notice." },
+            { text: "That dress looks great on you.", meaning: "It's not my style, but I want to be supportive." },
+            { text: "It's nothing, really.", meaning: "It's something, but I'm choosing not to make a big deal about it, for now." },
+            { text: "Have fun.", meaning: "I'm a little bit jealous that I'm not going with you." },
+            { text: "I'm not giving you the silent treatment.", meaning: "I'm giving you the silent treatment, and I'm waiting for you to notice and apologize." },
+            { text: "I'll get back to you.", meaning: "I don't have an answer right now, and I may never get back to you." },
+            { text: "I just need a minute.", meaning: "I'm on the verge of losing my temper, so you should back away immediately." },
+            { text: "I just said I was sorry.", meaning: "I said the words, but I don't actually mean it." },
+            { text: "I'm not mad.", meaning: "I am furious, and I am choosing to express my anger in this passive-aggressive way." },
+            { text: "I'm just being honest.", meaning: "I am about to say something rude and I want to justify it in advance." },
+            { text: "I'm trying to be positive.", meaning: "I am actively restraining myself from telling you all the things that are wrong." },
+            { text: "I'll let you know.", meaning: "I have no intention of letting you know." },
+            { text: "You look great.", meaning: "I don't think you look great, but I'm being nice." },
+            { text: "Can we talk about this later?", meaning: "I want to end this conversation immediately because I am not prepared for a difficult discussion right now." },
+            { text: "I'm not sure what you mean.", meaning: "I know exactly what you mean, but I want you to rephrase it in a way that is less direct and more polite." },
+            { text: "I love you.", meaning: "I am feeling insecure and I need you to confirm that you love me too." },
+            { text: "You're so lucky.", meaning: "I am jealous of your success and I'm trying to downplay your accomplishments." },
+            { text: "That's an interesting perspective.", meaning: "I think your opinion is wrong, but I am trying to be diplomatic about it." },
+            { text: "It's not about the money.", meaning: "It is absolutely about the money, but I don't want to admit it." },
+            { text: "You should have seen it coming.", meaning: "I am not sorry for the way I acted because you should have been able to predict my reaction." },
+            { text: "You're overthinking it.", meaning: "You are being too rational, and I want you to focus on my emotional perspective instead." },
+            { text: "It's a long story.", meaning: "I don't want to tell you the full story because it's embarrassing." },
+            { text: "I need some space.", meaning: "I am angry, and I need time to calm down before I say something I'll regret." },
+            { text: "It’s a bit chilly in here.", meaning: "Please get me my sweater or turn up the heat." },
+            { text: "Is that what you're wearing?", meaning: "You should probably change your outfit." },
+            { text: "This place is fine.", meaning: "I am not enjoying this place at all and want to leave." },
+            { text: "He’s a nice guy.", meaning: "He's not a potential romantic partner." },
+            { text: "I thought you were going to do that.", meaning: "I am mad that you didn't do what you were supposed to do." },
+            { text: "I don't have an opinion.", meaning: "I have a strong opinion, but I don't want to start an argument." },
+            { text: "I'm just going to freshen up.", meaning: "I need to take a break from this conversation." },
+            { text: "Is everything okay?", meaning: "Something is clearly wrong, and I'm trying to get you to open up." },
+            { text: "Oh, you got a haircut!", meaning: "I don't know what else to say about your appearance, so I'm commenting on the most obvious change." },
+            { text: "I’ll remember that.", meaning: "I am going to bring this up again in the future." },
+            { text: "I’m not interested.", meaning: "I am interested, but I don't want to seem too eager." },
+            { text: "I like that.", meaning: "I don’t like it at all, but I’m trying to be polite." },
+            { text: "Let's agree to disagree.", meaning: "I think my opinion is right, but I don't want to fight about it." },
+            { text: "That's so brave of you.", meaning: "I would never do that." },
+            { text: "Just kidding.", meaning: "I said something I shouldn't have and now I'm trying to take it back." },
+            { text: "I'll think about it.", meaning: "I have already made a decision, but I'm not ready to tell you." },
+            { text: "I appreciate your advice.", meaning: "I will not be taking your advice." },
+            { text: "This is a great opportunity.", meaning: "I don't want to do this, but I'm trying to convince myself it's a good idea." },
+            { text: "I’m a low-maintenance person.", meaning: "I am a high-maintenance person, and I want you to know this now." },
+            { text: "I'm not a coffee person.", meaning: "I am not a morning person, and I will be grumpy until I've had my coffee." },
+            { text: "I'm not a cat person.", meaning: "I have a strong preference for dogs, but I won't judge you for having a cat." },
+            { text: "I'm not a dog person.", meaning: "I have a strong preference for cats, but I won't judge you for having a dog." },
+            { text: "I'm not a morning person.", meaning: "Do not speak to me until I've had my coffee." },
+            { text: "I'm not a fan of that.", meaning: "I absolutely hate that, and I'm trying to be polite about it." },
+            { text: "I'm just being me.", meaning: "I am not a fan of that, but I will not be changing my mind." },
+            { text: "I'm not a hugger.", meaning: "Do not hug me, I am uncomfortable with physical contact." },
+            { text: "I'm just a little bit crazy.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a neat freak.", meaning: "I have a severe case of OCD, and I will be judging your messy house." },
+            { text: "I'm a little bit of a germaphobe.", meaning: "I will not be touching anything in your house, so please don't be offended." },
+            { text: "I'm a little bit of a control freak.", meaning: "I need to be in control of all situations, so please don't get in my way." },
+            { text: "I'm a little bit of a perfectionist.", meaning: "I will be judging everything you do, and I will be very critical." },
+            { text: "I'm a little bit of a drama queen.", meaning: "I have a tendency to overreact to situations, so please don't be surprised when I do." },
+            { text: "I'm a little bit of a handful.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a wild card.", meaning: "I am unpredictable, and I will do whatever I want." },
+            { text: "I'm a little bit of a free spirit.", meaning: "I have no plans, and I will not be making any." },
+            { text: "I'm a little bit of a wanderer.", meaning: "I have a strong desire to travel, and I will not be staying in one place for long." },
+            { text: "I'm a little bit of a homebody.", meaning: "I do not like to leave my house, and I will not be leaving it for you." },
+            { text: "I'm a little bit of a workaholic.", meaning: "I will be working all the time, and I will not have time for you." },
+            { text: "I'm a little bit of a bookworm.", meaning: "I would rather be reading than talking to you." },
+            { text: "I'm a little bit of a foodie.", meaning: "I am a picky eater, and I will not be eating anything you cook." },
+            { text: "I'm a little bit of a night owl.", meaning: "I will be up all night, and I will not be waking up early for you." },
+            { text: "I'm a little bit of a morning lark.", meaning: "I will be up early, and I will be very grumpy if you wake me up late." },
+            { text: "I'm a little bit of a people pleaser.", meaning: "I will do whatever you want me to do, but I will be silently judging you." },
+            { text: "I'm a little bit of a hermit.", meaning: "I do not like to be around people, and I will not be around you for long." },
+            { text: "I'm a little bit of a procrastinator.", meaning: "I will not be doing anything you ask me to do until the last minute." },
+            { text: "I'm a little bit of a minimalist.", meaning: "I have very few possessions, and I will be judging your clutter." },
+            { text: "I'm a little bit of a hoarder.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a collector.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a daredevil.", meaning: "I will be doing dangerous things, and I will not be stopping for you." },
+            { text: "I'm a little bit of a worrier.", meaning: "I will be worrying about everything, and I will be very anxious." },
+            { text: "I'm a little bit of a dreamer.", meaning: "I will be daydreaming all the time, and I will not be paying attention to you." },
+            { text: "I'm a little bit of a realist.", meaning: "I will be telling you the truth, even if it hurts." },
+            { text: "I'm a little bit of a romantic.", meaning: "I have very high expectations for romance, and I will be very disappointed if you don't meet them." },
+            { text: "I'm a little bit of a cynic.", meaning: "I will be cynical about everything, and I will not be trusting you." },
+            { text: "I'm a little bit of a pessimist.", meaning: "I will be pessimistic about everything, and I will be very negative." },
+            { text: "I'm a little bit of an optimist.", meaning: "I will be optimistic about everything, and I will be very positive." },
+            { text: "I'm a little bit of a clown.", meaning: "I will be making jokes all the time, and I will not be serious." },
+            { text: "I'm a little bit of a nerd.", meaning: "I will be talking about nerdy things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a geek.", meaning: "I will be talking about geeky things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a goofball.", meaning: "I will be goofy all the time, and I will not be serious." },
+            { text: "I'm a little bit of a smarty-pants.", meaning: "I will be correcting you all the time, and I will be very annoying." },
+            { text: "I'm a little bit of a know-it-all.", meaning: "I will be telling you everything I know, and I will be very annoying." },
+            { text: "I'm a little bit of a gossip.", meaning: "I will be gossiping about everyone, and I will be very annoying." },
+            { text: "I'm a little bit of a liar.", meaning: "I will be lying all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a cheater.", meaning: "I will be cheating all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a manipulator.", meaning: "I will be manipulating you all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a narcissist.", meaning: "I will be narcissistic all the time, and I will be very self-centered." },
+            { text: "I'm a little bit of a psychopath.", meaning: "I will be psychopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sociopath.", meaning: "I will be sociopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a masochist.", meaning: "I will be masochistic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sadist.", meaning: "I will be sadistic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sociopath.", meaning: "I will be sociopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a psychopath.", meaning: "I will be psychopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a narcissist.", meaning: "I will be narcissistic all the time, and I will be very self-centered." },
+            { text: "I'm a little bit of a manipulator.", meaning: "I will be manipulating you all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a cheater.", meaning: "I will be cheating all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a liar.", meaning: "I will be lying all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a gossip.", meaning: "I will be gossiping about everyone, and I will be very annoying." },
+            { text: "I'm a little bit of a know-it-all.", meaning: "I will be telling you everything I know, and I will be very annoying." },
+            { text: "I'm a little bit of a smarty-pants.", meaning: "I will be correcting you all the time, and I will be very annoying." },
+            { text: "I'm a little bit of a goofball.", meaning: "I will be goofy all the time, and I will not be serious." },
+            { text: "I'm a little bit of a geek.", meaning: "I will be talking about geeky things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a nerd.", meaning: "I will be talking about nerdy things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a clown.", meaning: "I will be making jokes all the time, and I will not be serious." },
+            { text: "I'm a little bit of an optimist.", meaning: "I will be optimistic about everything, and I will be very positive." },
+            { text: "I'm a little bit of a pessimist.", meaning: "I will be pessimistic about everything, and I will be very negative." },
+            { text: "I'm a little bit of a cynic.", meaning: "I will be cynical about everything, and I will not be trusting you." },
+            { text: "I'm a little bit of a romantic.", meaning: "I have very high expectations for romance, and I will be very disappointed if you don't meet them." },
+            { text: "I'm a little bit of a realist.", meaning: "I will be telling you the truth, even if it hurts." },
+            { text: "I'm a little bit of a dreamer.", meaning: "I will be daydreaming all the time, and I will not be paying attention to you." },
+            { text: "I'm a little bit of a worrier.", meaning: "I will be worrying about everything, and I will be very anxious." },
+            { text: "I'm a little bit of a daredevil.", meaning: "I will be doing dangerous things, and I will not be stopping for you." },
+            { text: "I'm a little bit of a collector.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a hoarder.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a minimalist.", meaning: "I have very few possessions, and I will be judging your clutter." },
+            { text: "I'm a little bit of a procrastinator.", meaning: "I will not be doing anything you ask me to do until the last minute." },
+            { text: "I'm a little bit of a hermit.", meaning: "I do not like to be around people, and I will not be around you for long." },
+            { text: "I'm a little bit of a people pleaser.", meaning: "I will do whatever you want me to do, but I will be silently judging you." },
+            { text: "I'm a little bit of a morning lark.", meaning: "I will be up early, and I will be very grumpy if you wake me up late." },
+            { text: "I'm a little bit of a night owl.", meaning: "I will be up all night, and I will not be waking up early for you." },
+            { text: "I'm a little bit of a foodie.", meaning: "I am a picky eater, and I will not be eating anything you cook." },
+            { text: "I'm a little bit of a bookworm.", meaning: "I would rather be reading than talking to you." },
+            { text: "I'm a little bit of a workaholic.", meaning: "I will be working all the time, and I will not have time for you." },
+            { text: "I'm a little bit of a homebody.", meaning: "I do not like to leave my house, and I will not be leaving it for you." },
+            { text: "I'm a little bit of a wanderer.", meaning: "I have a strong desire to travel, and I will not be staying in one place for long." },
+            { text: "I'm a little bit of a free spirit.", meaning: "I have no plans, and I will not be making any." },
+            { text: "I'm a little bit of a wild card.", meaning: "I am unpredictable, and I will do whatever I want." },
+            { text: "I'm a little bit of a handful.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a drama queen.", meaning: "I have a tendency to overreact to situations, so please don't be surprised when I do." },
+            { text: "I'm a little bit of a perfectionist.", meaning: "I will be judging everything you do, and I will be very critical." },
+            { text: "I'm a little bit of a control freak.", meaning: "I need to be in control of all situations, so please don't get in my way." },
+            { text: "I'm a little bit of a germaphobe.", meaning: "I will not be touching anything in your house, so please don't be offended." },
+            { text: "I'm a little bit of a neat freak.", meaning: "I have a severe case of OCD, and I will be judging your messy house." },
+            { text: "I'm a little bit crazy.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm not a hugger.", meaning: "Do not hug me, I am uncomfortable with physical contact." },
+            { text: "I'm just being me.", meaning: "I am not a fan of that, but I will not be changing my mind." },
+            { text: "I'm not a fan of that.", meaning: "I absolutely hate that, and I'm trying to be polite about it." },
+            { text: "I'm not a morning person.", meaning: "Do not speak to me until I've had my coffee." },
+            { text: "I'm not a dog person.", meaning: "I have a strong preference for cats, but I won't judge you for having a dog." },
+            { text: "I'm not a cat person.", meaning: "I have a strong preference for dogs, but I won't judge you for having a cat." },
+            { text: "I'm not a coffee person.", meaning: "I am not a morning person, and I will be grumpy until I've had my coffee." },
+            { text: "I'm not a morning person.", meaning: "Do not speak to me until I've had my coffee." },
+            { text: "I'm not a fan of that.", meaning: "I absolutely hate that, and I'm trying to be polite about it." },
+            { text: "I'm just being me.", meaning: "I am not a fan of that, but I will not be changing my mind." },
+            { text: "I'm not a hugger.", meaning: "Do not hug me, I am uncomfortable with physical contact." },
+            { text: "I'm a little bit crazy.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a neat freak.", meaning: "I have a severe case of OCD, and I will be judging your messy house." },
+            { text: "I'm a little bit of a germaphobe.", meaning: "I will not be touching anything in your house, so please don't be offended." },
+            { text: "I'm a little bit of a control freak.", meaning: "I need to be in control of all situations, so please don't get in my way." },
+            { text: "I'm a little bit of a perfectionist.", meaning: "I will be judging everything you do, and I will be very critical." },
+            { text: "I'm a little bit of a drama queen.", meaning: "I have a tendency to overreact to situations, so please don't be surprised when I do." },
+            { text: "I'm a little bit of a handful.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a wild card.", meaning: "I am unpredictable, and I will do whatever I want." },
+            { text: "I'm a little bit of a free spirit.", meaning: "I have no plans, and I will not be making any." },
+            { text: "I'm a little bit of a wanderer.", meaning: "I have a strong desire to travel, and I will not be staying in one place for long." },
+            { text: "I'm a little bit of a homebody.", meaning: "I do not like to leave my house, and I will not be leaving it for you." },
+            { text: "I'm a little bit of a workaholic.", meaning: "I will be working all the time, and I will not have time for you." },
+            { text: "I'm a little bit of a bookworm.", meaning: "I would rather be reading than talking to you." },
+            { text: "I'm a little bit of a foodie.", meaning: "I am a picky eater, and I will not be eating anything you cook." },
+            { text: "I'm a little bit of a night owl.", meaning: "I will be up all night, and I will not be waking up early for you." },
+            { text: "I'm a little bit of a morning lark.", meaning: "I will be up early, and I will be very grumpy if you wake me up late." },
+            { text: "I'm a little bit of a people pleaser.", meaning: "I will do whatever you want me to do, but I will be silently judging you." },
+            { text: "I'm a little bit of a hermit.", meaning: "I do not like to be around people, and I will not be around you for long." },
+            { text: "I'm a little bit of a procrastinator.", meaning: "I will not be doing anything you ask me to do until the last minute." },
+            { text: "I'm a little bit of a minimalist.", meaning: "I have very few possessions, and I will be judging your clutter." },
+            { text: "I'm a little bit of a hoarder.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a collector.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a daredevil.", meaning: "I will be doing dangerous things, and I will not be stopping for you." },
+            { text: "I'm a little bit of a worrier.", meaning: "I will be worrying about everything, and I will be very anxious." },
+            { text: "I'm a little bit of a dreamer.", meaning: "I will be daydreaming all the time, and I will not be paying attention to you." },
+            { text: "I'm a little bit of a realist.", meaning: "I will be telling you the truth, even if it hurts." },
+            { text: "I'm a little bit of a romantic.", meaning: "I have very high expectations for romance, and I will be very disappointed if you don't meet them." },
+            { text: "I'm a little bit of a cynic.", meaning: "I will be cynical about everything, and I will not be trusting you." },
+            { text: "I'm a little bit of a pessimist.", meaning: "I will be pessimistic about everything, and I will be very negative." },
+            { text: "I'm a little bit of an optimist.", meaning: "I will be optimistic about everything, and I will be very positive." },
+            { text: "I'm a little bit of a clown.", meaning: "I will be making jokes all the time, and I will not be serious." },
+            { text: "I'm a little bit of a nerd.", meaning: "I will be talking about nerdy things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a geek.", meaning: "I will be talking about geeky things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a goofball.", meaning: "I will be goofy all the time, and I will not be serious." },
+            { text: "I'm a little bit of a smarty-pants.", meaning: "I will be correcting you all the time, and I will be very annoying." },
+            { text: "I'm a little bit of a know-it-all.", meaning: "I will be telling you everything I know, and I will be very annoying." },
+            { text: "I'm a little bit of a gossip.", meaning: "I will be gossiping about everyone, and I will be very annoying." },
+            { text: "I'm a little bit of a liar.", meaning: "I will be lying all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a cheater.", meaning: "I will be cheating all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a manipulator.", meaning: "I will be manipulating you all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a narcissist.", meaning: "I will be narcissistic all the time, and I will be very self-centered." },
+            { text: "I'm a little bit of a psychopath.", meaning: "I will be psychopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sociopath.", meaning: "I will be sociopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a masochist.", meaning: "I will be masochistic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sadist.", meaning: "I will be sadistic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sociopath.", meaning: "I will be sociopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a psychopath.", meaning: "I will be psychopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a narcissist.", meaning: "I will be narcissistic all the time, and I will be very self-centered." },
+            { text: "I'm a little bit of a manipulator.", meaning: "I will be manipulating you all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a cheater.", meaning: "I will be cheating all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a liar.", meaning: "I will be lying all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a gossip.", meaning: "I will be gossiping about everyone, and I will be very annoying." },
+            { text: "I'm a little bit of a know-it-all.", meaning: "I will be telling you everything I know, and I will be very annoying." },
+            { text: "I'm a little bit of a smarty-pants.", meaning: "I will be correcting you all the time, and I will be very annoying." },
+            { text: "I'm a little bit of a goofball.", meaning: "I will be goofy all the time, and I will not be serious." },
+            { text: "I'm a little bit of a geek.", meaning: "I will be talking about geeky things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a nerd.", meaning: "I will be talking about nerdy things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a clown.", meaning: "I will be making jokes all the time, and I will not be serious." },
+            { text: "I'm a little bit of an optimist.", meaning: "I will be optimistic about everything, and I will be very positive." },
+            { text: "I'm a little bit of a pessimist.", meaning: "I will be pessimistic about everything, and I will be very negative." },
+            { text: "I'm a little bit of a cynic.", meaning: "I will be cynical about everything, and I will not be trusting you." },
+            { text: "I'm a little bit of a romantic.", meaning: "I have very high expectations for romance, and I will be very disappointed if you don't meet them." },
+            { text: "I'm a little bit of a realist.", meaning: "I will be telling you the truth, even if it hurts." },
+            { text: "I'm a little bit of a dreamer.", meaning: "I will be daydreaming all the time, and I will not be paying attention to you." },
+            { text: "I'm a little bit of a worrier.", meaning: "I will be worrying about everything, and I will be very anxious." },
+            { text: "I'm a little bit of a daredevil.", meaning: "I will be doing dangerous things, and I will not be stopping for you." },
+            { text: "I'm a little bit of a collector.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a hoarder.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a minimalist.", meaning: "I have very few possessions, and I will be judging your clutter." },
+            { text: "I'm a little bit of a procrastinator.", meaning: "I will not be doing anything you ask me to do until the last minute." },
+            { text: "I'm a little bit of a hermit.", meaning: "I do not like to be around people, and I will not be around you for long." },
+            { text: "I'm a little bit of a people pleaser.", meaning: "I will do whatever you want me to do, but I will be silently judging you." },
+            { text: "I'm a little bit of a morning lark.", meaning: "I will be up early, and I will be very grumpy if you wake me up late." },
+            { text: "I'm a little bit of a night owl.", meaning: "I will be up all night, and I will not be waking up early for you." },
+            { text: "I'm a little bit of a foodie.", meaning: "I am a picky eater, and I will not be eating anything you cook." },
+            { text: "I'm a little bit of a bookworm.", meaning: "I would rather be reading than talking to you." },
+            { text: "I'm a little bit of a workaholic.", meaning: "I will be working all the time, and I will not have time for you." },
+            { text: "I'm a little bit of a homebody.", meaning: "I do not like to leave my house, and I will not be leaving it for you." },
+            { text: "I'm a little bit of a wanderer.", meaning: "I have a strong desire to travel, and I will not be staying in one place for long." },
+            { text: "I'm a little bit of a free spirit.", meaning: "I have no plans, and I will not be making any." },
+            { text: "I'm a little bit of a wild card.", meaning: "I am unpredictable, and I will do whatever I want." },
+            { text: "I'm a little bit of a handful.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a drama queen.", meaning: "I have a tendency to overreact to situations, so please don't be surprised when I do." },
+            { text: "I'm a little bit of a perfectionist.", meaning: "I will be judging everything you do, and I will be very critical." },
+            { text: "I'm a little bit of a control freak.", meaning: "I need to be in control of all situations, so please don't get in my way." },
+            { text: "I'm a little bit of a germaphobe.", meaning: "I will not be touching anything in your house, so please don't be offended." },
+            { text: "I'm a little bit of a neat freak.", meaning: "I have a severe case of OCD, and I will be judging your messy house." },
+            { text: "I'm a little bit crazy.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm not a hugger.", meaning: "Do not hug me, I am uncomfortable with physical contact." },
+            { text: "I'm just being me.", meaning: "I am not a fan of that, but I will not be changing my mind." },
+            { text: "I'm not a fan of that.", meaning: "I absolutely hate that, and I'm trying to be polite about it." },
+            { text: "I'm not a morning person.", meaning: "Do not speak to me until I've had my coffee." },
+            { text: "I'm not a dog person.", meaning: "I have a strong preference for cats, but I won't judge you for having a dog." },
+            { text: "I'm not a cat person.", meaning: "I have a strong preference for dogs, but I won't judge you for having a cat." },
+            { text: "I'm not a coffee person.", meaning: "I am not a morning person, and I will be grumpy until I've had my coffee." },
+            { text: "I'm not a morning person.", meaning: "Do not speak to me until I've had my coffee." },
+            { text: "I'm not a fan of that.", meaning: "I absolutely hate that, and I'm trying to be polite about it." },
+            { text: "I'm just being me.", meaning: "I am not a fan of that, but I will not be changing my mind." },
+            { text: "I'm not a hugger.", meaning: "Do not hug me, I am uncomfortable with physical contact." },
+            { text: "I'm a little bit crazy.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a neat freak.", meaning: "I have a severe case of OCD, and I will be judging your messy house." },
+            { text: "I'm a little bit of a germaphobe.", meaning: "I will not be touching anything in your house, so please don't be offended." },
+            { text: "I'm a little bit of a control freak.", meaning: "I need to be in control of all situations, so please don't get in my way." },
+            { text: "I'm a little bit of a perfectionist.", meaning: "I will be judging everything you do, and I will be very critical." },
+            { text: "I'm a little bit of a drama queen.", meaning: "I have a tendency to overreact to situations, so please don't be surprised when I do." },
+            { text: "I'm a little bit of a handful.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a wild card.", meaning: "I am unpredictable, and I will do whatever I want." },
+            { text: "I'm a little bit of a free spirit.", meaning: "I have no plans, and I will not be making any." },
+            { text: "I'm a little bit of a wanderer.", meaning: "I have a strong desire to travel, and I will not be staying in one place for long." },
+            { text: "I'm a little bit of a homebody.", meaning: "I do not like to leave my house, and I will not be leaving it for you." },
+            { text: "I'm a little bit of a workaholic.", meaning: "I will be working all the time, and I will not have time for you." },
+            { text: "I'm a little bit of a bookworm.", meaning: "I would rather be reading than talking to you." },
+            { text: "I'm a little bit of a foodie.", meaning: "I am a picky eater, and I will not be eating anything you cook." },
+            { text: "I'm a little bit of a night owl.", meaning: "I will be up all night, and I will not be waking up early for you." },
+            { text: "I'm a little bit of a morning lark.", meaning: "I will be up early, and I will be very grumpy if you wake me up late." },
+            { text: "I'm a little bit of a people pleaser.", meaning: "I will do whatever you want me to do, but I will be silently judging you." },
+            { text: "I'm a little bit of a hermit.", meaning: "I do not like to be around people, and I will not be around you for long." },
+            { text: "I'm a little bit of a procrastinator.", meaning: "I will not be doing anything you ask me to do until the last minute." },
+            { text: "I'm a little bit of a minimalist.", meaning: "I have very few possessions, and I will be judging your clutter." },
+            { text: "I'm a little bit of a hoarder.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a collector.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a daredevil.", meaning: "I will be doing dangerous things, and I will not be stopping for you." },
+            { text: "I'm a little bit of a worrier.", meaning: "I will be worrying about everything, and I will be very anxious." },
+            { text: "I'm a little bit of a dreamer.", meaning: "I will be daydreaming all the time, and I will not be paying attention to you." },
+            { text: "I'm a little bit of a realist.", meaning: "I will be telling you the truth, even if it hurts." },
+            { text: "I'm a little bit of a romantic.", meaning: "I have very high expectations for romance, and I will be very disappointed if you don't meet them." },
+            { text: "I'm a little bit of a cynic.", meaning: "I will be cynical about everything, and I will not be trusting you." },
+            { text: "I'm a little bit of a pessimist.", meaning: "I will be pessimistic about everything, and I will be very negative." },
+            { text: "I'm a little bit of an optimist.", meaning: "I will be optimistic about everything, and I will be very positive." },
+            { text: "I'm a little bit of a clown.", meaning: "I will be making jokes all the time, and I will not be serious." },
+            { text: "I'm a little bit of a nerd.", meaning: "I will be talking about nerdy things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a geek.", meaning: "I will be talking about geeky things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a goofball.", meaning: "I will be goofy all the time, and I will not be serious." },
+            { text: "I'm a little bit of a smarty-pants.", meaning: "I will be correcting you all the time, and I will be very annoying." },
+            { text: "I'm a little bit of a know-it-all.", meaning: "I will be telling you everything I know, and I will be very annoying." },
+            { text: "I'm a little bit of a gossip.", meaning: "I will be gossiping about everyone, and I will be very annoying." },
+            { text: "I'm a little bit of a liar.", meaning: "I will be lying all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a cheater.", meaning: "I will be cheating all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a manipulator.", meaning: "I will be manipulating you all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a narcissist.", meaning: "I will be narcissistic all the time, and I will be very self-centered." },
+            { text: "I'm a little bit of a psychopath.", meaning: "I will be psychopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sociopath.", meaning: "I will be sociopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a masochist.", meaning: "I will be masochistic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sadist.", meaning: "I will be sadistic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sociopath.", meaning: "I will be sociopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a psychopath.", meaning: "I will be psychopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a narcissist.", meaning: "I will be narcissistic all the time, and I will be very self-centered." },
+            { text: "I'm a little bit of a manipulator.", meaning: "I will be manipulating you all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a cheater.", meaning: "I will be cheating all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a liar.", meaning: "I will be lying all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a gossip.", meaning: "I will be gossiping about everyone, and I will be very annoying." },
+            { text: "I'm a little bit of a know-it-all.", meaning: "I will be telling you everything I know, and I will be very annoying." },
+            { text: "I'm a little bit of a smarty-pants.", meaning: "I will be correcting you all the time, and I will be very annoying." },
+            { text: "I'm a little bit of a goofball.", meaning: "I will be goofy all the time, and I will not be serious." },
+            { text: "I'm a little bit of a geek.", meaning: "I will be talking about geeky things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a nerd.", meaning: "I will be talking about nerdy things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a clown.", meaning: "I will be making jokes all the time, and I will not be serious." },
+            { text: "I'm a little bit of an optimist.", meaning: "I will be optimistic about everything, and I will be very positive." },
+            { text: "I'm a little bit of a pessimist.", meaning: "I will be pessimistic about everything, and I will be very negative." },
+            { text: "I'm a little bit of a cynic.", meaning: "I will be cynical about everything, and I will not be trusting you." },
+            { text: "I'm a little bit of a romantic.", meaning: "I have very high expectations for romance, and I will be very disappointed if you don't meet them." },
+            { text: "I'm a little bit of a realist.", meaning: "I will be telling you the truth, even if it hurts." },
+            { text: "I'm a little bit of a dreamer.", meaning: "I will be daydreaming all the time, and I will not be paying attention to you." },
+            { text: "I'm a little bit of a worrier.", meaning: "I will be worrying about everything, and I will be very anxious." },
+            { text: "I'm a little bit of a daredevil.", meaning: "I will be doing dangerous things, and I will not be stopping for you." },
+            { text: "I'm a little bit of a collector.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a hoarder.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a minimalist.", meaning: "I have very few possessions, and I will be judging your clutter." },
+            { text: "I'm a little bit of a procrastinator.", meaning: "I will not be doing anything you ask me to do until the last minute." },
+            { text: "I'm a little bit of a hermit.", meaning: "I do not like to be around people, and I will not be around you for long." },
+            { text: "I'm a little bit of a people pleaser.", meaning: "I will do whatever you want me to do, but I will be silently judging you." },
+            { text: "I'm a little bit of a morning lark.", meaning: "I will be up early, and I will be very grumpy if you wake me up late." },
+            { text: "I'm a little bit of a night owl.", meaning: "I will be up all night, and I will not be waking up early for you." },
+            { text: "I'm a little bit of a foodie.", meaning: "I am a picky eater, and I will not be eating anything you cook." },
+            { text: "I'm a little bit of a bookworm.", meaning: "I would rather be reading than talking to you." },
+            { text: "I'm a little bit of a workaholic.", meaning: "I will be working all the time, and I will not have time for you." },
+            { text: "I'm a little bit of a homebody.", meaning: "I do not like to leave my house, and I will not be leaving it for you." },
+            { text: "I'm a little bit of a wanderer.", meaning: "I have a strong desire to travel, and I will not be staying in one place for long." },
+            { text: "I'm a little bit of a free spirit.", meaning: "I have no plans, and I will not be making any." },
+            { text: "I'm a little bit of a wild card.", meaning: "I am unpredictable, and I will do whatever I want." },
+            { text: "I'm a little bit of a handful.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a drama queen.", meaning: "I have a tendency to overreact to situations, so please don't be surprised when I do." },
+            { text: "I'm a little bit of a perfectionist.", meaning: "I will be judging everything you do, and I will be very critical." },
+            { text: "I'm a little bit of a control freak.", meaning: "I need to be in control of all situations, so please don't get in my way." },
+            { text: "I'm a little bit of a germaphobe.", meaning: "I will not be touching anything in your house, so please don't be offended." },
+            { text: "I'm a little bit of a neat freak.", meaning: "I have a severe case of OCD, and I will be judging your messy house." },
+            { text: "I'm a little bit crazy.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm not a hugger.", meaning: "Do not hug me, I am uncomfortable with physical contact." },
+            { text: "I'm just being me.", meaning: "I am not a fan of that, but I will not be changing my mind." },
+            { text: "I'm not a fan of that.", meaning: "I absolutely hate that, and I'm trying to be polite about it." },
+            { text: "I'm not a morning person.", meaning: "Do not speak to me until I've had my coffee." },
+            { text: "I'm not a dog person.", meaning: "I have a strong preference for cats, but I won't judge you for having a dog." },
+            { text: "I'm not a cat person.", meaning: "I have a strong preference for dogs, but I won't judge you for having a cat." },
+            { text: "I'm not a coffee person.", meaning: "I am not a morning person, and I will be grumpy until I've had my coffee." },
+            { text: "I'm not a morning person.", meaning: "Do not speak to me until I've had my coffee." },
+            { text: "I'm not a fan of that.", meaning: "I absolutely hate that, and I'm trying to be polite about it." },
+            { text: "I'm just being me.", meaning: "I am not a fan of that, but I will not be changing my mind." },
+            { text: "I'm not a hugger.", meaning: "Do not hug me, I am uncomfortable with physical contact." },
+            { text: "I'm a little bit crazy.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a neat freak.", meaning: "I have a severe case of OCD, and I will be judging your messy house." },
+            { text: "I'm a little bit of a germaphobe.", meaning: "I will not be touching anything in your house, so please don't be offended." },
+            { text: "I'm a little bit of a control freak.", meaning: "I need to be in control of all situations, so please don't get in my way." },
+            { text: "I'm a little bit of a perfectionist.", meaning: "I will be judging everything you do, and I will be very critical." },
+            { text: "I'm a little bit of a drama queen.", meaning: "I have a tendency to overreact to situations, so please don't be surprised when I do." },
+            { text: "I'm a little bit of a handful.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a wild card.", meaning: "I am unpredictable, and I will do whatever I want." },
+            { text: "I'm a little bit of a free spirit.", meaning: "I have no plans, and I will not be making any." },
+            { text: "I'm a little bit of a wanderer.", meaning: "I have a strong desire to travel, and I will not be staying in one place for long." },
+            { text: "I'm a little bit of a homebody.", meaning: "I do not like to leave my house, and I will not be leaving it for you." },
+            { text: "I'm a little bit of a workaholic.", meaning: "I will be working all the time, and I will not have time for you." },
+            { text: "I'm a little bit of a bookworm.", meaning: "I would rather be reading than talking to you." },
+            { text: "I'm a little bit of a foodie.", meaning: "I am a picky eater, and I will not be eating anything you cook." },
+            { text: "I'm a little bit of a night owl.", meaning: "I will be up all night, and I will not be waking up early for you." },
+            { text: "I'm a little bit of a morning lark.", meaning: "I will be up early, and I will be very grumpy if you wake me up late." },
+            { text: "I'm a little bit of a people pleaser.", meaning: "I will do whatever you want me to do, but I will be silently judging you." },
+            { text: "I'm a little bit of a hermit.", meaning: "I do not like to be around people, and I will not be around you for long." },
+            { text: "I'm a little bit of a procrastinator.", meaning: "I will not be doing anything you ask me to do until the last minute." },
+            { text: "I'm a little bit of a minimalist.", meaning: "I have very few possessions, and I will be judging your clutter." },
+            { text: "I'm a little bit of a hoarder.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a collector.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a daredevil.", meaning: "I will be doing dangerous things, and I will not be stopping for you." },
+            { text: "I'm a little bit of a worrier.", meaning: "I will be worrying about everything, and I will be very anxious." },
+            { text: "I'm a little bit of a dreamer.", meaning: "I will be daydreaming all the time, and I will not be paying attention to you." },
+            { text: "I'm a little bit of a realist.", meaning: "I will be telling you the truth, even if it hurts." },
+            { text: "I'm a little bit of a romantic.", meaning: "I have very high expectations for romance, and I will be very disappointed if you don't meet them." },
+            { text: "I'm a little bit of a cynic.", meaning: "I will be cynical about everything, and I will not be trusting you." },
+            { text: "I'm a little bit of a pessimist.", meaning: "I will be pessimistic about everything, and I will be very negative." },
+            { text: "I'm a little bit of an optimist.", meaning: "I will be optimistic about everything, and I will be very positive." },
+            { text: "I'm a little bit of a clown.", meaning: "I will be making jokes all the time, and I will not be serious." },
+            { text: "I'm a little bit of a nerd.", meaning: "I will be talking about nerdy things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a geek.", meaning: "I will be talking about geeky things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a goofball.", meaning: "I will be goofy all the time, and I will not be serious." },
+            { text: "I'm a little bit of a smarty-pants.", meaning: "I will be correcting you all the time, and I will be very annoying." },
+            { text: "I'm a little bit of a know-it-all.", meaning: "I will be telling you everything I know, and I will be very annoying." },
+            { text: "I'm a little bit of a gossip.", meaning: "I will be gossiping about everyone, and I will be very annoying." },
+            { text: "I'm a little bit of a liar.", meaning: "I will be lying all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a cheater.", meaning: "I will be cheating all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a manipulator.", meaning: "I will be manipulating you all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a narcissist.", meaning: "I will be narcissistic all the time, and I will be very self-centered." },
+            { text: "I'm a little bit of a psychopath.", meaning: "I will be psychopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sociopath.", meaning: "I will be sociopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a masochist.", meaning: "I will be masochistic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sadist.", meaning: "I will be sadistic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sociopath.", meaning: "I will be sociopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a psychopath.", meaning: "I will be psychopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a narcissist.", meaning: "I will be narcissistic all the time, and I will be very self-centered." },
+            { text: "I'm a little bit of a manipulator.", meaning: "I will be manipulating you all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a cheater.", meaning: "I will be cheating all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a liar.", meaning: "I will be lying all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a gossip.", meaning: "I will be gossiping about everyone, and I will be very annoying." },
+            { text: "I'm a little bit of a know-it-all.", meaning: "I will be telling you everything I know, and I will be very annoying." },
+            { text: "I'm a little bit of a smarty-pants.", meaning: "I will be correcting you all the time, and I will be very annoying." },
+            { text: "I'm a little bit of a goofball.", meaning: "I will be goofy all the time, and I will not be serious." },
+            { text: "I'm a little bit of a geek.", meaning: "I will be talking about geeky things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a nerd.", meaning: "I will be talking about nerdy things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a clown.", meaning: "I will be making jokes all the time, and I will not be serious." },
+            { text: "I'm a little bit of an optimist.", meaning: "I will be optimistic about everything, and I will be very positive." },
+            { text: "I'm a little bit of a pessimist.", meaning: "I will be pessimistic about everything, and I will be very negative." },
+            { text: "I'm a little bit of a cynic.", meaning: "I will be cynical about everything, and I will not be trusting you." },
+            { text: "I'm a little bit of a romantic.", meaning: "I have very high expectations for romance, and I will be very disappointed if you don't meet them." },
+            { text: "I'm a little bit of a realist.", meaning: "I will be telling you the truth, even if it hurts." },
+            { text: "I'm a little bit of a dreamer.", meaning: "I will be daydreaming all the time, and I will not be paying attention to you." },
+            { text: "I'm a little bit of a worrier.", meaning: "I will be worrying about everything, and I will be very anxious." },
+            { text: "I'm a little bit of a daredevil.", meaning: "I will be doing dangerous things, and I will not be stopping for you." },
+            { text: "I'm a little bit of a collector.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a hoarder.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a minimalist.", meaning: "I have very few possessions, and I will be judging your clutter." },
+            { text: "I'm a little bit of a procrastinator.", meaning: "I will not be doing anything you ask me to do until the last minute." },
+            { text: "I'm a little bit of a hermit.", meaning: "I do not like to be around people, and I will not be around you for long." },
+            { text: "I'm a little bit of a people pleaser.", meaning: "I will do whatever you want me to do, but I will be silently judging you." },
+            { text: "I'm a little bit of a morning lark.", meaning: "I will be up early, and I will be very grumpy if you wake me up late." },
+            { text: "I'm a little bit of a night owl.", meaning: "I will be up all night, and I will not be waking up early for you." },
+            { text: "I'm a little bit of a foodie.", meaning: "I am a picky eater, and I will not be eating anything you cook." },
+            { text: "I'm a little bit of a bookworm.", meaning: "I would rather be reading than talking to you." },
+            { text: "I'm a little bit of a workaholic.", meaning: "I will be working all the time, and I will not have time for you." },
+            { text: "I'm a little bit of a homebody.", meaning: "I do not like to leave my house, and I will not be leaving it for you." },
+            { text: "I'm a little bit of a wanderer.", meaning: "I have a strong desire to travel, and I will not be staying in one place for long." },
+            { text: "I'm a little bit of a free spirit.", meaning: "I have no plans, and I will not be making any." },
+            { text: "I'm a little bit of a wild card.", meaning: "I am unpredictable, and I will do whatever I want." },
+            { text: "I'm a little bit of a handful.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a drama queen.", meaning: "I have a tendency to overreact to situations, so please don't be surprised when I do." },
+            { text: "I'm a little bit of a perfectionist.", meaning: "I will be judging everything you do, and I will be very critical." },
+            { text: "I'm a little bit of a control freak.", meaning: "I need to be in control of all situations, so please don't get in my way." },
+            { text: "I'm a little bit of a germaphobe.", meaning: "I will not be touching anything in your house, so please don't be offended." },
+            { text: "I'm a little bit of a neat freak.", meaning: "I have a severe case of OCD, and I will be judging your messy house." },
+            { text: "I'm a little bit crazy.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm not a hugger.", meaning: "Do not hug me, I am uncomfortable with physical contact." },
+            { text: "I'm just being me.", meaning: "I am not a fan of that, but I will not be changing my mind." },
+            { text: "I'm not a fan of that.", meaning: "I absolutely hate that, and I'm trying to be polite about it." },
+            { text: "I'm not a morning person.", meaning: "Do not speak to me until I've had my coffee." },
+            { text: "I'm not a dog person.", meaning: "I have a strong preference for cats, but I won't judge you for having a dog." },
+            { text: "I'm not a cat person.", meaning: "I have a strong preference for dogs, but I won't judge you for having a cat." },
+            { text: "I'm not a coffee person.", meaning: "I am not a morning person, and I will be grumpy until I've had my coffee." },
+            { text: "I'm not a morning person.", meaning: "Do not speak to me until I've had my coffee." },
+            { text: "I'm not a fan of that.", meaning: "I absolutely hate that, and I'm trying to be polite about it." },
+            { text: "I'm just being me.", meaning: "I am not a fan of that, but I will not be changing my mind." },
+            { text: "I'm not a hugger.", meaning: "Do not hug me, I am uncomfortable with physical contact." },
+            { text: "I'm a little bit crazy.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a neat freak.", meaning: "I have a severe case of OCD, and I will be judging your messy house." },
+            { text: "I'm a little bit of a germaphobe.", meaning: "I will not be touching anything in your house, so please don't be offended." },
+            { text: "I'm a little bit of a control freak.", meaning: "I need to be in control of all situations, so please don't get in my way." },
+            { text: "I'm a little bit of a perfectionist.", meaning: "I will be judging everything you do, and I will be very critical." },
+            { text: "I'm a little bit of a drama queen.", meaning: "I have a tendency to overreact to situations, so please don't be surprised when I do." },
+            { text: "I'm a little bit of a handful.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a wild card.", meaning: "I am unpredictable, and I will do whatever I want." },
+            { text: "I'm a little bit of a free spirit.", meaning: "I have no plans, and I will not be making any." },
+            { text: "I'm a little bit of a wanderer.", meaning: "I have a strong desire to travel, and I will not be staying in one place for long." },
+            { text: "I'm a little bit of a homebody.", meaning: "I do not like to leave my house, and I will not be leaving it for you." },
+            { text: "I'm a little bit of a workaholic.", meaning: "I will be working all the time, and I will not have time for you." },
+            { text: "I'm a little bit of a bookworm.", meaning: "I would rather be reading than talking to you." },
+            { text: "I'm a little bit of a foodie.", meaning: "I am a picky eater, and I will not be eating anything you cook." },
+            { text: "I'm a little bit of a night owl.", meaning: "I will be up all night, and I will not be waking up early for you." },
+            { text: "I'm a little bit of a morning lark.", meaning: "I will be up early, and I will be very grumpy if you wake me up late." },
+            { text: "I'm a little bit of a people pleaser.", meaning: "I will do whatever you want me to do, but I will be silently judging you." },
+            { text: "I'm a little bit of a hermit.", meaning: "I do not like to be around people, and I will not be around you for long." },
+            { text: "I'm a little bit of a procrastinator.", meaning: "I will not be doing anything you ask me to do until the last minute." },
+            { text: "I'm a little bit of a minimalist.", meaning: "I have very few possessions, and I will be judging your clutter." },
+            { text: "I'm a little bit of a hoarder.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a collector.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a daredevil.", meaning: "I will be doing dangerous things, and I will not be stopping for you." },
+            { text: "I'm a little bit of a worrier.", meaning: "I will be worrying about everything, and I will be very anxious." },
+            { text: "I'm a little bit of a dreamer.", meaning: "I will be daydreaming all the time, and I will not be paying attention to you." },
+            { text: "I'm a little bit of a realist.", meaning: "I will be telling you the truth, even if it hurts." },
+            { text: "I'm a little bit of a romantic.", meaning: "I have very high expectations for romance, and I will be very disappointed if you don't meet them." },
+            { text: "I'm a little bit of a cynic.", meaning: "I will be cynical about everything, and I will not be trusting you." },
+            { text: "I'm a little bit of a pessimist.", meaning: "I will be pessimistic about everything, and I will be very negative." },
+            { text: "I'm a little bit of an optimist.", meaning: "I will be optimistic about everything, and I will be very positive." },
+            { text: "I'm a little bit of a clown.", meaning: "I will be making jokes all the time, and I will not be serious." },
+            { text: "I'm a little bit of a nerd.", meaning: "I will be talking about nerdy things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a geek.", meaning: "I will be talking about geeky things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a goofball.", meaning: "I will be goofy all the time, and I will not be serious." },
+            { text: "I'm a little bit of a smarty-pants.", meaning: "I will be correcting you all the time, and I will be very annoying." },
+            { text: "I'm a little bit of a know-it-all.", meaning: "I will be telling you everything I know, and I will be very annoying." },
+            { text: "I'm a little bit of a gossip.", meaning: "I will be gossiping about everyone, and I will be very annoying." },
+            { text: "I'm a little bit of a liar.", meaning: "I will be lying all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a cheater.", meaning: "I will be cheating all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a manipulator.", meaning: "I will be manipulating you all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a narcissist.", meaning: "I will be narcissistic all the time, and I will be very self-centered." },
+            { text: "I'm a little bit of a psychopath.", meaning: "I will be psychopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sociopath.", meaning: "I will be sociopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a masochist.", meaning: "I will be masochistic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sadist.", meaning: "I will be sadistic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sociopath.", meaning: "I will be sociopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a psychopath.", meaning: "I will be psychopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a narcissist.", meaning: "I will be narcissistic all the time, and I will be very self-centered." },
+            { text: "I'm a little bit of a manipulator.", meaning: "I will be manipulating you all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a cheater.", meaning: "I will be cheating all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a liar.", meaning: "I will be lying all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a gossip.", meaning: "I will be gossiping about everyone, and I will be very annoying." },
+            { text: "I'm a little bit of a know-it-all.", meaning: "I will be telling you everything I know, and I will be very annoying." },
+            { text: "I'm a little bit of a smarty-pants.", meaning: "I will be correcting you all the time, and I will be very annoying." },
+            { text: "I'm a little bit of a goofball.", meaning: "I will be goofy all the time, and I will not be serious." },
+            { text: "I'm a little bit of a geek.", meaning: "I will be talking about geeky things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a nerd.", meaning: "I will be talking about nerdy things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a clown.", meaning: "I will be making jokes all the time, and I will not be serious." },
+            { text: "I'm a little bit of an optimist.", meaning: "I will be optimistic about everything, and I will be very positive." },
+            { text: "I'm a little bit of a pessimist.", meaning: "I will be pessimistic about everything, and I will be very negative." },
+            { text: "I'm a little bit of a cynic.", meaning: "I will be cynical about everything, and I will not be trusting you." },
+            { text: "I'm a little bit of a romantic.", meaning: "I have very high expectations for romance, and I will be very disappointed if you don't meet them." },
+            { text: "I'm a little bit of a realist.", meaning: "I will be telling you the truth, even if it hurts." },
+            { text: "I'm a little bit of a dreamer.", meaning: "I will be daydreaming all the time, and I will not be paying attention to you." },
+            { text: "I'm a little bit of a worrier.", meaning: "I will be worrying about everything, and I will be very anxious." },
+            { text: "I'm a little bit of a daredevil.", meaning: "I will be doing dangerous things, and I will not be stopping for you." },
+            { text: "I'm a little bit of a collector.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a hoarder.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a minimalist.", meaning: "I have very few possessions, and I will be judging your clutter." },
+            { text: "I'm a little bit of a procrastinator.", meaning: "I will not be doing anything you ask me to do until the last minute." },
+            { text: "I'm a little bit of a hermit.", meaning: "I do not like to be around people, and I will not be around you for long." },
+            { text: "I'm a little bit of a people pleaser.", meaning: "I will do whatever you want me to do, but I will be silently judging you." },
+            { text: "I'm a little bit of a morning lark.", meaning: "I will be up early, and I will be very grumpy if you wake me up late." },
+            { text: "I'm a little bit of a night owl.", meaning: "I will be up all night, and I will not be waking up early for you." },
+            { text: "I'm a little bit of a foodie.", meaning: "I am a picky eater, and I will not be eating anything you cook." },
+            { text: "I'm a little bit of a bookworm.", meaning: "I would rather be reading than talking to you." },
+            { text: "I'm a little bit of a workaholic.", meaning: "I will be working all the time, and I will not have time for you." },
+            { text: "I'm a little bit of a homebody.", meaning: "I do not like to leave my house, and I will not be leaving it for you." },
+            { text: "I'm a little bit of a wanderer.", meaning: "I have a strong desire to travel, and I will not be staying in one place for long." },
+            { text: "I'm a little bit of a free spirit.", meaning: "I have no plans, and I will not be making any." },
+            { text: "I'm a little bit of a wild card.", meaning: "I am unpredictable, and I will do whatever I want." },
+            { text: "I'm a little bit of a handful.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a drama queen.", meaning: "I have a tendency to overreact to situations, so please don't be surprised when I do." },
+            { text: "I'm a little bit of a perfectionist.", meaning: "I will be judging everything you do, and I will be very critical." },
+            { text: "I'm a little bit of a control freak.", meaning: "I need to be in control of all situations, so please don't get in my way." },
+            { text: "I'm a little bit of a germaphobe.", meaning: "I will not be touching anything in your house, so please don't be offended." },
+            { text: "I'm a little bit of a neat freak.", meaning: "I have a severe case of OCD, and I will be judging your messy house." },
+            { text: "I'm a little bit crazy.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm not a hugger.", meaning: "Do not hug me, I am uncomfortable with physical contact." },
+            { text: "I'm just being me.", meaning: "I am not a fan of that, but I will not be changing my mind." },
+            { text: "I'm not a fan of that.", meaning: "I absolutely hate that, and I'm trying to be polite about it." },
+            { text: "I'm not a morning person.", meaning: "Do not speak to me until I've had my coffee." },
+            { text: "I'm not a dog person.", meaning: "I have a strong preference for cats, but I won't judge you for having a dog." },
+            { text: "I'm not a cat person.", meaning: "I have a strong preference for dogs, but I won't judge you for having a cat." },
+            { text: "I'm not a coffee person.", meaning: "I am not a morning person, and I will be grumpy until I've had my coffee." },
+            { text: "I'm not a morning person.", meaning: "Do not speak to me until I've had my coffee." },
+            { text: "I'm not a fan of that.", meaning: "I absolutely hate that, and I'm trying to be polite about it." },
+            { text: "I'm just being me.", meaning: "I am not a fan of that, but I will not be changing my mind." },
+            { text: "I'm not a hugger.", meaning: "Do not hug me, I am uncomfortable with physical contact." },
+            { text: "I'm a little bit crazy.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a neat freak.", meaning: "I have a severe case of OCD, and I will be judging your messy house." },
+            { text: "I'm a little bit of a germaphobe.", meaning: "I will not be touching anything in your house, so please don't be offended." },
+            { text: "I'm a little bit of a control freak.", meaning: "I need to be in control of all situations, so please don't get in my way." },
+            { text: "I'm a little bit of a perfectionist.", meaning: "I will be judging everything you do, and I will be very critical." },
+            { text: "I'm a little bit of a drama queen.", meaning: "I have a tendency to overreact to situations, so please don't be surprised when I do." },
+            { text: "I'm a little bit of a handful.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a wild card.", meaning: "I am unpredictable, and I will do whatever I want." },
+            { text: "I'm a little bit of a free spirit.", meaning: "I have no plans, and I will not be making any." },
+            { text: "I'm a little bit of a wanderer.", meaning: "I have a strong desire to travel, and I will not be staying in one place for long." },
+            { text: "I'm a little bit of a homebody.", meaning: "I do not like to leave my house, and I will not be leaving it for you." },
+            { text: "I'm a little bit of a workaholic.", meaning: "I will be working all the time, and I will not have time for you." },
+            { text: "I'm a little bit of a bookworm.", meaning: "I would rather be reading than talking to you." },
+            { text: "I'm a little bit of a foodie.", meaning: "I am a picky eater, and I will not be eating anything you cook." },
+            { text: "I'm a little bit of a night owl.", meaning: "I will be up all night, and I will not be waking up early for you." },
+            { text: "I'm a little bit of a morning lark.", meaning: "I will be up early, and I will be very grumpy if you wake me up late." },
+            { text: "I'm a little bit of a people pleaser.", meaning: "I will do whatever you want me to do, but I will be silently judging you." },
+            { text: "I'm a little bit of a hermit.", meaning: "I do not like to be around people, and I will not be around you for long." },
+            { text: "I'm a little bit of a procrastinator.", meaning: "I will not be doing anything you ask me to do until the last minute." },
+            { text: "I'm a little bit of a minimalist.", meaning: "I have very few possessions, and I will be judging your clutter." },
+            { text: "I'm a little bit of a hoarder.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a collector.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a daredevil.", meaning: "I will be doing dangerous things, and I will not be stopping for you." },
+            { text: "I'm a little bit of a worrier.", meaning: "I will be worrying about everything, and I will be very anxious." },
+            { text: "I'm a little bit of a dreamer.", meaning: "I will be daydreaming all the time, and I will not be paying attention to you." },
+            { text: "I'm a little bit of a realist.", meaning: "I will be telling you the truth, even if it hurts." },
+            { text: "I'm a little bit of a romantic.", meaning: "I have very high expectations for romance, and I will be very disappointed if you don't meet them." },
+            { text: "I'm a little bit of a cynic.", meaning: "I will be cynical about everything, and I will not be trusting you." },
+            { text: "I'm a little bit of a pessimist.", meaning: "I will be pessimistic about everything, and I will be very negative." },
+            { text: "I'm a little bit of an optimist.", meaning: "I will be optimistic about everything, and I will be very positive." },
+            { text: "I'm a little bit of a clown.", meaning: "I will be making jokes all the time, and I will not be serious." },
+            { text: "I'm a little bit of a nerd.", meaning: "I will be talking about nerdy things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a geek.", meaning: "I will be talking about geeky things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a goofball.", meaning: "I will be goofy all the time, and I will not be serious." },
+            { text: "I'm a little bit of a smarty-pants.", meaning: "I will be correcting you all the time, and I will be very annoying." },
+            { text: "I'm a little bit of a know-it-all.", meaning: "I will be telling you everything I know, and I will be very annoying." },
+            { text: "I'm a little bit of a gossip.", meaning: "I will be gossiping about everyone, and I will be very annoying." },
+            { text: "I'm a little bit of a liar.", meaning: "I will be lying all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a cheater.", meaning: "I will be cheating all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a manipulator.", meaning: "I will be manipulating you all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a narcissist.", meaning: "I will be narcissistic all the time, and I will be very self-centered." },
+            { text: "I'm a little bit of a psychopath.", meaning: "I will be psychopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sociopath.", meaning: "I will be sociopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a masochist.", meaning: "I will be masochistic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sadist.", meaning: "I will be sadistic all the time, and I will be very dangerous." },
+            { text: "I'm not a fan of that.", meaning: "I absolutely hate that, and I'm trying to be polite about it." },
+            { text: "I'm just being me.", meaning: "I am not a fan of that, but I will not be changing my mind." },
+            { text: "I'm not a hugger.", meaning: "Do not hug me, I am uncomfortable with physical contact." },
+            { text: "I'm a little bit crazy.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a neat freak.", meaning: "I have a severe case of OCD, and I will be judging your messy house." },
+            { text: "I'm a little bit of a germaphobe.", meaning: "I will not be touching anything in your house, so please don't be offended." },
+            { text: "I'm a little bit of a control freak.", meaning: "I need to be in control of all situations, so please don't get in my way." },
+            { text: "I'm a little bit of a perfectionist.", meaning: "I will be judging everything you do, and I will be very critical." },
+            { text: "I'm a little bit of a drama queen.", meaning: "I have a tendency to overreact to situations, so please don't be surprised when I do." },
+            { text: "I'm a little bit of a handful.", meaning: "I have a lot of emotional baggage, and I'm trying to warn you about it." },
+            { text: "I'm a little bit of a wild card.", meaning: "I am unpredictable, and I will do whatever I want." },
+            { text: "I'm a little bit of a free spirit.", meaning: "I have no plans, and I will not be making any." },
+            { text: "I'm a little bit of a wanderer.", meaning: "I have a strong desire to travel, and I will not be staying in one place for long." },
+            { text: "I'm a little bit of a homebody.", meaning: "I do not like to leave my house, and I will not be leaving it for you." },
+            { text: "I'm a little bit of a workaholic.", meaning: "I will be working all the time, and I will not have time for you." },
+            { text: "I'm a little bit of a bookworm.", meaning: "I would rather be reading than talking to you." },
+            { text: "I'm a little bit of a foodie.", meaning: "I am a picky eater, and I will not be eating anything you cook." },
+            { text: "I'm a little bit of a night owl.", meaning: "I will be up all night, and I will not be waking up early for you." },
+            { text: "I'm a little bit of a morning lark.", meaning: "I will be up early, and I will be very grumpy if you wake me up late." },
+            { text: "I'm a little bit of a people pleaser.", meaning: "I will do whatever you want me to do, but I will be silently judging you." },
+            { text: "I'm a little bit of a hermit.", meaning: "I do not like to be around people, and I will not be around you for long." },
+            { text: "I'm a little bit of a procrastinator.", meaning: "I will not be doing anything you ask me to do until the last minute." },
+            { text: "I'm a little bit of a minimalist.", meaning: "I have very few possessions, and I will be judging your clutter." },
+            { text: "I'm a little bit of a hoarder.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a collector.", meaning: "I have a lot of possessions, and I will be judging your lack of possessions." },
+            { text: "I'm a little bit of a daredevil.", meaning: "I will be doing dangerous things, and I will not be stopping for you." },
+            { text: "I'm a little bit of a worrier.", meaning: "I will be worrying about everything, and I will be very anxious." },
+            { text: "I'm a little bit of a dreamer.", meaning: "I will be daydreaming all the time, and I will not be paying attention to you." },
+            { text: "I'm a little bit of a realist.", meaning: "I will be telling you the truth, even if it hurts." },
+            { text: "I'm a little bit of a romantic.", meaning: "I have very high expectations for romance, and I will be very disappointed if you don't meet them." },
+            { text: "I'm a little bit of a cynic.", meaning: "I will be cynical about everything, and I will not be trusting you." },
+            { text: "I'm a little bit of a pessimist.", meaning: "I will be pessimistic about everything, and I will be very negative." },
+            { text: "I'm a little bit of an optimist.", meaning: "I will be optimistic about everything, and I will be very positive." },
+            { text: "I'm a little bit of a clown.", meaning: "I will be making jokes all the time, and I will not be serious." },
+            { text: "I'm a little bit of a nerd.", meaning: "I will be talking about nerdy things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a geek.", meaning: "I will be talking about geeky things all the time, and I will not be stopping for you." },
+            { text: "I'm a little bit of a goofball.", meaning: "I will be goofy all the time, and I will not be serious." },
+            { text: "I'm a little bit of a smarty-pants.", meaning: "I will be correcting you all the time, and I will be very annoying." },
+            { text: "I'm a little bit of a know-it-all.", meaning: "I will be telling you everything I know, and I will be very annoying." },
+            { text: "I'm a little bit of a gossip.", meaning: "I will be gossiping about everyone, and I will be very annoying." },
+            { text: "I'm a little bit of a liar.", meaning: "I will be lying all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a cheater.", meaning: "I will be cheating all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a manipulator.", meaning: "I will be manipulating you all the time, and I will be very untrustworthy." },
+            { text: "I'm a little bit of a narcissist.", meaning: "I will be narcissistic all the time, and I will be very self-centered." },
+            { text: "I'm a little bit of a psychopath.", meaning: "I will be psychopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sociopath.", meaning: "I will be sociopathic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a masochist.", meaning: "I will be masochistic all the time, and I will be very dangerous." },
+            { text: "I'm a little bit of a sadist.", meaning: "I will be sadistic all the time, and I will be very dangerous." }
+        ];
+
+        // Get references to all necessary DOM elements
+        const phraseInput = document.getElementById('phrase-input');
+        const suggestionsBox = document.getElementById('suggestions');
+        const resultBox = document.getElementById('result-box');
+        const resultText = document.getElementById('result-text');
+
+        /**
+         * Clears all suggestions from the suggestions box.
+         */
+        const clearSuggestions = () => {
+            suggestionsBox.innerHTML = '';
+            suggestionsBox.classList.add('hidden');
+        };
+
+        /**
+         * Displays the translation for a given phrase.
+         * @param {string} phrase - The phrase to translate.
+         */
+        const showTranslation = (phrase) => {
+            // Find the corresponding meaning in the phrases data
+            const match = phrases.find(p => p.text.toLowerCase() === phrase.toLowerCase());
+
+            if (match) {
+                // Animate the result box and show the meaning
+                resultText.textContent = match.meaning;
+                resultBox.classList.remove('hidden');
+                resultBox.classList.add('result-animation');
+            } else {
+                // Hide the result box if no match is found
+                resultBox.classList.add('hidden');
+            }
+        };
+
+        /**
+         * Cleans a string for better matching by removing non-alphanumeric characters and converting to lowercase.
+         * @param {string} str - The string to clean.
+         * @returns {string} The cleaned string.
+         */
+        const cleanString = (str) => {
+            return str.toLowerCase().replace(/[^a-z0-9]/g, '');
+        };
+
+        /**
+         * Handles input events on the text field to display suggestions using fuzzy matching.
+         */
+        phraseInput.addEventListener('input', (e) => {
+            const query = cleanString(e.target.value);
+            clearSuggestions();
+            resultBox.classList.add('hidden');
+
+            if (query.length > 0) {
+                // Filter phrases that match the cleaned query
+                const filteredPhrases = phrases.filter(p => cleanString(p.text).includes(query));
+
+                if (filteredPhrases.length > 0) {
+                    suggestionsBox.classList.remove('hidden');
+                    // Create and append a div for each matching phrase
+                    filteredPhrases.forEach(p => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.textContent = p.text;
+                        suggestionItem.className = 'suggestion-item p-3 text-lg font-medium text-gray-800 rounded-md';
+                        // Add a click listener to the suggestion item
+                        suggestionItem.addEventListener('click', () => {
+                            phraseInput.value = p.text;
+                            clearSuggestions();
+                            showTranslation(p.text);
+                        });
+                        suggestionsBox.appendChild(suggestionItem);
+                    });
+                }
+            }
+        });
+
+        /**
+         * Handles keydown events, specifically the 'Enter' key, to trigger translation.
+         */
+        phraseInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const phrase = e.target.value;
+                if (phrase.trim().length > 0) {
+                    showTranslation(phrase);
+                    clearSuggestions();
+                }
+            }
+        });
+
+        /**
+         * Hides the suggestions box when the user clicks outside of the input or suggestions box.
+         */
+        document.addEventListener('click', (e) => {
+            if (!phraseInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                clearSuggestions();
+            }
+        });
+
+    </script>
+</body>
+</html>

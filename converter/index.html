@@ -1,48 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f172a" id="theme-color-meta" />
   <title>Converter Hub</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f7fa;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    h1 {
-      margin-bottom: 30px;
-    }
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background: #0078d7;
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background: #005a9e;
-    }
+    body { font-family: 'Inter', sans-serif; }
+    .icon-sun, .icon-moon { transition: opacity .3s ease; }
   </style>
+
+  <script>
+    // Prevent flash of wrong theme
+    (() => {
+      const stored = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const htmlEl = document.documentElement;
+      if (stored === 'dark' || (!stored && prefersDark)) {
+        htmlEl.classList.add('dark');
+      } else {
+        htmlEl.classList.remove('dark');
+      }
+    })();
+  </script>
 </head>
-<body>
-  <h1>Choose a Converter</h1>
-  <div class="button-container">
-    <button onclick="location.href='currency.html'">Currency Converter</button>
-    <button onclick="location.href='eu_us.html'">US to EU Converter</button>
+<body class="bg-white dark:bg-slate-950 min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-300">
+
+  <!-- Toggle -->
+  <button id="theme-toggle" aria-label="Toggle Dark Mode" aria-pressed="true"
+    class="absolute top-4 right-4 p-3 rounded-full bg-slate-300 dark:bg-slate-700 text-gray-800 dark:text-gray-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all">
+    <svg id="sun-icon" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+    </svg>
+    <svg id="moon-icon" class="h-6 w-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+    </svg>
+  </button>
+
+  <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-50 mb-8 text-center px-4">Choose a Converter</h1>
+
+  <div class="flex flex-col gap-4 w-full max-w-sm px-4">
+    <!-- Go Back Button -->
+    <button onclick="history.back()" class="w-full py-3 px-4 rounded-xl bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-semibold hover:scale-[1.02] transition-all">
+      Go Back
+    </button>
+
+    <!-- Converters -->
+    <button onclick="location.href='currency.html'" class="w-full py-3 px-4 rounded-xl bg-slate-300 dark:bg-slate-700 text-gray-900 dark:text-gray-100 font-semibold hover:scale-[1.02] transition-all">
+      Currency Converter
+    </button>
+    <button onclick="location.href='eu_us.html'" class="w-full py-3 px-4 rounded-xl bg-slate-300 dark:bg-slate-700 text-gray-900 dark:text-gray-100 font-semibold hover:scale-[1.02] transition-all">
+      US to EU Converter
+    </button>
+	<button onclick="location.href='women_to_no_bs.html'" class="w-full py-3 px-4 rounded-xl bg-slate-300 dark:bg-slate-700 text-gray-900 dark:text-gray-100 font-semibold hover:scale-[1.02] transition-all">
+      Women talk to No BS
+    </button>
+	
   </div>
+
+  <script>
+    const toggleBtn = document.getElementById('theme-toggle');
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
+    const htmlEl = document.documentElement;
+    const themeMeta = document.getElementById('theme-color-meta');
+
+    const updateIcons = (dark) => {
+      sunIcon.classList.toggle('hidden', dark);
+      moonIcon.classList.toggle('hidden', !dark);
+      toggleBtn.setAttribute('aria-pressed', dark);
+      themeMeta.setAttribute('content', dark ? '#0f172a' : '#ffffff');
+    };
+
+    const applyTheme = () => {
+      const isDark = htmlEl.classList.contains('dark');
+      updateIcons(isDark);
+    };
+
+    applyTheme();
+
+    toggleBtn.addEventListener('click', () => {
+      htmlEl.classList.toggle('dark');
+      const isDark = htmlEl.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateIcons(isDark);
+    });
+  </script>
 </body>
 </html>
