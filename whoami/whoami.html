@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultimate Client Info</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<style>
+body { font-family: Arial, sans-serif; background: #f0f0f0; color: #333; padding: 30px; }
+h1 { text-align: center; margin-bottom: 20px; }
+.info { background: #fff; padding: 20px; margin: 0 auto 20px auto; border-radius: 8px; max-width: 950px; box-shadow: 0 0 10px rgba(0,0,0,0.1); white-space: pre-wrap; }
+#map { height: 400px; max-width: 950px; margin: 0 auto; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+</style>
+</head>
+<body>
+<h1>Ultimate Client Information</h1>
+<div class="info" id="clientInfo">Loading client information...</div>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+async function getUltimateClientInfo() {
+    const infoDiv = document.getElementById('clientInfo');
+    let map, marker;
+
+    // Browser Info
+    const browser = navigator.userAgent;
+    const platform = navigator.platform;
+    const language = navigator.language;
+    const vendor = navigator.vendor;
+    const engine = navigator.product;
+
+    // Screen & Device
+    const screenRes = `${window.screen.width}x${window.screen.height}`;
+    const viewport = `${window.innerWidth}x${window.innerHeight}`;
+    const colorDepth = window.screen.colorDepth;
+    const pixelRatio = window.devicePixelRatio || 1;
+    const orientationType = (screen.orientation || {}).type || 'Unknown';
+    const touchSupport = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    // Storage & Plugins
+    const cookiesEnabled = navigator.cookieEnabled;
+    const localStorageEnabled = (() => { try { localStorage.setItem('x','1'); localStorage.removeItem('x'); return true; } catch { return false; }})();
+    const sessionStorageEnabled = (() => { try { sessionStorage.setItem('x','1'); sessionStorage.removeItem('x'); return true; } catch { return false; }})();
+    const indexedDBSupport = !!window.indexedDB;
+    const cacheSupport = 'caches' in window;
+    const plugins = Array.from(navigator.plugins || []).map(p => p.name).join(', ') || 'None';
+
+    // Fonts
+    const fonts = ['Arial','Courier New','Georgia','Times New Roman','Verdana'];
+    const availableFonts = fonts.filter(f => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        context.font = '72px monospace';
+        const baseline = context.measureText('mmmmmmmmmm').width;
+        context.font = `72px ${f}, monospace`;
+        return context.measureText('mmmmmmmmmm').width !== baseline;
+    }).join(', ');
+
+    // Canvas fingerprint
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.textBaseline = "top";
+    ctx.font = "14px 'Arial'";
+    ctx.fillStyle = "#f60";
+    ctx.fillRect(125,1,62,20);
+    ctx.fillStyle = "#069";
+    ctx.fillText("Fingerprint Test", 2, 15);
+    const canvasFingerprint = canvas.toDataURL();
+
+    // WebGL/GPU Info
+    let gpuVendor = 'Unknown', gpuRenderer = 'Unknown';
+    try {
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        gpuVendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+        gpuRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+    } catch(e){}
+
+    // Battery & Connection
+    let batteryInfo = {level:'Unknown', charging:'Unknown'};
+    try { batteryInfo = await navigator.getBattery(); } catch(e){}
+    const connection = navigator.connection || {};
+
+    // Media devices
+    let mediaDevices = [];
+    try { mediaDevices = await navigator.mediaDevices.enumerateDevices(); } catch(e) {}
+    const hasCamera = mediaDevices.some(d => d.kind === 'videoinput');
+    const hasMicrophone = mediaDevices.some(d => d.kind === 'audioinput');
+
+    // Camera & microphone permissions to get resolution/sample rate
+    let cameraRes = 'Unknown', micRate = 'Unknown';
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({video:true, audio:true});
+        const videoTrack = stream.getVideoTracks()[0];
+        if(videoTrack) cameraRes = `${videoTrack.getSettings().width}x${videoTrack.getSettings().height}`;
+        const audioTrack = stream.getAudioTracks()[0];
+        if(audioTrack) micRate = audioTrack.getSettings().sampleRate || 'Unknown';
+        stream.getTracks().forEach(t => t.stop());
+    } catch(e){}
+
+    // Public IP & Geolocation
+    let ip = 'Unknown', city = 'Unknown', country = 'Unknown', org = 'Unknown', latitude = null, longitude = null;
+    let accuracy = null, altitude = null, speed = null, heading = null;
+    try {
+        const resp = await fetch('https://ipapi.co/json/');
+        const data = await resp.json();
+        ip = data.ip; city = data.city; country = data.country_name; org = data.org;
+        latitude = data.latitude; longitude = data.longitude;
+    } catch(e){}
+    try {
+        await new Promise(resolve => {
+            navigator.geolocation.getCurrentPosition(pos => {
+                latitude = pos.coords.latitude;
+                longitude = pos.coords.longitude;
+                accuracy = pos.coords.accuracy;
+                altitude = pos.coords.altitude;
+                speed = pos.coords.speed;
+                heading = pos.coords.heading;
+                resolve();
+            }, () => resolve());
+        });
+    } catch(e){}
+
+    // Device Orientation & Motion
+    let orientationData = {alpha:null, beta:null, gamma:null};
+    let motionData = {x:null, y:null, z:null, acceleration:null, rotationRate:null};
+    try {
+        window.addEventListener('deviceorientation', e => {
+            orientationData.alpha = e.alpha;
+            orientationData.beta = e.beta;
+            orientationData.gamma = e.gamma;
+        }, {once:true});
+        window.addEventListener('devicemotion', e => {
+            motionData.x = e.accelerationIncludingGravity.x;
+            motionData.y = e.accelerationIncludingGravity.y;
+            motionData.z = e.accelerationIncludingGravity.z;
+            motionData.acceleration = e.acceleration;
+            motionData.rotationRate = e.rotationRate;
+        }, {once:true});
+    } catch(e){}
+
+    // Ambient Light Sensor (if supported)
+    let ambientLight = 'Unknown';
+    try {
+        if('AmbientLightSensor' in window){
+            const sensor = new AmbientLightSensor();
+            sensor.onreading = () => ambientLight = sensor.illuminance;
+            sensor.start();
+        }
+    } catch(e){}
+
+    // Service Worker Support
+    const serviceWorkers = 'serviceWorker' in navigator;
+
+    // MIME Types
+    const mimeTypes = Array.from(navigator.mimeTypes).map(m=>m.type).join(', ') || 'None';
+
+    // Time
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const systemTime = new Date().toString();
+
+    // Display all info
+    infoDiv.innerHTML = `
+Browser: ${browser}
+Platform: ${platform}
+Vendor: ${vendor}
+Engine: ${engine}
+Language: ${language}
+Screen Resolution: ${screenRes}
+Viewport: ${viewport}
+Color Depth: ${colorDepth}
+Pixel Ratio: ${pixelRatio}
+Screen Orientation: ${orientationType}
+Touch Support: ${touchSupport}
+Connection Type: ${connection.effectiveType || 'Unknown'}
+Downlink: ${connection.downlink || 'Unknown'} Mbps
+RTT: ${connection.rtt || 'Unknown'} ms
+Save-Data: ${connection.saveData || false}
+CPU Cores: ${navigator.hardwareConcurrency || 'Unknown'}
+Device Memory: ${navigator.deviceMemory || 'Unknown'} GB
+Battery Level: ${batteryInfo.level}
+Charging: ${batteryInfo.charging}
+Cookies Enabled: ${cookiesEnabled}
+LocalStorage: ${localStorageEnabled}
+SessionStorage: ${sessionStorageEnabled}
+IndexedDB: ${indexedDBSupport}
+Cache API: ${cacheSupport}
+Plugins: ${plugins}
+Detected Fonts: ${availableFonts}
+Canvas Fingerprint: ${canvasFingerprint}
+GPU Vendor: ${gpuVendor}
+GPU Renderer: ${gpuRenderer}
+Camera Available: ${hasCamera}
+Camera Resolution: ${cameraRes}
+Microphone Available: ${hasMicrophone}
+Microphone Sample Rate: ${micRate}
+Public IP: ${ip}
+Organization: ${org}
+City: ${city}
+Country: ${country}
+Latitude: ${latitude}
+Longitude: ${longitude}
+Accuracy: ${accuracy}
+Altitude: ${altitude}
+Speed: ${speed}
+Heading: ${heading}
+Device Orientation (α,β,γ): ${orientationData.alpha},${orientationData.beta},${orientationData.gamma}
+Device Motion X/Y/Z: ${motionData.x},${motionData.y},${motionData.z}
+Ambient Light: ${ambientLight}
+Service Worker Supported: ${serviceWorkers}
+MIME Types: ${mimeTypes}
+Timezone: ${timezone}
+System Time: ${systemTime}
+`;
+
+    if(latitude && longitude){
+        map = L.map('map').setView([latitude, longitude], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+        marker = L.marker([latitude, longitude]).addTo(map).bindPopup(`${city}, ${country}`).openPopup();
+    }
+}
+
+getUltimateClientInfo();
+</script>
+</body>
+</html>

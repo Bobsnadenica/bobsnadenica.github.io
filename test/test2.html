@@ -1,0 +1,235 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Palette Particles</title>
+    <style>
+      body { margin: 0; overflow: hidden; background: #f5f0e6; }
+      canvas { display: block; }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      import * as THREE from 'https://cdn.skypack.dev/three@0.136.0/build/three.module.js';
+      import { OrbitControls } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls.js';
+      import { EffectComposer } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/EffectComposer.js';
+      import { RenderPass } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/RenderPass.js';
+      import { UnrealBloomPass } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+      import { AfterimagePass } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/AfterimagePass.js';
+      import { ShaderPass } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/ShaderPass.js';
+      import { RGBShiftShader } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/shaders/RGBShiftShader.js';
+      import * as dat from 'https://cdn.skypack.dev/dat.gui';
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 200;
+      camera.lookAt(0, 0, 0);
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.025;
+      controls.enableZoom = true;
+      controls.minDistance = 10;
+      controls.maxDistance = 500;
+
+      const composer = new EffectComposer(renderer);
+      composer.addPass(new RenderPass(scene, camera));
+      const afterimagePass = new AfterimagePass(0.89);
+      composer.addPass(afterimagePass);
+      const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.5, 0.4, 0.5);
+      composer.addPass(bloomPass);
+
+      const RadialVignetteShader = {
+        uniforms: {
+          tDiffuse: { value: null },
+          resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+          vignetteIntensity: { value: 0.3 },
+          vignetteSmoothness: { value: 0.5 },
+          blurStrength: { value: 0.15 },
+          blurSamples: { value: 64 }
+        },
+        vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+        fragmentShader: `
+          uniform sampler2D tDiffuse;
+          uniform vec2 resolution;
+          uniform float vignetteIntensity;
+          uniform float vignetteSmoothness;
+          uniform float blurStrength;
+          uniform int blurSamples;
+          varying vec2 vUv;
+          void main() {
+            vec2 uv = vUv;
+            vec2 center = vec2(0.5, 0.5);
+            vec2 delta = uv - center;
+            float dist = length(delta);
+            vec4 color = vec4(0.0);
+            float total = 0.0;
+            for (int i = 0; i < 256; i++) {
+              if(i >= blurSamples) break;
+              float t = float(i) / float(blurSamples - 1);
+              vec2 sampleUv = center + delta * (1.0 + t * blurStrength);
+              color += texture2D(tDiffuse, sampleUv);
+              total += 1.0;
+            }
+            color /= total;
+            float vignette = smoothstep(0.1, vignetteSmoothness, dist);
+            color.rgb *= mix(1.0, 1.0 - vignetteIntensity, vignette);
+            gl_FragColor = color;
+          }
+        `
+      };
+      const vignettePass = new ShaderPass(RadialVignetteShader);
+      composer.addPass(vignettePass);
+      const rgbShiftPass = new ShaderPass(RGBShiftShader);
+      rgbShiftPass.uniforms['amount'].value = 0.0015;
+      composer.addPass(rgbShiftPass);
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      scene.add(ambientLight);
+
+      let colors = [];
+      async function fetchRandomPalette() {
+        try {
+          const proxy = 'https://cors-anywhere.herokuapp.com/';
+          const url = 'https://www.thecolorapi.com/scheme?mode=random&count=5';
+          const response = await fetch(proxy + url);
+          if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
+          const data = await response.json();
+          colors = data.colors.map(c => parseInt(c.hex.value.replace('#', '0x')));
+          console.log('Couleurs récupérées:', colors);
+          generateParticles();
+        } catch (error) {
+          console.error('Erreur lors de la récupération de la palette:', error);
+          colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff];
+          generateParticles();
+        }
+      }
+
+      const particles = [];
+      function generateParticles(count = 1200, scale = 1.4) {
+        if (colors.length === 0) return;
+        particles.forEach(p => scene.remove(p));
+        particles.length = 0;
+        for (let i = 0; i < count; i++) {
+          const geometry = new THREE.SphereGeometry((Math.random() * 2 + 0.5) * scale, 8, 8);
+          const material = new THREE.MeshStandardMaterial({
+            color: colors[Math.floor(Math.random() * colors.length)],
+            emissive: colors[Math.floor(Math.random() * colors.length)],
+            emissiveIntensity: 0.5
+          });
+          const sphere = new THREE.Mesh(geometry, material);
+          sphere.position.set(
+            (Math.random() - 0.5) * 100,
+            (Math.random() - 0.5) * 100,
+            (Math.random() - 0.5) * 100
+          );
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.acos(2 * Math.random() - 1);
+          const r = Math.random();
+          const x = r * Math.sin(phi) * Math.cos(theta);
+          const y = r * Math.sin(phi) * Math.sin(theta);
+          const z = r * Math.cos(phi);
+          const direction = new THREE.Vector3(x, y, z).normalize().multiplyScalar(2);
+          sphere.velocity = direction;
+          scene.add(sphere);
+          particles.push(sphere);
+        }
+      }
+
+      const gui = new dat.GUI();
+      const particleFolder = gui.addFolder('Particles');
+      const particleSettings = { scale: 1, damping: 0.98 };
+      particleFolder.add(particleSettings, 'scale', 0.1, 5).name('Sphere Size').onChange(value => {
+        particles.forEach(p => p.scale.set(value, value, value));
+      });
+      particleFolder.add(particleSettings, 'damping', 0.8, 0.98).name('Damping');
+      // particleFolder.open();
+
+      const waveFolder = gui.addFolder('Sinusoidal Wave');
+      const waveSettings = { amplitude: 2, frequency: 0.5 };
+      waveFolder.add(waveSettings, 'amplitude', 0, 20).name('Amplitude');
+      waveFolder.add(waveSettings, 'frequency', 0.1, 2).name('Frequency');
+      // waveFolder.open();
+
+      const vignetteFolder = gui.addFolder('Vignette + Blur');
+      vignetteFolder.add(vignettePass.uniforms.vignetteIntensity, 'value', 0.0, 2.0).name('Vignette Intensity');
+      vignetteFolder.add(vignettePass.uniforms.vignetteSmoothness, 'value', 0.2, 1.5).name('Vignette Smooth');
+      vignetteFolder.add(vignettePass.uniforms.blurStrength, 'value', 0.0, 0.25, 0.01).name('Blur Strength');
+      vignetteFolder.add(vignettePass.uniforms.blurSamples, 'value', 8, 128, 1).name('Blur Samples');
+      // vignetteFolder.open();
+
+      const bloomFolder = gui.addFolder('Bloom');
+      const bloomSettings = {
+        strength: bloomPass.strength,
+        radius: bloomPass.radius,
+        threshold: bloomPass.threshold
+      };
+      bloomFolder.add(bloomSettings, 'strength', 0, 3).name('Strength').onChange(v => bloomPass.strength = v);
+      bloomFolder.add(bloomSettings, 'radius', 0, 1).name('Radius').onChange(v => bloomPass.radius = v);
+      bloomFolder.add(bloomSettings, 'threshold', 0, 1).name('Threshold').onChange(v => bloomPass.threshold = v);
+      // bloomFolder.open();
+
+      const afterimageFolder = gui.addFolder('Afterimage');
+      const afterimageSettings = { damp: afterimagePass.uniforms['damp'].value };
+      afterimageFolder.add(afterimageSettings, 'damp', 0.5, 0.8).name('Damping').onChange(v => {
+        afterimagePass.uniforms['damp'].value = v;
+      });
+      // afterimageFolder.open();
+
+      const rgbFolder = gui.addFolder('RGB Shift');
+      const rgbSettings = {
+        amount: rgbShiftPass.uniforms['amount'].value
+      };
+      rgbFolder.add(rgbSettings, 'amount', -0.02, 0.02).name('Amount').onChange(v => {
+        rgbShiftPass.uniforms['amount'].value = v;
+      });
+      // rgbFolder.open();
+
+      const particleControls = {
+        regenerate: () => {
+          fetchRandomPalette();
+        }
+      };
+      gui.add(particleControls, 'regenerate').name('Restart');
+      
+      const displayParams = {
+        fullscreen: () => {
+          if (!document.fullscreenElement) {
+            document.body.requestFullscreen(); 
+          } else {
+            document.exitFullscreen();
+          }
+        }
+      };
+      gui.add(displayParams, 'fullscreen').name('Fullscreen');
+      
+      function animate(time) {
+        requestAnimationFrame(animate);
+        controls.update();
+        particles.forEach((p, i) => {
+          p.position.add(p.velocity);
+          p.velocity.multiplyScalar(particleSettings.damping);
+          const t = time * 0.001 + i * 0.1;
+          const amplitude = waveSettings.amplitude;
+          const frequency = waveSettings.frequency;
+          p.position.y += Math.sin(t * frequency) * amplitude * 0.1;
+          p.position.x += Math.cos(t * frequency) * amplitude * 0.1;
+          p.position.z += Math.sin(t * frequency) * amplitude * 0.1;
+        });
+        composer.render();
+      }
+      animate(0);
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        composer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      fetchRandomPalette();
+    </script>
+  </body>
+</html>
