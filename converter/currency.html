@@ -80,8 +80,7 @@
   </div>
 
   <script>
-    // Placeholder for API key, workflow will replace it
-    const API_KEY = "${EXCHANGE_API}";
+    const API_KEY = "${EXCHANGE_API}"; // Workflow will replace this
 
     async function convert() {
       const amount = parseFloat(document.getElementById("amount").value);
@@ -94,12 +93,15 @@
       }
 
       try {
-        const res = await fetch(`https://api.exchangeratesapi.io/v1/convert?access_key=${API_KEY}&from=${from}&to=${to}&amount=${amount}`);
+        // Fetch latest rates from free API
+        const res = await fetch(`https://api.exchangeratesapi.io/v1/latest?access_key=${API_KEY}&base=${from}&symbols=${to}`);
         const data = await res.json();
 
-        if (data && data.result) {
+        if (data && data.rates && data.rates[to]) {
+          const rate = data.rates[to];
+          const converted = (amount * rate).toFixed(2);
           document.getElementById("result").innerText =
-            `${amount} ${from} = ${data.result.toFixed(2)} ${to}`;
+            `${amount} ${from} = ${converted} ${to}`;
         } else {
           document.getElementById("result").innerText = "Conversion failed. Try again.";
           console.error("API response:", data);
