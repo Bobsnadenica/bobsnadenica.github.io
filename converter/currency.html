@@ -80,7 +80,7 @@
   </div>
 
   <script>
-    const API_KEY = "${EXCHANGE_API}"; // Workflow will replace this
+    const API_KEY = "${EXCHANGE_API}"; // Workflow will inject your key
 
     async function convert() {
       const amount = parseFloat(document.getElementById("amount").value);
@@ -93,13 +93,21 @@
       }
 
       try {
-        // Fetch latest rates from free API
-        const res = await fetch(`https://api.exchangeratesapi.io/v1/latest?access_key=${API_KEY}&base=${from}&symbols=${to}`);
+        // Free plan: fetch latest rates (EUR as base)
+        const res = await fetch(`https://api.exchangeratesapi.io/v1/latest?access_key=${API_KEY}`);
         const data = await res.json();
 
-        if (data && data.rates && data.rates[to]) {
-          const rate = data.rates[to];
-          const converted = (amount * rate).toFixed(2);
+        if (data && data.rates) {
+          const rates = data.rates;
+          rates["EUR"] = 1; // EUR is the base
+
+          if (!rates[from] || !rates[to]) {
+            document.getElementById("result").innerText = "Conversion failed. Currency not supported.";
+            return;
+          }
+
+          // Convert via EUR
+          const converted = (amount / rates[from] * rates[to]).toFixed(2);
           document.getElementById("result").innerText =
             `${amount} ${from} = ${converted} ${to}`;
         } else {
