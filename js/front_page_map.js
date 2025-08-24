@@ -1,5 +1,7 @@
+window.map = null;
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Theme toggle logic
+    // Theme toggle
     const toggleBtn = document.getElementById('theme-toggle');
     const sunIcon = document.getElementById('sun-icon');
     const moonIcon = document.getElementById('moon-icon');
@@ -26,23 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
         updateIcons(isCurrentlyDark);
     });
 
-    // PWA Service Worker Registration
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then(reg => console.log('Service Worker registered!', reg))
-                .catch(err => console.error('Service Worker registration failed:', err));
-        });
-    }
-
-    // Map logic
+    // Map setup
     const savedState = JSON.parse(localStorage.getItem('mapState')) || { lat: 0, lon: 0, zoom: 2 };
-    
-    const map = L.map('map', {
-        zoomControl: false, 
-        scrollWheelZoom: true,
-        dragging: true,
-    }).setView([savedState.lat, savedState.lon], savedState.zoom);
+    window.map = L.map('map', { zoomControl: false, scrollWheelZoom: true, dragging: true })
+        .setView([savedState.lat, savedState.lon], savedState.zoom);
+
+    const map = window.map;
 
     L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
@@ -63,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function updateMap() {
         try {
             const res = await fetch('https://api.wheretheiss.at/v1/satellites/25544');
-            if (!res.ok) throw new Error('Network response was not ok');
+            if (!res.ok) throw new Error('Network response not ok');
             const data = await res.json();
             const lat = data.latitude;
             const lon = data.longitude;
@@ -75,9 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             issMarker.setPopupContent(`The ISS is currently over ${place}`).openPopup();
 
             map.panTo([lat, lon]);
-        } catch(e) {
-            console.error('ISS fetch error:', e);
-        }
+        } catch(e) { console.error(e); }
         terminator.setTime();
 
         localStorage.setItem('mapState', JSON.stringify({
@@ -97,30 +86,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     userLocationBtn.addEventListener('click', () => {
-        if (!navigator.geolocation) {
-            alert('Geolocation is not supported by your browser.');
-            return;
-        }
-
+        if (!navigator.geolocation) { alert('Geolocation not supported'); return; }
         navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const { latitude, longitude } = position.coords;
-                const userLatLng = [latitude, longitude];
-
-                if (userMarker) {
-                    userMarker.setLatLng(userLatLng);
-                } else {
-                    userMarker = L.marker(userLatLng).addTo(map)
-                        .bindPopup('You are here!').openPopup();
-                }
-
-                map.setView(userLatLng, 10);
-                localStorage.setItem('userLocation', JSON.stringify({ lat: latitude, lon: longitude }));
+            (pos) => {
+                const latLng = [pos.coords.latitude, pos.coords.longitude];
+                if (userMarker) userMarker.setLatLng(latLng);
+                else userMarker = L.marker(latLng).addTo(map).bindPopup('You are here!').openPopup();
+                map.setView(latLng, 10);
+                localStorage.setItem('userLocation', JSON.stringify({ lat: pos.coords.latitude, lon: pos.coords.longitude }));
             },
-            (error) => {
-                console.error('Geolocation error:', error);
-                alert('Unable to retrieve your location.');
-            }
+            (err) => { console.error(err); alert('Unable to retrieve location'); }
         );
     });
 
