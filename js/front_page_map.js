@@ -1,7 +1,5 @@
-window.map = null;
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Theme toggle
+function initPage() {
+    // Theme toggle logic
     const toggleBtn = document.getElementById('theme-toggle');
     const sunIcon = document.getElementById('sun-icon');
     const moonIcon = document.getElementById('moon-icon');
@@ -28,12 +26,30 @@ document.addEventListener('DOMContentLoaded', () => {
         updateIcons(isCurrentlyDark);
     });
 
-    // Map setup
-    const savedState = JSON.parse(localStorage.getItem('mapState')) || { lat: 0, lon: 0, zoom: 2 };
-    window.map = L.map('map', { zoomControl: false, scrollWheelZoom: true, dragging: true })
-        .setView([savedState.lat, savedState.lon], savedState.zoom);
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('Service Worker registered!', reg))
+                .catch(err => console.error('Service Worker registration failed:', err));
+        });
+    }
 
-    const map = window.map;
+    // Map logic
+    const savedState = JSON.parse(localStorage.getItem('mapState')) || { lat: 0, lon: 0, zoom: 2 };
+
+    // Remove existing map if any (bfcache restoration)
+    if (window._mapInstance) {
+        window._mapInstance.remove();
+    }
+
+    const map = L.map('map', {
+        zoomControl: false, 
+        scrollWheelZoom: true,
+        dragging: true,
+    }).setView([savedState.lat, savedState.lon], savedState.zoom);
+
+    window._mapInstance = map;
 
     L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
@@ -54,19 +70,16 @@ document.addEventListener('DOMContentLoaded', () => {
     async function updateMap() {
         try {
             const res = await fetch('https://api.wheretheiss.at/v1/satellites/25544');
-            if (!res.ok) throw new Error('Network response not ok');
+            if (!res.ok) throw new Error('Network response was not ok');
             const data = await res.json();
             const lat = data.latitude;
             const lon = data.longitude;
             issMarker.setLatLng([lat, lon]);
 
-            const geocodeRes = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=YOUR_OPENCAGE_API_KEY`);
-            const geocodeData = await geocodeRes.json();
-            const place = geocodeData.results[0]?.components?.country || 'the ocean';
-            issMarker.setPopupContent(`The ISS is currently over ${place}`).openPopup();
-
             map.panTo([lat, lon]);
-        } catch(e) { console.error(e); }
+        } catch(e) {
+            console.error('ISS fetch error:', e);
+        }
         terminator.setTime();
 
         localStorage.setItem('mapState', JSON.stringify({
@@ -86,19 +99,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     userLocationBtn.addEventListener('click', () => {
-        if (!navigator.geolocation) { alert('Geolocation not supported'); return; }
+        if (!navigator.geolocation) {
+            alert('Geolocation is not supported by your browser.');
+            return;
+        }
+
         navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                const latLng = [pos.coords.latitude, pos.coords.longitude];
-                if (userMarker) userMarker.setLatLng(latLng);
-                else userMarker = L.marker(latLng).addTo(map).bindPopup('You are here!').openPopup();
-                map.setView(latLng, 10);
-                localStorage.setItem('userLocation', JSON.stringify({ lat: pos.coords.latitude, lon: pos.coords.longitude }));
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                const userLatLng = [latitude, longitude];
+
+                if (userMarker) {
+                    userMarker.setLatLng(userLatLng);
+                } else {
+                    userMarker = L.marker(userLatLng).addTo(map)
+                        .bindPopup('You are here!').openPopup();
+                }
+
+                map.setView(userLatLng, 10);
+                localStorage.setItem('userLocation', JSON.stringify({ lat: latitude, lon: longitude }));
             },
-            (err) => { console.error(err); alert('Unable to retrieve location'); }
+            (error) => {
+                console.error('Geolocation error:', error);
+                alert('Unable to retrieve your location.');
+            }
         );
     });
 
     updateMap();
     setInterval(updateMap, 5000);
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', initPage);
+
+// Re-initialize if coming back via browser back button
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        initPage();
+    }
 });
