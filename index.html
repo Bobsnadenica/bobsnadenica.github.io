@@ -15,12 +15,10 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         body { font-family: 'Inter', sans-serif; margin:0; padding:0; overflow-x:hidden; }
-
         .video-bg {
             position: fixed; top: 50%; left: 50%; width: 120vw; height: 120vh;
             transform: translate(-50%, -50%); z-index: -3; pointer-events: none;
         }
-
         .video-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(120deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6));
@@ -32,7 +30,6 @@
             0% { background-position: left top; }
             100% { background-position: right bottom; }
         }
-
         #map { width: 100%; max-width: 600px; height: 400px; border-radius: 12px; margin: 20px auto; }
         .map-buttons { position: absolute; bottom: 10px; right: 10px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; }
 
@@ -76,7 +73,7 @@
 
     <div id="map">
         <div class="map-buttons">
-            <button id="user-location-btn" class="p-3 rounded-full bg-slate-300 dark:bg-slate-700 text-gray-800 dark:text-gray-200 shadow-lg hover:scale-110 transition-all" aria-label="Center map on my location">
+            <button id="user-location-btn" aria-label="Center map on my location" class="p-3 rounded-full bg-slate-300 dark:bg-slate-700 text-gray-800 dark:text-gray-200 shadow-lg hover:scale-110 transition-all">
                 <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -88,6 +85,6 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/@joergdietrich/leaflet.terminator@1.1.0/L.Terminator.js"></script>
-<script src="js/main.js"></script>
+<script src="js/front_page_map.js"></script>
 </body>
 </html>

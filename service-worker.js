@@ -3,6 +3,9 @@ const urlsToCache = [
     '/',
     '/index.html',
     '/js/main.js',
+    '/js/modules/map.js',
+    '/js/modules/pwa.js',
+    '/js/modules/theme.js',
     '/manifest.json',
     '/converter/index.html',
     '/games/index.html',
@@ -14,7 +17,6 @@ const urlsToCache = [
     'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
     'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
     'https://unpkg.com/@joergdietrich/leaflet.terminator@1.1.0/L.Terminator.js',
-    // Add other essential assets
 ];
 
 self.addEventListener('install', (event) => {
@@ -32,9 +34,9 @@ self.addEventListener('fetch', (event) => {
         caches.match(event.request)
             .then((response) => {
                 if (response) {
-                    return response; // Found in cache
+                    return response;
                 }
-                return fetch(event.request); // Not found, fetch from network
+                return fetch(event.request);
             })
     );
 });

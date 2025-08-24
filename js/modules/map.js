@@ -1,41 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Theme toggle logic
-    const toggleBtn = document.getElementById('theme-toggle');
-    const sunIcon = document.getElementById('sun-icon');
-    const moonIcon = document.getElementById('moon-icon');
-    const htmlEl = document.documentElement;
-    const themeMeta = document.getElementById('theme-color-meta');
-
-    const updateIcons = (dark) => {
-        sunIcon.classList.toggle('hidden', dark);
-        moonIcon.classList.toggle('hidden', !dark);
-        toggleBtn.setAttribute('aria-pressed', dark);
-        themeMeta.setAttribute('content', dark ? '#0f172a' : '#ffffff');
-    };
-
-    const storedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = storedTheme === 'dark' || (!storedTheme && prefersDark);
-    htmlEl.classList.toggle('dark', isDark);
-    updateIcons(isDark);
-
-    toggleBtn.addEventListener('click', () => {
-        const isCurrentlyDark = !htmlEl.classList.contains('dark');
-        htmlEl.classList.toggle('dark', isCurrentlyDark);
-        localStorage.setItem('theme', isCurrentlyDark ? 'dark' : 'light');
-        updateIcons(isCurrentlyDark);
-    });
-
-    // PWA Service Worker Registration
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then(reg => console.log('Service Worker registered!', reg))
-                .catch(err => console.error('Service Worker registration failed:', err));
-        });
-    }
-
-    // Map logic
+export function setupMap(L) {
+    // Check for last saved map state
     const savedState = JSON.parse(localStorage.getItem('mapState')) || { lat: 0, lon: 0, zoom: 2 };
     
     const map = L.map('map', {
@@ -69,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const lon = data.longitude;
             issMarker.setLatLng([lat, lon]);
 
+            // Add reverse geocoding for a bonus feature
             const geocodeRes = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=YOUR_OPENCAGE_API_KEY`);
             const geocodeData = await geocodeRes.json();
             const place = geocodeData.results[0]?.components?.country || 'the ocean';
@@ -80,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         terminator.setTime();
 
+        // Save map state
         localStorage.setItem('mapState', JSON.stringify({
             lat: map.getCenter().lat,
             lon: map.getCenter().lng,
@@ -126,4 +92,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateMap();
     setInterval(updateMap, 5000);
-});
+}
