@@ -1,72 +1,195 @@
-<!DOCTYPE html>
-<html lang="en" class="dark">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-    <meta name="theme-color" content="#0f172a" id="theme-color-meta" />
-    <title>Random Tools</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Everyday Lilly — Daily photo diary for your lily</title>
+  <meta name="description" content="Everyday Lilly — take a picture of your lily every day. Local storage only, simple and beautiful." />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo="> 
+  <style>
+    :root{
+      --bg:#f7fbff;
+      --card:#ffffff;
+      --accent1:#7dd3fc; /* light cyan */
+      --accent2:#7c3aed; /* violet */
+      --muted:#6b7280;
+      --radius:16px;
+      --maxw:1100px;
+      --glass: rgba(255,255,255,0.6);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, #eef8ff 0%, #fdf6ff 100%);
+      color:#0f172a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:40px 20px;
+      display:flex;
+      justify-content:center;
+    }
+    .container{
+      width:100%;
+      max-width:var(--maxw);
+    }
 
-    <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:28px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:14px;
+    }
+    .logo{
+      width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      color:white;font-weight:700;font-size:20px;box-shadow:0 6px 20px rgba(124,58,237,0.18);
+    }
+    h1{margin:0;font-size:20px}
+    p.lead{margin:0;color:var(--muted)}
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { darkMode: 'class' }</script>
+    nav{display:flex;gap:12px;align-items:center}
+    a.btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;text-decoration:none;font-weight:600}
+    .btn.ghost{background:transparent;color:var(--muted)}
+    .btn.primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;box-shadow:0 8px 30px rgba(124,58,237,0.12)}
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="css/style.css">
+    .hero{
+      background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+      border-radius:var(--radius);
+      padding:36px;
+      display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;box-shadow:0 10px 30px rgba(16,24,40,0.06);
+    }
+    .hero h2{font-size:32px;margin:0 0 10px}
+    .hero p{margin:0 0 18px;color:var(--muted);font-size:16px}
+
+    .feature-list{display:flex;flex-direction:column;gap:10px}
+    .feature{display:flex;gap:12px;align-items:flex-start}
+    .icon{width:44px;height:44px;border-radius:10px;background:var(--glass);display:flex;align-items:center;justify-content:center;font-weight:700}
+
+    .mock{
+      background:linear-gradient(180deg,#fff 0%, #f6fbff 100%);
+      border-radius:14px;padding:12px;border:1px solid rgba(15,23,42,0.03);
+    }
+    .phone{width:100%;height:640px;border-radius:12px;background:linear-gradient(180deg,#0ea5e9 0%, #7c3aed 100%);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:14px}
+    .phone .hint{opacity:0.95;text-align:center;padding:22px}
+
+    .actions{display:flex;gap:12px;margin-top:18px}
+
+    .badges{display:flex;gap:10px;margin-top:8px}
+    .badge{padding:8px 12px;border-radius:999px;background:rgba(15,23,42,0.04);font-weight:600}
+
+    section.features{margin-top:26px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 20px rgba(2,6,23,0.04)}
+
+    footer{margin-top:26px;text-align:center;color:var(--muted);font-size:14px}
+
+    @media (max-width:920px){
+      .hero{grid-template-columns:1fr;}
+      .phone{height:420px}
+      section.features{grid-template-columns:1fr}
+      header{flex-direction:column;align-items:flex-start;gap:12px}
+    }
+  </style>
 </head>
-<body class="bg-white dark:bg-slate-950 min-h-screen flex flex-col items-center justify-start p-4">
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">EL</div>
+        <div>
+          <h1>Everyday Lilly</h1>
+          <p class="lead">A simple daily photo diary for your lily — local-first, privacy-friendly.</p>
+        </div>
+      </div>
 
-<!-- Fixed background video -->
-<iframe class="video-bg"
-    src="https://www.youtube.com/embed/iYmvCUonukw?autoplay=1&mute=1&controls=0&loop=1&playlist=iYmvCUonukw&modestbranding=1&showinfo=0&playsinline=1"
-    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy">
-</iframe>
-<div class="video-overlay"></div>
+      <nav>
+        <a class="btn ghost" href="privacypolicy.html">Privacy Policy</a>
+        <a class="btn primary" href="#download">Download on Android
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="transform:translateY(1px)"><path d="M12 2v14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5 9l7 7 7-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </a>
+      </nav>
+    </header>
 
-<!-- Explosion wrapper: content explodes -->
-<div id="fade-wrapper">
-    <div id="page-content" class="flex flex-col items-center w-full">
+    <main class="hero">
+      <div>
+        <h2>Capture a tiny moment every day.</h2>
+        <p>Everyday Lilly helps you build a beautiful timeline of your plant's growth — with simple daily reminders and local-only storage. No accounts, no cloud sync — your photos stay on your device.</p>
 
-        <main class="relative z-10 w-full flex flex-col items-center">
-
-            <div class="bg-slate-100/70 dark:bg-slate-800/70 backdrop-blur-xl p-8 rounded-2xl shadow-2xl w-full max-w-sm border border-slate-200 dark:border-slate-700 transition-all duration-500 hover:scale-[1.02]">
-
-                <!-- Theme toggle button -->
-                <button id="theme-toggle" aria-label="Toggle Dark Mode" aria-pressed="true"
-                    class="absolute top-4 right-4 p-3 rounded-full bg-slate-300 dark:bg-slate-700 text-gray-800 dark:text-gray-200 hover:rotate-12 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all">
-                    <svg id="sun-icon" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
-                    <svg id="moon-icon" class="h-6 w-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                    </svg>
-                </button>
-
-                <h1 class="text-4xl md:text-5xl font-extrabold text-center text-gray-900 dark:text-gray-50 mb-6 drop-shadow-lg">Random Tools</h1>
-
-                <div class="space-y-4">
-                    <a href="privacypolicy.html" class="block"><button class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-slate-300 to-slate-400 dark:from-slate-700 dark:to-slate-800 text-gray-900 dark:text-gray-100 font-semibold hover:scale-105 hover:shadow-lg transition-all">Everyday Lilly's Privacy Policy</button></a>
-                </div>
+        <div class="feature-list">
+          <div class="feature">
+            <div class="icon">📷</div>
+            <div>
+              <strong>Daily photo reminders</strong>
+              <div class="muted">Never miss a day — set a time and the app will remind you.</div>
             </div>
+          </div>
 
-            <!-- Map container -->
-            <div id="map-container" class="w-full max-w-3xl aspect-video rounded-xl overflow-hidden mt-6">
-                <div id="map" class="w-full h-full"></div>
-                <div class="map-buttons">
-                    <button id="user-location-btn" aria-label="Center map on my location" class="p-3 rounded-full bg-slate-300 dark:bg-slate-700 text-gray-800 dark:text-gray-200 shadow-lg hover:scale-110 transition-all">
-                        <!-- Icon SVG -->
-                    </button>
-                </div>
+          <div class="feature">
+            <div class="icon">🔒</div>
+            <div>
+              <strong>Local storage only</strong>
+              <div class="muted">All images and data are stored on your device — no data leaves your phone.</div>
             </div>
+          </div>
 
-        </main>
-    </div>
-</div>
+          <div class="feature">
+            <div class="icon">✨</div>
+            <div>
+              <strong>Beautiful timeline</strong>
+              <div class="muted">See your lily's growth in an elegant, scrollable timeline.</div>
+            </div>
+          </div>
+        </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/@joergdietrich/leaflet.terminator@1.1.0/L.Terminator.js"></script>
-<script src="js/front_page_map.js"></script>
-<script src="js/explosion.js"></script>
+        <div class="actions">
+          <a id="download" class="btn primary" href="#" onclick="alert('Replace this link with your Google Play store URL')">Download on Android</a>
+          <a class="btn ghost" href="#" onclick="alert('iOS version coming soon — follow our updates')">Soon on iOS!</a>
+        </div>
+
+        <div class="badges">
+          <div class="badge">Local-only</div>
+          <div class="badge">No tracking</div>
+          <div class="badge">Lightweight</div>
+        </div>
+      </div>
+
+      <div class="mock">
+        <div class="phone">
+          <div class="hint">
+            Everyday Lilly preview<br/>
+            (Replace this mock with a screenshot of your app)
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <section class="features" aria-label="features">
+      <div class="card">
+        <h3>Quick setup</h3>
+        <p class="muted">Install, pick a reminder time, and start taking photos — no account required.</p>
+      </div>
+      <div class="card">
+        <h3>Export photos</h3>
+        <p class="muted">Easily export selected photos to share or backup from your device.</p>
+      </div>
+      <div class="card">
+        <h3>Minimal & fast</h3>
+        <p class="muted">Optimized for quick daily use with a low storage footprint.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>Questions? Contact <a href="mailto:Dimitar@bobsnadenica.com">Dimitar@bobsnadenica.com</a></p>
+      <p style="margin-top:6px;color:var(--muted)">&copy; <span id="year"></span> Everyday Lilly</p>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
